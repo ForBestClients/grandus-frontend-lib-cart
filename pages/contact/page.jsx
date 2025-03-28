@@ -11,12 +11,12 @@ export async function generateMetadata({params}) {
   const {t} = await initTranslations(params?.locale);
 
   return SEO.getDefaultMetaObject(
-    t('Kontaktné informácie'),
-    '',
+      t('Kontaktné informácie'),
+      '',
   );
 }
 
-export default async function Home(props) {
+export default async function CartContact(props) {
   const [countries, towns, contact] = await Promise.all([
     getCountries(),
     getTowns(),

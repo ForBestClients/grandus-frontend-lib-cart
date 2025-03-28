@@ -31,7 +31,6 @@ const CartLayout = ({ children }) => {
     return (
         <Suspense fallback={<LoadingCart />}>
             <CartHeader />
-            <CartTitle />
             <div className="grid grid-cols-6 gap-6 py-8">
                 <div className="col col-span-full md:col-span-4">
                     <Suspense>
