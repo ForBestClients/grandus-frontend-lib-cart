@@ -1,0 +1,9 @@
+.shipping {
+  :global(.packetery__custom) {
+    @apply bg-white rounded-lg mt-2 ml-8;
+
+    button {
+      @apply bg-primary text-white rounded-lg p-2.5;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+.wrapper {
+  @apply my-16 text-center flex flex-col items-center justify-center;
+
+  .icon {
+    @apply my-10 w-20 text-primary;
+  }
+}

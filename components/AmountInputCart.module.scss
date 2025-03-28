@@ -1,0 +1,68 @@
+
+$input-height: 34px;
+$input-small-height: 40px;
+
+.amountInput {
+  @apply mb-4 md:w-auto md:mb-0;
+  width: 100%;
+  //min-width: 150px;
+  flex-wrap: wrap;
+  position: relative;
+  font-weight: bold;
+
+  input[type="number"] {
+    height: $input-height;
+    border: 0;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 6px;
+
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+
+  .btnMinus,
+  .btnPlus {
+    @apply text-primary;
+    border: 0;
+    height: $input-height;
+    margin-top: 0;
+    box-shadow: none;
+    font-weight: bold;
+    font-size: 16px;
+    background-color: transparent;
+
+    &:hover {
+      @apply border-grey text-primaryHover
+      background: transparent;
+    }
+  }
+
+  &.small {
+    input[type="number"],
+    .btnMinus,
+    .btnPlus {
+      height: $input-small-height;
+    }
+
+    .piecesInBundle {
+      font-size: 13px;
+    }
+  }
+
+  .loader {
+    max-width: 40px !important;
+    color: #000000;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}

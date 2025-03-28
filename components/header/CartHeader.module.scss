@@ -1,0 +1,50 @@
+@use "sass:selector";
+
+.wrapper {
+  @apply mt-4 bg-grey rounded-full overflow-hidden relative flex w-full justify-between items-center flex-col md:flex-row;
+
+  .stepCount {
+    @apply w-[20px] h-[20px] relative inline-block text-grey mr-3;
+  }
+
+  .navLink {
+    @apply flex grow basis-1 justify-center items-center px-3.5 py-3 whitespace-nowrap font-normal  text-font w-full;
+
+    &:not(.finished) {
+      @apply -ml-[20px];
+    }
+
+    .stepCount {
+      @apply bg-white text-primary rounded-full flex items-center justify-center p-3 text-sm leading-none;
+    }
+
+    @at-root #{selector.unify(&, 'span')} {
+      @apply opacity-40;
+
+      .stepCount {
+        @apply text-font;
+      }
+    }
+
+    @at-root #{selector.unify(&, 'a')} {
+      @apply flex justify-center items-center font-normal no-underline;
+
+      &.active {
+        //@apply bg-primary text-white rounded-full;
+        @apply bg-alt text-black rounded-full;
+      }
+
+      &.finished {
+        @apply bg-alt/40 text-font;
+
+        &:hover {
+          @apply bg-primary text-white;
+        }
+      }
+    }
+  }
+
+  p {
+    @apply mb-0;
+  }
+}

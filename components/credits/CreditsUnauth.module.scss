@@ -1,0 +1,12 @@
+
+.login {
+  @apply flex flex-col md:flex-row gap-4 md:items-center;
+
+  .button {
+    @apply w-full max-w-[262px] ms-auto;
+
+    button {
+      @apply w-full;
+    }
+  }
+}

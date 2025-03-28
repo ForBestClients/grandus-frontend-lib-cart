@@ -1,0 +1,44 @@
+.creditsForm {
+  form {
+    @apply flex justify-start items-baseline w-full;
+
+    > div {
+      @apply m-0 p-0;
+    }
+
+    .remove {
+      @apply cursor-pointer p-8;
+      &:hover {
+        // color: var(--c_text);
+      }
+    }
+
+    span {
+      @apply whitespace-nowrap mx-0 my-8;
+    }
+
+    // button {
+    //   border: none;
+    //   border-radius: 2px;
+    // }
+
+    &.error {
+      @apply border-danger;
+    }
+  }
+}
+
+.feedback {
+  @apply mt-8;
+
+  span {
+    @apply block mt-1;
+    &.error {
+      @apply text-danger;
+    }
+    &.success {
+      @apply text-success;
+    }
+  }
+
+}

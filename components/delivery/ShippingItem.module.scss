@@ -1,0 +1,66 @@
+@import "styles/variables";
+
+
+.formItems {
+  margin: 0 auto;
+
+  .input,
+  .select2 :global(.select2__control) {
+    box-shadow: $general-shadow;
+    background-color: #F4F6F4;
+    border-color: #F4F6F4;
+
+    @media screen and (max-width: $sm) {
+      border-color: $c_grey4;
+    }
+  }
+
+  .phoneInput :global(.PhoneInputCountry),
+  .phoneInput :global(.PhoneInputInput) {
+    background-color: #F4F6F4;
+    border-color: #F4F6F4;
+
+    @media screen and (max-width: $sm) {
+      border-color: $c_grey4;
+    }
+  }
+
+  .phoneInput {
+    box-shadow: $general-shadow;
+    border-radius: $general-radius-2;
+  }
+}
+
+.deliveryAlert {
+  display: block;
+  margin-bottom: $general-gutter-2;
+}
+
+.title {
+  font-size: 18px;
+
+  @media screen and (min-width: $lg) {
+    font-size: 24px;
+  }
+}
+
+.loader {
+  position: absolute;
+  background-color: rgba(244, 246, 244, 0.75);
+  border-radius: $general-gutter-2;
+}
+
+.checkbox {
+  label {
+    color: $c_alt2
+    //justify-content: center;
+  }
+}
+
+.customHint {
+  margin-top: 5px;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}

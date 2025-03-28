@@ -1,0 +1,14 @@
+.dates {
+  display: flex;
+  position: relative;
+  &:before {
+    content: "";
+    display: block;
+    left: 20px;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    position: absolute;
+  }
+}
