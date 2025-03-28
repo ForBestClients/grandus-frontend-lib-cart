@@ -12,7 +12,7 @@ export default function LoadingCart(props) {
                 <div className={"flex flex-col text-center items-center justify-center min-h-[500px]"}>
                     <Suspense>
                         <CartIcon className={"h-52 w-auto text-grey mb-16"}/>
-                        <h1>{upperFirst(t('cart.loading'))}</h1>
+                        <h1 className="text-lg">{upperFirst(t('cart.loading'))}</h1>
                     </Suspense>
                 </div>
             </div>

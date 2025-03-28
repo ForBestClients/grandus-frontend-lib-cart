@@ -13,7 +13,7 @@ export default function EmptyCart(props) {
                 <div className={"flex flex-col items-center justify-center min-h-[500px]"}>
                     <Suspense>
                         <CartIcon className={"h-52 w-auto text-grey mb-16"}/>
-                        <h1 className="text-center">{upperFirst(t('cart.empty'))}</h1>
+                        <h1 className="text-center text-lg">{upperFirst(t('cart.empty'))}</h1>
                     </Suspense>
                     <div className="py-8">
                         <Button htmlType={"a"} href={"/"}>
