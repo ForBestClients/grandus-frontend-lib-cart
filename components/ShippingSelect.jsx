@@ -30,34 +30,34 @@ const ShippingSelect = ({ countries, selected, selectedGroup, handleChange, hand
   );
 
   return (
-    <div className={styles.shipping}>
-      <h3 className="text-lg mb-3">
-        {t('cart_form.delivery.title')}
-      </h3>
-      {
-        isEmpty(nogroup) && isEmpty(groups)
-          ? <p>{t('delivery_select.empty')}</p>
-          : (<>
-              {map(nogroup, (delivery, i) => {
-                return <ShippingItem key={`delivery-item-${i}`} delivery={delivery} countries={countries} selected={selected?.id === delivery.id} handleChange={handleChange} />
-              })}
+      <div className={styles.shipping}>
+        <h3 className="text-lg mb-3">
+          {t('cart_form.delivery.title')}
+        </h3>
+        {
+          isEmpty(nogroup) && isEmpty(groups)
+              ? <p>{t('delivery_select.empty')}</p>
+              : (<>
+                    {map(nogroup, (delivery, i) => {
+                      return <ShippingItem key={`delivery-item-${i}`} delivery={delivery} countries={countries} selected={selected?.id === delivery.id} handleChange={handleChange} />
+                    })}
 
-              {map(groups, (delivery, groupName) => {
-                return <ShippingItemGroup
-                    key={`delivery-item-${delivery?.id}`}
-                    group={delivery}
-                    countries={countries}
-                    selectedDelivery={selected}
-                    selectedGroup={selectedGroup === groupName}
-                    groupName={groupName}
-                    handleGroupChange={handleGroupChange}
-                    handleChange={handleChange}
-                />
-              })}
-            </>
-          )
-      }
-    </div>
+                    {map(groups, (delivery, groupName) => {
+                      return <ShippingItemGroup
+                          key={`delivery-item-${delivery?.id}`}
+                          group={delivery}
+                          countries={countries}
+                          selectedDelivery={selected}
+                          selectedGroup={selectedGroup === groupName}
+                          groupName={groupName}
+                          handleGroupChange={handleGroupChange}
+                          handleChange={handleChange}
+                      />
+                    })}
+                  </>
+              )
+        }
+      </div>
   )
 }
 

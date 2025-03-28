@@ -23,13 +23,13 @@ const ShippingItem = ({ delivery, countries, handleChange, selected = false, chi
             <div>
                 <label htmlFor={`delivery-${delivery.id}`} className={'flex items-start justify-start gap-4'}>
                     <RadioInput
-                      inputProps={{
-                        id: `delivery-${delivery.id}`,
-                        name:`delivery-${delivery.id}`,
-                        className: 'me-2 mt-1.5',
-                        onChange: onChange,
-                        checked: optimisticIsSelected
-                      }}
+                        inputProps={{
+                            id: `delivery-${delivery.id}`,
+                            name:`delivery-${delivery.id}`,
+                            className: 'me-2 mt-1.5',
+                            onChange: onChange,
+                            checked: optimisticIsSelected
+                        }}
                     />
                     {delivery?.photo ? (
                         <div className="w-[50px] h-[60px] flex-shrink-0">
