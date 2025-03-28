@@ -28,7 +28,7 @@ const PaymentItem = ({ payment, handleChange, selected = false }) => {
                     inputProps={{
                         id: `payment-${payment.id}`,
                         name:`payment-${payment.id}`,
-                        className: 'me-2 mt-1.5',
+                        className: 'me-2',
                         onChange: onChange,
                         checked: optimisticIsSelected
                     }}

@@ -26,7 +26,7 @@ const ShippingItem = ({ delivery, countries, handleChange, selected = false, chi
                         inputProps={{
                             id: `delivery-${delivery.id}`,
                             name:`delivery-${delivery.id}`,
-                            className: 'me-2 mt-1.5',
+                            className: 'me-2',
                             onChange: onChange,
                             checked: optimisticIsSelected
                         }}
@@ -46,7 +46,7 @@ const ShippingItem = ({ delivery, countries, handleChange, selected = false, chi
                     ) : (
                         ''
                     )}
-                    <div className={'flex-grow text-sm'}>
+                    <div className={'flex-grow'}>
                         <span className="font-bold text-font inline-block mb-1">
                             {delivery?.name} {' '}
                         </span>
