@@ -6,7 +6,16 @@ import {Suspense} from "react";
 import {CartSummarySection} from "@/modules/cart/components/CartSummarySection";
 import CartLayout from "@/components/cart/cartLayout/CartLayout";
 
-export default function CartPage(props) {
+export async function generateMetadata({params}) {
+    const {t} = await initTranslations(params?.locale);
+
+    return SEO.getDefaultMetaObject(
+        t('Kontaktné informácie'),
+        '',
+    );
+}
+
+export default async function CartPage(props) {
   return (
       <CartLayout>
           <div className="grid grid-cols-6 gap-6 py-8">
