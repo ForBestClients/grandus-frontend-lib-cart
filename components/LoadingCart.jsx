@@ -1,6 +1,6 @@
 "use client"
 import { Suspense } from 'react';
-import { CartIcon } from '@/components/_other/icons/CartIcon';
+import CartIcon from '@/components/_other/icons/CartIcon';
 import {useTranslation} from "@/app/i18n/client";
 import upperFirst from "lodash/upperFirst";
 

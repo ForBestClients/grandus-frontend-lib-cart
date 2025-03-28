@@ -1,5 +1,5 @@
 import CartListingItems from '@/modules/cart/components/CartListingItems';
-import { CartIcon } from '@/components/_other/icons/CartIcon';
+import CartIcon from '@/components/_other/icons/CartIcon';
 import Button from '@/components/_other/button/Button';
 import CloseIcon from '@/components/_other/icons/CloseIcon';
 import { useEffect, useState } from 'react';
@@ -65,7 +65,7 @@ export const MiniCart = ({ isOpen, handleClose }) => {
           <MiniCartItems />
         </div>
         <Button type={'alt'} fullWidth className="mt-6" htmlType={'a'} href={CART_STEPS[0]}>
-          <CartIcon /> 
+          <CartIcon />
           <span>
             {t('cart.proceed_to_cart')}
           </span>
