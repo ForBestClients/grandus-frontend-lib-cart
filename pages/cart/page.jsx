@@ -5,6 +5,8 @@ import Credits from "@/modules/cart/components/credits/Credits";
 import {Suspense} from "react";
 import {CartSummarySection} from "@/modules/cart/components/CartSummarySection";
 import CartLayout from "@/components/cart/cartLayout/CartLayout";
+import { initTranslations } from "@/app/i18n";
+import SEO from "@/utils/seo";
 
 export async function generateMetadata({params}) {
     const {t} = await initTranslations(params?.locale);
