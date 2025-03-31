@@ -1,4 +1,3 @@
-import CartListingItems from '@/modules/cart/components/CartListingItems';
 import CartIcon from '@/components/_other/icons/CartIcon';
 import Button from '@/components/_other/button/Button';
 import CustomButton from '@/components/_other/button/CustomButton';
@@ -54,11 +53,13 @@ export const MiniCart = ({ isOpen, handleClose }) => {
             ${isOpen ? 'translate-0 translate-y-0' : 'sm:translate-x-full translate-y-full sm:translate-y-0'}
           `}
         >
-          <Button type="text" size={'big'} className={'absolute right-5 top-4 h-auto'} onClick={handleClose}>
-            <CloseIcon className={'h-6 text-grey/80 hover:text-font w-auto'} />
-          </Button>
+          <span className={'absolute right-8 top-8 flex items-center justify-center'}>
+            <Button type="text" onClick={handleClose}>
+              <CloseIcon className={'h-6 text-grey/80 hover:text-font w-auto'} />
+            </Button>
+          </span>
           <div>
-            <h2 className={'flex gap-8 items-center text-lg font-semibold'}>
+            <h2 className={'flex gap-8 items-center text-xl font-semibold'}>
               <CartIcon className={'h-8 w-auto'} />
               {t('cart.your_cart')}
             </h2>
