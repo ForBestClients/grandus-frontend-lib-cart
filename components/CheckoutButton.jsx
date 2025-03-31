@@ -157,7 +157,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
               label={
                 <>
                   {t('cart_summary.privacy_policy.label')}
-                  {get(settings, 'require_consent_for_processing_personal_data')
+                  {get(settings, 'conditions_for_processing_personal_data_link')
                     ? <>
                       {' '} (
                       <Link
@@ -172,7 +172,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
                     : null}
                 </>
               }
-              error={errors?.termsAndConditions}
+              error={errors?.privacyPolicy}
               inputProps={{
                 id: 'privacy_policy',
                 name: 'privacy_policy',
