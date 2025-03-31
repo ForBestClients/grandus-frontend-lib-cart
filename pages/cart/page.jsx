@@ -1,5 +1,5 @@
 import CartListingItems from '@/modules/cart/components/CartListingItems';
-import Box from '@/components/content/Box';
+import Box from "@/components/_other/box/Box";
 import DiscountForm from "@/modules/cart/components/DiscountForm";
 import Credits from "@/modules/cart/components/credits/Credits";
 import {Suspense} from "react";

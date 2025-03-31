@@ -3,7 +3,7 @@ import useCart from 'grandus-lib/hooks/useCart';
 import { useEffect, useState } from 'react';
 import Coupon from '@/modules/cart/components/coupon/Coupon';
 import Isic from '@/modules/cart/components/isic/Isic';
-import Box from '@/components/content/Box';
+import Box from "@/components/_other/box/Box";
 import Button from '@/components/_other/button/Button';
 import { useTranslation } from '@/app/i18n/client';
 import useWebInstance from 'grandus-lib/hooks/useWebInstance';

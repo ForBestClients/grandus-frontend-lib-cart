@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useReducer } from 'react';
-import Box from '@/components/content/Box';
+import Box from "@/components/_other/box/Box";
 import ShippingSelect from '@/modules/cart/components/ShippingSelect';
 import PaymentSelect from '@/modules/cart/components/PaymentSelect';
 import useCart from '@/grandus-lib/hooks/useCart';

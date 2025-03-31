@@ -29,7 +29,7 @@ import CheckboxInput from '@/components/_other/form/CheckboxInput';
 import TownInput from '@/components/_other/form/TownInput';
 import Button from '@/components/_other/button/Button';
 import { useRouter } from 'next/navigation';
-import Box from '@/components/content/Box';
+import Box from "@/components/_other/box/Box";
 import { createPortal } from 'react-dom';
 import TextAreaInput from "@/components/_other/form/TextAreaInput";
 import EmailChecker from "@/modules/cart/components/emailChecker/EmailChecker";
