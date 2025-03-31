@@ -53,7 +53,7 @@ export const MiniCart = ({ isOpen, handleClose }) => {
             ${isOpen ? 'translate-0 translate-y-0' : 'sm:translate-x-full translate-y-full sm:translate-y-0'}
           `}
         >
-          <span className={'absolute right-8 top-8 flex items-center justify-center'}>
+          <span className={'absolute right-[50px] top-8 flex items-center justify-center'}>
             <Button type="text" onClick={handleClose}>
               <CloseIcon className={'h-6 text-grey/80 hover:text-font w-auto'} />
             </Button>
