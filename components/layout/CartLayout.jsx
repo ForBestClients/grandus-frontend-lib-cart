@@ -9,11 +9,12 @@ import get from "lodash/get";
 import EmptyCart from "@/modules/cart/components/EmptyCart";
 import LoadingCart from "@/modules/cart/components/LoadingCart";
 import ProcessingOrder from "@/modules/cart/components/processingOrder/ProcessingOrder";
+import {useCartStep} from "@/utils/cart";
 
-const CartLayout = ({ children }) => {
+const CartLayout = ({ children, contact }) => {
     const { cart, isLoading } = useCart();
+    const step = useCartStep();
     const [isProcessing, setIsProcessing] = useState(false);
-
     const componentIsLoading = isLoading || isProcessing;
 
     if (isProcessing) {
@@ -28,19 +29,27 @@ const CartLayout = ({ children }) => {
         return <EmptyCart />;
     }
 
+    const leftColSpan = step === 2 ? 'md:col-span-4' : 'md:col-span-3'
+    const rightColSpan = step === 2 ? 'md:col-span-2' : 'md:col-span-3'
+
     return (
         <Suspense fallback={<LoadingCart />}>
-            <CartHeader />
-            <div className="grid grid-cols-6 gap-6 py-8">
-                <div className="col col-span-full md:col-span-4">
-                    <Suspense>
-                        {children}
-                    </Suspense>
-                </div>
-                <div className="col col-span-full md:col-span-2 flex flex-col gap-6">
-                    <CartSummarySection setIsProcessing={setIsProcessing} />
-                </div>
+            <div className="mt-4">
+                <CartHeader />
             </div>
+            {step === 0 ? children : (
+                <div className="grid grid-cols-6 gap-6 py-12">
+                    <div className={`col col-span-full ${leftColSpan}`}>
+                        <Suspense>
+                            {children}
+                        </Suspense>
+                    </div>
+                    <div className={`col col-span-full ${rightColSpan} flex flex-col gap-6`}>
+                        <CartSummarySection setIsProcessing={setIsProcessing} contact={contact} />
+                    </div>
+                </div>
+            )}
+
         </Suspense>
     )
 }

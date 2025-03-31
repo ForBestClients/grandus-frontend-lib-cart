@@ -5,7 +5,7 @@ import {CART_CONTACT_CONSTANT} from "@/grandus-lib/constants/SessionConstants";
 import { initTranslations } from "@/app/i18n";
 import SEO from "@/utils/seo";
 import ContactForm from '@/modules/cart/components/ContactForm';
-import CartLayout from "@/modules/cart/components/CartLayout";
+import CartLayout from "@/modules/cart/components/layout/CartLayout";
 
 export async function generateMetadata({params}) {
   const {t} = await initTranslations(params?.locale);

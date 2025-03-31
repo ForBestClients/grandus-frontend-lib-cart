@@ -21,27 +21,27 @@ const MiniCartItems = () => {
   }
 
   return (
-    <>
-      <div className="grid grid-cols-5 sm:grid-cols-6 items-center text-left">
-        <div className="col col-span-3 p-2 pl-2.5 ps-0 text-left">
-          <h5>{t('cart_summary_items.products')}</h5>
-        </div>
-        <div className="hidden sm:block col text-center p-2">
-          <h5>{t('cart_summary_items.count')}</h5>
-        </div>
-        <div className="col col-span-2 sm:col-span-1 text-right sm:text-center p-2">
-          <h5>{t('cart_summary_items.price')}</h5>
-        </div>
-        <div className={"hidden sm:block"}/>
+      <>
+        <div className="grid grid-cols-5 xs:grid-cols-6 items-center text-left">
+          <div className="col col-span-3 p-2 pl-2.5 ps-0 text-left">
+            <h5>{t('cart_summary_items.products')}</h5>
+          </div>
+          <div className="hidden xs:block col text-center p-2">
+            <h5>{t('cart_summary_items.count')}</h5>
+          </div>
+          <div className="col col-span-2 xs:col-span-1 text-right xs:text-center p-2">
+            <h5>{t('cart_summary_items.price')}</h5>
+          </div>
+          <div className={"hidden xs:block"}/>
 
-        {map(cart?.items, (item, i) => {
-          return <MiniCartItem key={`cart-item-${i}`} item={item}/>
-        })}
-        <div className="col-span-full">
-          <Divider />
+          {map(cart?.items, (item, i) => {
+            return <MiniCartItem key={`cart-item-${i}`} item={item}/>
+          })}
+          <div className="col-span-full">
+            <Divider />
+          </div>
         </div>
-      </div>
-    </>
+      </>
   )
 }
 

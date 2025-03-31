@@ -4,7 +4,7 @@ import DiscountForm from "@/modules/cart/components/DiscountForm";
 import Credits from "@/modules/cart/components/credits/Credits";
 import {Suspense} from "react";
 import {CartSummarySection} from "@/modules/cart/components/CartSummarySection";
-import CartLayout from "@/components/cart/cartLayout/CartLayout";
+import CartLayout from "@/modules/cart/components/layout/CartLayout";
 import { initTranslations } from "@/app/i18n";
 import SEO from "@/utils/seo";
 

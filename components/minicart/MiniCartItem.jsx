@@ -7,9 +7,9 @@ import { useCallback, useEffect, useState } from 'react';
 import AmountInputCart from '@/modules/cart/components/AmountInputCart';
 import Image from '@/grandus-utils/wrappers/image/Image';
 import IconRemove from '@/components/_other/icons/IconRemove';
-import Button from '@/components/_other/button/Button';
+import CustomButton from '@/components/_other/button/CustomButton';
 import Link from 'next/link';
-import PriceDynamic from '@/components/price/PriceDynamic';
+import PriceDynamic from 'components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
@@ -25,52 +25,52 @@ const ItemCountInput = ({ item }) => {
   }, [count]);
 
   const selectedStore = find(
-    product?.store,
-    productStore => productStore?.id === store?.id,
+      product?.store,
+      productStore => productStore?.id === store?.id,
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCountChange = useCallback(
-    debounce(value => {
-      try {
-        const oldCount = +item?.count || 1;
-        let newCount = +value || 1;
-        if (newCount !== oldCount) {
-          itemUpdate(item?.id, { count: newCount }, cart => {
-            const newItem = find(cart?.items, { id: item?.id });
-            if (newCount !== newItem?.count) {
-              setAmount(newItem?.count);
-            }
-          });
+      debounce(value => {
+        try {
+          const oldCount = +item?.count || 1;
+          let newCount = +value || 1;
+          if (newCount !== oldCount) {
+            itemUpdate(item?.id, { count: newCount }, cart => {
+              const newItem = find(cart?.items, { id: item?.id });
+              if (newCount !== newItem?.count) {
+                setAmount(newItem?.count);
+              }
+            });
+          }
+        } catch {
+          console.log('error');
         }
-      } catch {
-        console.log('error');
-      }
-    }, 500),
+      }, 500),
   );
 
   return (
-    <AmountInputCart
-      size={selectedStore}
-      amount={amount}
-      setAmount={setAmount}
-      afterChange={handleCountChange}
-      loading={isLoading}
-      item={item}
-    />
+      <AmountInputCart
+          size={selectedStore}
+          amount={amount}
+          setAmount={setAmount}
+          afterChange={handleCountChange}
+          loading={isLoading}
+          item={item}
+      />
   );
 };
 
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
 
-  return <Button
-    type={'text'}
-    color={'secondary'}
-    onClick={() => itemRemove(item?.id)} loading={isLoading}
-    className={className}>
+  return <CustomButton
+      type={'text'}
+      color={'secondary'}
+      onClick={() => itemRemove(item?.id)} loading={isLoading}
+      className={className}>
     <IconRemove className={'h-6'} />
-  </Button>;
+  </CustomButton>;
 };
 
 const ItemBundleInfo = ({ item }) => {
@@ -97,59 +97,59 @@ const MiniCartItem = ({ item }) => {
   }
 
   return (
-    <>
-      <div className="col col-span-3 p-2 ps-0 flex gap-4 items-center h-full relative">
-        <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
-        <div className="w-[50px] h-[60px] sm:w-[80px] sm:h-[100px] bg-grey flex-shrink-0">
-          {item?.product?.photo ? (
-            <Image
-              width={80}
-              height={100}
-              photo={item?.product?.photo}
-              type={'jpg'}
-              title={item?.product?.name}
-              alt={item?.product?.name ?? 'product'}
-            />
-          ) : (
-            <PlaceHolderImage
-              width={80}
-              height={100}
-              type={'jpg'}
-              title={item?.product?.name}
-              alt={item?.product?.name ?? 'product'}
-            />
-          )}
+      <>
+        <div className="col col-span-3 p-2 ps-0 flex gap-4 items-center h-full relative">
+          <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
+          <div className="w-[50px] h-[60px] xs:w-[80px] xs:h-[100px] bg-grey flex-shrink-0">
+            {item?.product?.photo ? (
+                <Image
+                    width={80}
+                    height={100}
+                    photo={item?.product?.photo}
+                    type={'jpg'}
+                    title={item?.product?.name}
+                    alt={item?.product?.name ?? 'product'}
+                />
+            ) : (
+                <PlaceHolderImage
+                    width={80}
+                    height={100}
+                    type={'jpg'}
+                    title={item?.product?.name}
+                    alt={item?.product?.name ?? 'product'}
+                />
+            )}
+          </div>
+          <p className="text-left">
+            {item?.product?.name}
+            <br/>
+            <span className={'text-xs'}>{itemInfos.join(' | ')}</span>
+          </p>
         </div>
-        <p className="text-left">
-          {item?.product?.name}
-          <br/>
-          <span className={'text-xs'}>{itemInfos.join(' | ')}</span>
-        </p>
-      </div>
 
-      <div className="col hidden sm:block text-center p-2 whitespace-nowrap">
-        <ItemCountInput item={item} className={'justify-center'} />
-        <BundleInfo product={item?.product} className="ms-2" />
-      </div>
+        <div className="col hidden xs:block text-center p-2 whitespace-nowrap">
+          <ItemCountInput item={item} className={'justify-center'} />
+          <BundleInfo product={item?.product} className="ms-2" />
+        </div>
 
-      <div className="col col-span-2 sm:col-span-1 text-right sm:text-center p-2 whitespace-nowrap">
-        <strong>
-          <PriceDynamic
-            priceData={item.priceTotalData}
-            standartPriceData={item?.product?.standardPriceData}
-            count={item.count}
-          />
-        </strong>
-      </div>
+        <div className="col col-span-2 xs:col-span-1 text-right xs:text-center p-2 whitespace-nowrap">
+          <strong>
+            <PriceDynamic
+                priceData={item.priceTotalData}
+                standartPriceData={item?.product?.standardPriceData}
+                count={item.count}
+            />
+          </strong>
+        </div>
 
-      <div className="col col-span-3 block sm:hidden p-2">
-        <ItemCountInput item={item} />
-      </div>
+        <div className="col col-span-3 block xs:hidden p-2">
+          <ItemCountInput item={item} />
+        </div>
 
-      <div className="col col-span-2 sm:col-span-1 p-2 text-right block">
-        <ItemRemoveButton item={item} />
-      </div>
-    </>
+        <div className="col col-span-2 xs:col-span-1 p-2 text-right block">
+          <ItemRemoveButton item={item} />
+        </div>
+      </>
   );
 };
 
