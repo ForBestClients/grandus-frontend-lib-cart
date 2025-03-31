@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 import upperFirst from 'lodash/upperFirst';
 
 import useUser from 'grandus-lib/hooks/useUser';
-import Box from "@/components/content/Box";
+import Box from "@/components/_other/box/Box";
 import {useTranslation} from "@/app/i18n/client";
 
 
@@ -34,7 +34,7 @@ const LoggedUserInfo = ({ isSimple = false }) => {
   }
 
   return (
-    <Box className={'!bg-primary text-primary !bg-opacity-15 font-medium'}>
+    <Box className={'!bg-primary/30 text-primary !bg-opacity-15 font-medium'}>
       <LoggedUserInfoContent user={user} />
     </Box>
   );

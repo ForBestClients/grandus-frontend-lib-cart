@@ -25,7 +25,7 @@ const PossibleCredits = () => {
   content = replace(content, '{credits}', cart?.possibleCredits ?? 0);
   content = replace(content, '{value}', formatter.format((cart?.possibleCredits ?? 0) * creditValue));
 
-  return <Box type={'typePink'}>
+  return <Box>
     <div dangerouslySetInnerHTML={{ __html: content }} />
   </Box>;
 };

@@ -1,5 +1,5 @@
 'use client';
-import Box from "@/components/content/Box";
+import Box from "@/components/_other/box/Box";
 import Badge from "@/components/content/Badge";
 import map from "lodash/map";
 import Price from "@/components/price/Price";

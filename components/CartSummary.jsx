@@ -9,7 +9,7 @@ import Link from "next/link";
 import isEmpty from "lodash/isEmpty";
 import forEach from "lodash/forEach";
 import Button from "components/_other/button/Button";
-import Box from "components/content/Box";
+import Box from "@/components/_other/box/Box";
 import map from "lodash/map";
 import Alert from "components/_other/alert/Alert";
 import dayjs from "dayjs";

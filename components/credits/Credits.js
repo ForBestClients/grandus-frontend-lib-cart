@@ -5,7 +5,7 @@ import useWebInstance from 'grandus-lib/hooks/useWebInstance';
 
 import toNumber from 'lodash/toNumber';
 
-import Box from "@/components/content/Box";
+import Box from "@/components/_other/box/Box";
 import CreditsUnauth from "@/modules/cart/components/credits/CreditsUnauth";
 import CreditsForm from "@/modules/cart/components/credits/CreditsForm";
 import {useTranslation} from "@/app/i18n/client";

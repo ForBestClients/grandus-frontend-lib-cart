@@ -1,5 +1,5 @@
 import Divider from "@/components/_other/divider/Divider";
-import Box from "@/components/content/Box";
+import Box from "@/components/_other/box/Box";
 
 const ThankYouSkeleton = () => {
 

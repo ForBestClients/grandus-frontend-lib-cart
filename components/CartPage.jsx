@@ -1,6 +1,6 @@
 'use client';
 
-import Box from "components/content/Box";
+import Box from "@/components/_other/box/Box";
 import CartForm from "@/modules/cart/components/CartForm";
 import CartSummary from "@/modules/cart/components/CartSummary";
 import {useRef, useState} from "react";

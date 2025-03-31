@@ -1,6 +1,6 @@
 'use client';
 
-import Box from "@/components/content/Box";
+import Box from "@/components/_other/box/Box";
 import {useTranslation} from "@/app/i18n/client";
 
 const EmptyState = () => {
