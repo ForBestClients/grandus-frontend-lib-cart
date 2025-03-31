@@ -1,8 +1,8 @@
 import {isEmpty} from "lodash";
 import getOrder from "@/grandus-utils/fetches/ssr/order/OrderByAccessToken";
-import EmptyState from "@/components/thankYou/EmptyState";
-import ThankYouPageContent from "@/components/ThankYouPageContent";
-import MainPageLink from "@/components/thankYou/MainPageLink";
+import EmptyState from "@/modules/cart/components/thankYou/EmptyState";
+import ThankYouPageContent from "@/modules/cart/components/ThankYouPageContent";
+import MainPageLink from "@/modules/cart/components/thankYou/MainPageLink";
 
 const ThankYou = async ({ orderToken }) => {
     const order = await getOrder(orderToken);
