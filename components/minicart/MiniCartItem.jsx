@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import AmountInputCart from '@/modules/cart/components/AmountInputCart';
 import Image from '@/grandus-utils/wrappers/image/Image';
 import IconRemove from '@/components/_other/icons/IconRemove';
-import CustomButton from '@/components/_other/button/CustomButton';
+import Button from '@/components/_other/button/Button';
 import Link from 'next/link';
 import PriceDynamic from 'components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
@@ -64,13 +64,13 @@ const ItemCountInput = ({ item }) => {
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
 
-  return <CustomButton
+  return <Button
       type={'text'}
       color={'secondary'}
       onClick={() => itemRemove(item?.id)} loading={isLoading}
       className={className}>
     <IconRemove className={'h-6'} />
-  </CustomButton>;
+  </Button>;
 };
 
 const ItemBundleInfo = ({ item }) => {
