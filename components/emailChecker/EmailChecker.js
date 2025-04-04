@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import isEmpty from 'lodash/isEmpty';
 import useUser from 'grandus-lib/hooks/useUser';
 import EmailCheckInput from 'components/_other/form/EmailCheckInput';
-import SocialLogin from '@/modules/user/components/auth/SocialLogin';;
+import SocialLogin from '@/modules/userzone/components/auth/SocialLogin';;
 import LoginForm from '@/components/forms/login/LoginForm';
 import styles from './EmailChecker.module.scss';
 import {useTranslation} from "@/app/i18n/client";
