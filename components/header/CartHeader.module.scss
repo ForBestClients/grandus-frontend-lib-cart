@@ -1,7 +1,7 @@
 @use "sass:selector";
 
 .wrapper {
-  @apply mt-4 bg-grey rounded-full overflow-hidden relative flex w-full justify-between items-center flex-col md:flex-row;
+  @apply mt-4 bg-grey rounded-xl md:rounded-full overflow-hidden relative flex w-full justify-between items-center flex-col md:flex-row;
 
   .stepCount {
     @apply w-[20px] h-[20px] relative inline-block text-grey mr-3;
@@ -11,7 +11,7 @@
     @apply flex grow basis-1 justify-center items-center px-3.5 py-3 whitespace-nowrap font-normal  text-font w-full;
 
     &:not(.finished) {
-      @apply -ml-[20px];
+      @apply md:-ml-[20px];
     }
 
     .stepCount {
@@ -31,7 +31,7 @@
 
       &.active {
         //@apply bg-primary text-white rounded-full;
-        @apply bg-alt text-black rounded-full;
+        @apply bg-alt text-black md:rounded-full;
       }
 
       &.finished {
