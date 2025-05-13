@@ -11,7 +11,7 @@ export async function generateMetadata({params}) {
   const {t} = await initTranslations(params?.locale);
 
   return SEO.getDefaultMetaObject(
-      t('Kontaktné informácie'),
+      t('cart.page.contact_info'),
       '',
   );
 }

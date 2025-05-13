@@ -7,7 +7,7 @@ import DeliveryAndPaymentForm from '@/modules/cart/components/DeliveryAndPayment
 export async function generateMetadata({ params }) {
   const { t } = await initTranslations(params?.locale);
 
-  return SEO.getDefaultMetaObject(t('Kontaktné informácie'), '');
+  return SEO.getDefaultMetaObject(t('cart.page.contact_info'), '');
 }
 
 export default async function DeliveryAndPaymentPage(props) {

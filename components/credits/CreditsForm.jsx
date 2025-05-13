@@ -1,143 +1,141 @@
-"use client"
-import toNumber from "lodash/toNumber";
-import get from "lodash/get";
-import styles from "@/modules/cart/components/credits/CreditsForm.module.scss";
-import isEmpty from "lodash/isEmpty";
-import NumberInput from "@/components/_other/form/NumberInput";
-import Button from "@/components/_other/button/Button";
-import Alert from "@/components/_other/alert/Alert";
-import {useState} from "react";
-import find from "lodash/find";
-import useWebInstance from "@/grandus-lib/hooks/useWebInstance";
-import useStaticBlock from "@/grandus-lib/hooks/useStaticBlock";
-import useCart from "@/grandus-lib/hooks/useCart";
-import useUser from "@/grandus-lib/hooks/useUser";
-import {useTranslation} from "@/app/i18n/client";
+'use client';
+import toNumber from 'lodash/toNumber';
+import get from 'lodash/get';
+import styles from '@/modules/cart/components/credits/CreditsForm.module.scss';
+import isEmpty from 'lodash/isEmpty';
+import NumberInput from '@/components/_other/form/NumberInput';
+import Button from '@/components/_other/button/Button';
+import Alert from '@/components/_other/alert/Alert';
+import { useState } from 'react';
+import find from 'lodash/find';
+import useWebInstance from '@/grandus-lib/hooks/useWebInstance';
+import useStaticBlock from '@/grandus-lib/hooks/useStaticBlock';
+import useCart from '@/grandus-lib/hooks/useCart';
+import useUser from '@/grandus-lib/hooks/useUser';
+import { useTranslation } from '@/app/i18n/client';
 
 const Feedback = ({ touched, status, message }) => {
-    if (touched && message && status) {
-        return (
-            <Alert type={status} message={message} className={styles?.feedback} />
-        );
-    }
-    return null;
+  if (touched && message && status) {
+    return (
+      <Alert type={status} message={message} className={styles?.feedback} />
+    );
+  }
+  return null;
 };
 
 const CreditsForm = ({}) => {
 
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    const { user } = useUser();
-    const { staticBlocks } = useStaticBlock();
-    const { cart, mutateCart, isLoading, applyCredits } = useCart();
-    const { webInstance, settings } = useWebInstance();
+  const { user } = useUser();
+  const { staticBlocks } = useStaticBlock();
+  const { cart, mutateCart, isLoading, applyCredits } = useCart();
+  const { webInstance, settings } = useWebInstance();
 
-    const fieldName = 'credits';
-    const cartCredit = get(cart, 'credit');
-    const cartHasCredit = !isEmpty(cartCredit);
+  const fieldName = 'credits';
+  const cartCredit = get(cart, 'credit');
+  const cartHasCredit = !isEmpty(cartCredit);
 
-    const [touched, setTouched] = useState(cartHasCredit);
-    const [value, setValue] = useState(cartCredit);
-    const [message, setMessage] = useState();
-    const [validateStatus, setValidateStatus] = useState(
-        cartHasCredit ? 'success' : '',
-    );
-
-
-    const cartCreditDescription = get(
-        find(staticBlocks, ['hash', 'cart_credit_description']),
-        'content',
-        '',
-    );
+  const [touched, setTouched] = useState(cartHasCredit);
+  const [value, setValue] = useState(cartCredit);
+  const [message, setMessage] = useState();
+  const [validateStatus, setValidateStatus] = useState(
+    cartHasCredit ? 'success' : '',
+  );
 
 
-    const handleChange = async value => {
-        setValue(value);
-        setTouched(true);
-    };
+  const cartCreditDescription = get(
+    find(staticBlocks, ['hash', 'cart_credit_description']),
+    'content',
+    '',
+  );
 
-    const handleBlur = e => {
-        setValue(e.target.value);
-        setTouched(true);
-        setMessage(null);
-    };
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setTouched(true);
-        setMessage(null);
-        setValidateStatus(null);
+  const handleChange = async value => {
+    setValue(value);
+    setTouched(true);
+  };
 
-        if (toNumber(value) < 0) {
-            setValidateStatus('danger');
-            setMessage('Hodnota kupónu musí byť väčšia alebo rovná 0');
-        }
+  const handleBlur = e => {
+    setValue(e.target.value);
+    setTouched(true);
+    setMessage(null);
+  };
 
-        const response = await applyCredits(value);
-        if (response) {
-            if (!get(response, 'status', true)) {
-                setValidateStatus('danger');
-            } else {
-                setValidateStatus('success');
-                mutateCart(get(response, 'data'), false);
-            }
-            setMessage(get(response, 'message', ''));
-        }
-    };
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setTouched(true);
+    setMessage(null);
+    setValidateStatus(null);
 
-    return (
-        <div className={styles?.creditsForm}>
-            {!isEmpty(cartCreditDescription) ? (
-                <div dangerouslySetInnerHTML={{__html: cartCreditDescription}}/>
-            ) : (
-                <div>
-                    {t(
-                        'Sekcia slúži na aplikovanie kreditov ({{name}}), ktoré ste nazbierali za svoje nákupy. Na základe množstva aplikovaných kreditov sa Vám z celkovej ceny odráta čiastka uhradená kreditom. Hodnota jedného kreditu je {{value}} {{currency}} (1 kredit = {{value}} {{currency}}).',
-                        {
-                            name: settings?.credits_name,
-                            value: settings?.credits_value,
-                            currency: webInstance?.currencySymbol,
-                        },
-                    )}
-                </div>
-            )}
+    if (toNumber(value) < 0) {
+      setValidateStatus('danger');
+      setMessage(t('credits_form.credits.min_value'));
+    }
 
-            <Feedback
-                touched={touched}
-                status={validateStatus}
-                message={message}
-            />
+    const response = await applyCredits(value);
+    if (response) {
+      if (!get(response, 'status', true)) {
+        setValidateStatus('danger');
+      } else {
+        setValidateStatus('success');
+        mutateCart(get(response, 'data'), false);
+      }
+      setMessage(get(response, 'message', ''));
+    }
+  };
 
-            <form onSubmit={handleSubmit}>
-                <NumberInput
-                    showButtons={false}
-                    inputProps={{
-                        id: fieldName,
-                        name: fieldName,
-                        value: value,
-                        placeholder: 'Vložiť počet kreditov',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        groupClassName: styles?.inputGroup,
-                        className: styles?.input,
-                        min: 0,
-                        max: get(user, 'credit', 0),
-                    }}
-                />
-                <span className="px-3">z {user?.credit}</span>
-                <Button
-                    htmlType="submit"
-                    size="smallWithNormalText"
-                    type={value ? 'primary' : 'disabled'}
-                    // size="small"
-                    disabled={value <= 0 || isLoading}
-                    loading={isLoading}
-                >
-                    Použiť
-                </Button>
-            </form>
+  return (
+    <div className={styles?.creditsForm}>
+      {!isEmpty(cartCreditDescription) ? (
+        <div dangerouslySetInnerHTML={{ __html: cartCreditDescription }} />
+      ) : (
+        <div>
+          {t('credits_form.description', {
+              name: settings?.credits_name,
+              value: settings?.credits_value,
+              currency: webInstance?.currencySymbol,
+            },
+          )}
         </div>
-    )
-}
+      )}
+
+      <Feedback
+        touched={touched}
+        status={validateStatus}
+        message={message}
+      />
+
+      <form onSubmit={handleSubmit}>
+        <NumberInput
+          showButtons={false}
+          inputProps={{
+            id: fieldName,
+            name: fieldName,
+            value: value,
+            placeholder: t('credits_form.credits.placeholder'),
+            onChange: handleChange,
+            onBlur: handleBlur,
+            groupClassName: styles?.inputGroup,
+            className: styles?.input,
+            min: 0,
+            max: get(user, 'credit', 0),
+          }}
+        />
+        <span className="px-3">{t('credits_form.credits.from', { credits: user?.credit })}</span>
+        <Button
+          htmlType="submit"
+          size="smallWithNormalText"
+          type={value ? 'primary' : 'disabled'}
+          // size="small"
+          disabled={value <= 0 || isLoading}
+          loading={isLoading}
+        >
+          {t('credits_form.submit.button')}
+        </Button>
+      </form>
+    </div>
+  );
+};
 
 export default CreditsForm;
