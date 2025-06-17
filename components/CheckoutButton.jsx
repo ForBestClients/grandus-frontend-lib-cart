@@ -32,7 +32,7 @@ const ButtonContent = ({ step }) => {
       break;
   }
 
-  return <span>{buttonText}</span>
+  return <span>{buttonText}</span>;
 };
 
 export const BackButtonContent = ({ step }) => {
@@ -48,19 +48,26 @@ export const BackButtonContent = ({ step }) => {
 };
 
 const OrderButton = ({ setIsProcessing, contact }) => {
-  const { cart, createOrder, removeContact, cartDestroy, isLoading } = useCart();
+  const { cart, createOrder, removeContact, cartDestroy, isLoading } =
+    useCart();
   const { t } = useTranslation();
 
-  const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] = useState(false);
+  const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] =
+    useState(false);
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
   const [marketingAgreement, setMarketingAgreement] = useState(false);
   const [errors, setErrors] = useState({});
 
   const { webInstance } = useWebInstance();
   const settings = get(webInstance, 'globalSettings');
-  const requirePrivacyPolicyAgreement = toNumber(get(settings, 'require_consent_for_processing_personal_data'));
+  const requirePrivacyPolicyAgreement = toNumber(
+    get(settings, 'require_consent_for_processing_personal_data'),
+  );
 
-  const providerSchema = getValidationScheme(find(cart?.deliveryOptions, { id: cart?.delivery?.id })?.serviceProviderType);
+  const providerSchema = getValidationScheme(
+    find(cart?.deliveryOptions, { id: cart?.delivery?.id })
+      ?.serviceProviderType,
+  );
   const schemaFields = {
     termsAndConditions: yup
       .bool()
@@ -78,6 +85,8 @@ const OrderButton = ({ setIsProcessing, contact }) => {
 
   const schema = yup.object().shape(schemaFields);
 
+  const isReadyForSubmit = cart?.delivery?.id && cart?.payment?.id;
+
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -90,7 +99,8 @@ const OrderButton = ({ setIsProcessing, contact }) => {
       specificDeliveryType: cart?.specificDeliveryType ?? null,
     };
 
-    schema.validate(values, { abortEarly: false })
+    schema
+      .validate(values, { abortEarly: false })
       .then(async _ => {
         setIsProcessing(true);
         await createOrder(values, response => {
@@ -98,10 +108,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
             .then(async order => {
               if (!isEmpty(order) && get(order, 'accessToken')) {
                 try {
-                  await Promise.all([
-                    removeContact(),
-                    cartDestroy(),
-                  ]);
+                  await Promise.all([removeContact(), cartDestroy()]);
                 } catch (err) {
                   console.error(err);
                 }
@@ -122,7 +129,6 @@ const OrderButton = ({ setIsProcessing, contact }) => {
               } else if (order?.messages) {
                 const orderErrors = {};
                 forEach(get(order, 'messages', []), (error, key) => {
-
                   if (error?.field) {
                     orderErrors[error?.field] = error?.message;
                   } else {
@@ -138,76 +144,82 @@ const OrderButton = ({ setIsProcessing, contact }) => {
               setIsProcessing(false);
             });
         });
-      }).catch(e => {
-      let err = {};
+      })
+      .catch(e => {
+        let err = {};
 
-      e.inner.forEach((error) => {
-        err[error.path] = error.message;
+        e.inner.forEach(error => {
+          err[error.path] = error.message;
+        });
+
+        setErrors(err);
       });
-
-      setErrors(err);
-    });
   };
   return (
     <div className="mt-4">
       <div className="ml-2">
-        {requirePrivacyPolicyAgreement
-          ? (
-            <CheckboxInput
-              label={
-                <>
-                  {t('cart_summary.privacy_policy.label')}
-                  {get(settings, 'conditions_for_processing_personal_data_link')
-                    ? <>
-                      {' '} (
-                      <Link
-                        className="underline"
-                        href={get(settings, 'conditions_for_processing_personal_data_link', '#')}
-                        target="_blank"
-                        passHref
-                      >
-                        {t('cart_summary.privacy_policy.read_more')}
-                      </Link>)
-                    </>
-                    : null}
-                </>
-              }
-              error={errors?.privacyPolicy}
-              inputProps={{
-                id: 'privacy_policy',
-                name: 'privacy_policy',
-                onChange: e => {
-                  setPrivacyPolicyAccepted(e.target.checked);
-                },
-                value: 1,
-                checked: privacyPolicyAccepted,
-                groupClassName: 'indent-label',
-              }}
-            />
-          )
-          : null
-        }
+        {requirePrivacyPolicyAgreement ? (
+          <CheckboxInput
+            label={
+              <>
+                {t('cart_summary.privacy_policy.label')}
+                {get(
+                  settings,
+                  'conditions_for_processing_personal_data_link',
+                ) ? (
+                  <>
+                    {' '}
+                    (
+                    <Link
+                      className="underline"
+                      href={get(
+                        settings,
+                        'conditions_for_processing_personal_data_link',
+                        '#',
+                      )}
+                      target="_blank"
+                      passHref
+                    >
+                      {t('cart_summary.privacy_policy.read_more')}
+                    </Link>
+                    )
+                  </>
+                ) : null}
+              </>
+            }
+            error={errors?.privacyPolicy}
+            inputProps={{
+              id: 'privacy_policy',
+              name: 'privacy_policy',
+              onChange: e => {
+                setPrivacyPolicyAccepted(e.target.checked);
+              },
+              value: 1,
+              checked: privacyPolicyAccepted,
+              groupClassName: 'indent-label',
+            }}
+          />
+        ) : null}
 
         <CheckboxInput
           label={
             <>
               {t('cart_summary.terms_and_conditions.label')}
-              {get(settings, 'terms_and_conditions_link')
-                ? <>
-                  {' '} (<Link
-                  className="underline"
-                  href={get(
-                    settings,
-                    'terms_and_conditions_link',
-                    '#',
-                  )}
-                  target="_blank"
-                  passHref
-                >
-                  {t('cart_summary.terms_and_conditions.read_more')}
-                </Link>)
+              {get(settings, 'terms_and_conditions_link') ? (
+                <>
+                  {' '}
+                  (
+                  <Link
+                    className="underline"
+                    href={get(settings, 'terms_and_conditions_link', '#')}
+                    target="_blank"
+                    passHref
+                  >
+                    {t('cart_summary.terms_and_conditions.read_more')}
+                  </Link>
+                  )
                 </>
-                : null}
+              ) : null}
             </>
           }
           error={errors?.termsAndConditions}
@@ -224,8 +236,16 @@ const OrderButton = ({ setIsProcessing, contact }) => {
         />
       </div>
       <div className={'mt-4'}>
-        {!isEmpty(errors) ? map(errors, (error, field) => <Alert type="error" message={error} key={field}
-                                                                 className="mb-2" />) : null}
+        {!isEmpty(errors)
+          ? map(errors, (error, field) => (
+              <Alert
+                type="error"
+                message={error}
+                key={field}
+                className="mb-2"
+              />
+            ))
+          : null}
       </div>
 
       <div className={'mt-4 text-center'}>
@@ -233,6 +253,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
           fullWidth
           loading={isLoading}
           onClick={handleSubmit}
+          disabled={!isReadyForSubmit}
         >
           <ButtonContent step={2} />
         </Button>
@@ -246,25 +267,27 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
   const { cart, isLoading } = useCart();
 
   if (step === 2) {
-    return <>
-      <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
-      <Button
-        className="mt-3"
-        type="link"
-        fullWidth
-        htmlType={'a'}
-        href={CART_STEPS[step - 1]}
-        loading={isLoading}
-        prefetch
-      >
-        <BackButtonContent step={step} />
-      </Button>
-    </>;
+    return (
+      <>
+        <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
+        <Button
+          className="mt-3"
+          type="link"
+          fullWidth
+          htmlType={'a'}
+          href={CART_STEPS[step - 1]}
+          loading={isLoading}
+          prefetch
+        >
+          <BackButtonContent step={step} />
+        </Button>
+      </>
+    );
   }
 
   return (
     <div id={'contact_confirm'} className={'mt-4 text-center'}>
-      {step !== 1 ?
+      {step !== 1 ? (
         <Button
           type="primary"
           fullWidth
@@ -274,8 +297,11 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
           prefetch
         >
           <ButtonContent step={step} />
-        </Button> : ''}
-      {step > 1 ?
+        </Button>
+      ) : (
+        ''
+      )}
+      {step > 1 ? (
         <Button
           type="link"
           fullWidth
@@ -286,7 +312,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
         >
           <BackButtonContent step={step} />
         </Button>
-        : null}
+      ) : null}
     </div>
   );
 };
