@@ -9,7 +9,6 @@ import upperFirst from 'lodash/upperFirst';
 import Link from 'next/link';
 
 import styles from './CartHeader.module.scss';
-import LocalizedLink from '@/components/localizedLink/LocalizedLink';
 
 const CartHeader = () => {
   let step = useCartStep();
@@ -67,27 +66,27 @@ const CartHeader = () => {
       {steps.map(stepItem => {
         if (stepItem.step === currentStep.step) {
           return (
-            <LocalizedLink
+            <Link
               href={stepItem?.link}
               key={`step-${stepItem?.step}`}
               className={`${styles.navLink} ${styles.active}`}
             >
               <span className={styles.stepCount}>{stepItem.step}</span>
               <span>{stepItem?.text}</span>
-            </LocalizedLink>
+            </Link>
           );
         }
 
         if (stepItem.step < currentStep.step) {
           return (
-            <LocalizedLink
+            <Link
               href={stepItem?.link}
               key={`step-${stepItem?.step}`}
               className={`${styles.navLink} ${styles.finished}`}
             >
               <span className={styles.stepCount}>{stepItem.step}</span>
               <span>{stepItem?.text}</span>
-            </LocalizedLink>
+            </Link>
           );
         }
 

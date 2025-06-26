@@ -264,7 +264,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
 
   return (
     <div id={'contact_confirm'} className={'mt-4 text-center'}>
-      {step !== 1 ?
+      {step > 1 ?
         <Button
           type="primary"
           fullWidth

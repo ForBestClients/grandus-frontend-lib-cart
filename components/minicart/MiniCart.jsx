@@ -36,10 +36,12 @@ export const MiniCart = ({ isOpen, handleClose }) => {
   }
 
   return createPortal(
-      <div className={`fixed left-0 top-0 w-full h-full z-50 bg-grey/70 transition-all backdrop-blur-sm
-      duration-500 pointer-events-none ${!isOpen ? 'opacity-0' : 'opacity-1'}`}>
-        <div
-          className={`
+    <div
+      className={`fixed left-0 top-0 w-full h-full z-50 bg-grey/70 transition-all backdrop-blur-sm
+      duration-500 pointer-events-none ${!isOpen ? 'opacity-0' : 'opacity-1'}`}
+    >
+      <div
+        className={`
             absolute
             bottom-0 w-full h-fit
             sm:right-0 sm:w-[600px] sm:h-full
@@ -50,27 +52,52 @@ export const MiniCart = ({ isOpen, handleClose }) => {
             pointer-events-auto
             transition-all
             duration-1000
-            ${isOpen ? 'translate-0 translate-y-0' : 'sm:translate-x-full translate-y-full sm:translate-y-0'}
+            ${
+              isOpen
+                ? 'translate-0 translate-y-0'
+                : 'sm:translate-x-full translate-y-full sm:translate-y-0'
+            }
           `}
+      >
+        <span
+          className={
+            'absolute right-[50px] top-7 flex items-center justify-center'
+          }
         >
-          <span className={'absolute right-[50px] top-7 flex items-center justify-center'}>
-            <Button type="text" onClick={handleClose}>
-              <CloseIcon className={'h-6 text-grey/80 hover:text-font w-auto'} />
-            </Button>
-          </span>
-          <div>
-            <h2 className={'flex gap-8 items-center text-xl font-semibold'}>
-              <CartIcon className={'h-8 w-auto'} />
-              {t('cart.your_cart')}
-            </h2>
-            <Divider className="my-8" />
-            <MiniCartItems />
-          </div>
-          <CustomButton type={'primary'} fullWidth  className="mt-6" htmlType={'a'} href={CART_STEPS[0]} icon={<CartIcon />}>
-            {t('cart.proceed_to_cart')}
-          </CustomButton>
+          <Button type="text" onClick={handleClose}>
+            <CloseIcon className={'h-6 text-grey/80 hover:text-font w-auto'} />
+          </Button>
+        </span>
+        <div>
+          <h2 className={'flex gap-8 items-center text-xl font-semibold'}>
+            <CartIcon className={'h-8 w-auto'} />
+            {t('cart.your_cart')}
+          </h2>
+          <Divider className="my-8" />
+          <MiniCartItems />
         </div>
-      </div>,
-      document.getElementById('mini-cart-drawer'),
+        <CustomButton
+          type={'primary'}
+          fullWidth
+          className="mt-6"
+          htmlType={'a'}
+          href={CART_STEPS[0]}
+          icon={<CartIcon />}
+        >
+          {t('cart.proceed_to_cart')}
+        </CustomButton>
+
+        <CustomButton
+          type={'invertPrimary'}
+          fullWidth
+          className="mt-6"
+          onClick={handleClose}
+          icon={null}
+        >
+          {t('cart.continue_shopping')}
+        </CustomButton>
+      </div>
+    </div>,
+    document.getElementById('mini-cart-drawer'),
   );
 };
