@@ -3,19 +3,43 @@
 import Price from '@/components/price/Price';
 import get from 'lodash/get';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
+import useStaticBlock from '@/grandus-lib/hooks/useStaticBlock';
+import Image from '@/grandus-utils/wrappers/image/Image';
 
 const CartSummaryItemVirtual = ({ item }) => {
+  const { staticBlocks } = useStaticBlock({
+    hash: 'cart_insurance_title',
+    expand: 'photo',
+  });
+
+  let photo = null;
+
+  if (get(item, 'parameters.productId') === 'cart_insurance') {
+    photo = get(staticBlocks, '[0].photo');
+  }
+
   return (
     <>
       <div className="col col-span-3 p-2 ps-0 flex gap-4 items-center h-full relative">
         <div className="w-[50px] h-[60px] bg-grey flex-shrink-0">
-          <PlaceHolderImage
-            width={100}
-            height={120}
-            type={'jpg'}
-            title={get(item, 'parameters.name', 'Virtual item')}
-            alt={get(item, 'parameters.name', 'Virtual item')}
-          />
+          {photo ? (
+            <Image
+              width={100}
+              height={120}
+              photo={photo}
+              type={'jpg'}
+              title={get(item, 'parameters.name', 'Virtual item')}
+              alt={get(item, 'parameters.name', 'Virtual item')}
+            />
+          ) : (
+            <PlaceHolderImage
+              width={100}
+              height={120}
+              type={'jpg'}
+              title={get(item, 'parameters.name', 'Virtual item')}
+              alt={get(item, 'parameters.name', 'Virtual item')}
+            />
+          )}
         </div>
         <p>{get(item, 'parameters.name', 'Virtual item')}</p>
       </div>

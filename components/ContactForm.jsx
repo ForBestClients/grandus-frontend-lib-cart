@@ -22,7 +22,11 @@ import {
   VAT_NUMBER_REGEX,
   STREET_REGEX,
 } from 'grandus-lib/constants/ValidatorConstants';
-import { ZIP_REGEX, PHONE_NUMBER_REGEX, CART_STEPS } from 'constants/AppConstants';
+import {
+  ZIP_REGEX,
+  PHONE_NUMBER_REGEX,
+  CART_STEPS,
+} from 'constants/AppConstants';
 
 import TextInput from '@/components/_other/form/TextInput';
 import CheckboxInput from '@/components/_other/form/CheckboxInput';
@@ -68,11 +72,11 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
     return toNumber(countryId);
   };
 
-  const cartContainsDigitalProduct = find(cart?.items, item => {
+  const cartContainsDigitalProduct =
+    find(cart?.items, item => {
       const kindName = item?.product?.kind?.name;
       return kindName === 'digitalny produkt';
-    },
-  ) !== undefined;
+    }) !== undefined;
 
   const formProps = {
     enableReinitialize: true,
@@ -85,12 +89,19 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
       phone: contact?.phone || user?.attributes?.phone || '',
       email: contact?.email || user?.attributes?.email || '',
       countryId: getDefaultCountryValue(),
-      isCompany: contact?.isCompany || !!(contact?.ico || contact?.companyName) || !!(user?.attributes?.companyName || user?.attributes?.ico) || false,
+      isCompany:
+        contact?.isCompany ||
+        !!(contact?.ico || contact?.companyName) ||
+        !!(user?.attributes?.companyName || user?.attributes?.ico) ||
+        false,
       companyName: contact?.companyName || user?.attributes?.companyName || '',
       ico: contact?.ico || user?.attributes?.ico || '',
       dic: contact?.dic || user?.attributes?.dic || '',
       icDPH: contact?.icDPH || user?.attributes?.icDPH || '',
-      createAccount: (isEmpty(user) && cartContainsDigitalProduct) || contact?.createAccount || false,
+      createAccount:
+        (isEmpty(user) && cartContainsDigitalProduct) ||
+        contact?.createAccount ||
+        false,
       registerPassword: contact?.registerPassword || '',
       registerPasswordConfirm: contact?.registerPasswordConfirm || '',
       isDifferentDeliveryAddress: contact?.isDifferentDeliveryAddress || false,
@@ -144,10 +155,7 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
         .string()
         .trim()
         .required(t('contact_form.zip.required_validation'))
-        .matches(
-          ZIP_REGEX,
-          t('contact_form.zip.matches_validation'),
-        ),
+        .matches(ZIP_REGEX, t('contact_form.zip.matches_validation')),
       phone: yup
         .string()
         .trim()
@@ -183,7 +191,10 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
           is: true,
           then: schema =>
             schema
-              .oneOf([yup.ref('registerPassword'), null], t('contact_form.password_confirm.confirm_validation'))
+              .oneOf(
+                [yup.ref('registerPassword'), null],
+                t('contact_form.password_confirm.confirm_validation'),
+              )
               .required(t('contact_form.password_confirm.required_validation')),
         }),
       isCompany: yup.bool().transform(v => !!toNumber(v)), //convert to boolean before validation
@@ -193,7 +204,8 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
         .trim()
         .when('isCompany', {
           is: true,
-          then: schema => schema.required(t('contact_form.company_name.required_validation')),
+          then: schema =>
+            schema.required(t('contact_form.company_name.required_validation')),
         }),
       ico: yup
         .string()
@@ -269,7 +281,10 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
         })
         .when('isDifferentDeliveryAddress', {
           is: true,
-          then: schema => schema.required(t('contact_form.delivery_street.required_validation')),
+          then: schema =>
+            schema.required(
+              t('contact_form.delivery_street.required_validation'),
+            ),
         }),
       deliveryCity: yup
         .string()
@@ -295,7 +310,10 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
           then: schema =>
             schema
               .required(t('contact_form.delivery_zip.required_validation'))
-              .matches(ZIP_REGEX, t('contact_form.delivery_zip.matches_validation')),
+              .matches(
+                ZIP_REGEX,
+                t('contact_form.delivery_zip.matches_validation'),
+              ),
         }),
       deliveryPhone: yup
         .string()
@@ -317,12 +335,14 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
         .nullable()
         .when('isDifferentDeliveryAddress', {
           is: true,
-          then: schema => schema.required(t('contact_form.delivery_country.required_validation')),
+          then: schema =>
+            schema.required(
+              t('contact_form.delivery_country.required_validation'),
+            ),
         }),
       note: yup.string().trim().nullable(),
     }),
     onSubmit: async (values, { setSubmitting }) => {
-
       const newContact = { ...contact, ...values };
 
       if (newContact?.createAccount) {
@@ -395,33 +415,39 @@ const ContactForm = ({ countries, towns, contact, contactFormRef }) => {
 };
 
 const Form = ({
-                values,
-                errors,
-                touched,
-                isSubmitting,
-                isValid,
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                setFieldValue,
-                setFieldTouched,
-                countries,
-                towns,
-                user = null,
-                isRedirecting = false,
-                emailExists,
-                setEmailExists,
-                innerRef,
-                isRegistrationRequired,
-              }) => {
+  values,
+  errors,
+  touched,
+  isSubmitting,
+  isValid,
+  handleSubmit,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+  setFieldTouched,
+  countries,
+  towns,
+  user = null,
+  isRedirecting = false,
+  emailExists,
+  setEmailExists,
+  innerRef,
+  isRegistrationRequired,
+}) => {
   const { t } = useTranslation();
   const { isLoading } = useCart();
   const step = useCartStep();
   const [buttonContainer, setButtonContainer] = useState(null);
 
-  const { staticBlocks: onlineProductCartMessages } = useStaticBlock({ group: 'online_product_cart_messages' });
-  const emailExistsLoginMessage = find(onlineProductCartMessages, { hash: 'ONLINE_PRODUCT_EMAIL_EXISTS_LOGIN' });
-  const createAccountMessage = find(onlineProductCartMessages, { hash: 'ONLINE_PRODUCT_CREATE_ACCOUNT' });
+  const { staticBlocks: onlineProductCartMessages } = useStaticBlock({
+    group: 'online_product_cart_messages',
+  });
+  const emailExistsLoginMessage = find(onlineProductCartMessages, {
+    hash: 'ONLINE_PRODUCT_EMAIL_EXISTS_LOGIN',
+  });
+  const createAccountMessage = find(onlineProductCartMessages, {
+    hash: 'ONLINE_PRODUCT_CREATE_ACCOUNT',
+  });
 
   const isCompany = !!toNumber(values?.isCompany);
   const isDifferentDeliveryAddress = !!toNumber(
@@ -429,7 +455,9 @@ const Form = ({
   );
 
   useEffect(() => {
-    setButtonContainer(document ? document.getElementById('contact_confirm') : null);
+    setButtonContainer(
+      document ? document.getElementById('contact_confirm') : null,
+    );
   }, []);
 
   return (
@@ -439,11 +467,20 @@ const Form = ({
           <LoggedUserInfo />
         ) : (
           <>
-            {isRegistrationRequired && emailExists && emailExistsLoginMessage
-              ? <Alert type="info"
-                       message={<div dangerouslySetInnerHTML={{ __html: emailExistsLoginMessage.content }} />} />
-              : null
-            }
+            {isRegistrationRequired &&
+            emailExists &&
+            emailExistsLoginMessage ? (
+              <Alert
+                type="info"
+                message={
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: emailExistsLoginMessage.content,
+                    }}
+                  />
+                }
+              />
+            ) : null}
             <EmailChecker
               email={values?.email}
               emailExists={emailExists}
@@ -465,105 +502,225 @@ const Form = ({
           </>
         )}
       </Box>
-      {isEmpty(user) && emailExists && isRegistrationRequired
-        ? null
-        : (
-          <form onSubmit={handleSubmit}>
-            <Box className={'mb-8'}>
-              <div className={'grid grid-cols-2 gap-4 mt-4'}>
-                <div className={'col-span-2 md:col-span-1'}>
-                  <TextInput
-                    required
-                    label={t('contact_form.firstname.label')}
-                    error={
-                      touched.firstname && errors.firstname ? errors.firstname : ''
-                    }
-                    inputProps={{
-                      id: 'firstname',
-                      name: 'firstname',
-                      onChange: handleChange,
-                      onBlur: handleBlur,
-                      value: values?.firstname,
-                      autoComplete: 'given-name',
-                      placeholder: t('contact_form.firstname.placeholder'),
-                    }}
-                  />
-                </div>
-                <div className={'col-span-2 md:col-span-1'}>
-                  <TextInput
-                    required
-                    label={t('contact_form.surname.label')}
-                    error={touched.surname && errors.surname ? errors.surname : ''}
-                    inputProps={{
-                      id: 'surname',
-                      name: 'surname',
-                      onChange: handleChange,
-                      onBlur: handleBlur,
-                      value: values?.surname,
-                      autoComplete: 'family-name',
-                      placeholder: t('contact_form.surname.placeholder'),
-                    }}
-                  />
-                </div>
-                <div className={'col col-span-2'}>
-                  <TextInput
-                    required
-                    label={t('contact_form.phone.label')}
-                    hint={t('contact_form.phone.hint')}
-                    error={touched.phone && errors.phone ? errors.phone : ''}
-                    inputProps={{
-                      id: 'phone',
-                      name: 'phone',
-                      type: 'tel',
-                      // pattern: "[0-9]*",
-                      onChange: handleChange,
-                      onBlur: handleBlur,
-                      value: values?.phone,
-                      autoComplete: 'tel',
-                      placeholder: t('contact_form.phone.placeholder'),
-                    }}
-                    setFieldTouched={setFieldTouched}
-                    setFieldValue={setFieldValue}
-                  />
-                </div>
+      {isEmpty(user) && emailExists && isRegistrationRequired ? null : (
+        <form onSubmit={handleSubmit}>
+          <Box className={'mb-8'}>
+            <div className={'grid grid-cols-2 gap-4 mt-4'}>
+              <div className={'col-span-2 md:col-span-1'}>
+                <TextInput
+                  required
+                  label={t('contact_form.firstname.label')}
+                  error={
+                    touched.firstname && errors.firstname
+                      ? errors.firstname
+                      : ''
+                  }
+                  inputProps={{
+                    id: 'firstname',
+                    name: 'firstname',
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.firstname,
+                    autoComplete: 'given-name',
+                    placeholder: t('contact_form.firstname.placeholder'),
+                  }}
+                />
+              </div>
+              <div className={'col-span-2 md:col-span-1'}>
+                <TextInput
+                  required
+                  label={t('contact_form.surname.label')}
+                  error={
+                    touched.surname && errors.surname ? errors.surname : ''
+                  }
+                  inputProps={{
+                    id: 'surname',
+                    name: 'surname',
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.surname,
+                    autoComplete: 'family-name',
+                    placeholder: t('contact_form.surname.placeholder'),
+                  }}
+                />
+              </div>
+              <div className={'col col-span-2'}>
+                <TextInput
+                  required
+                  label={t('contact_form.phone.label')}
+                  hint={t('contact_form.phone.hint')}
+                  error={touched.phone && errors.phone ? errors.phone : ''}
+                  inputProps={{
+                    id: 'phone',
+                    name: 'phone',
+                    type: 'tel',
+                    // pattern: "[0-9]*",
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.phone,
+                    autoComplete: 'tel',
+                    placeholder: t('contact_form.phone.placeholder'),
+                  }}
+                  setFieldTouched={setFieldTouched}
+                  setFieldValue={setFieldValue}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-4 mt-4 pb-4">
+              <div className="col col-span-4 md:col-span-3">
+                <TownInput
+                  required
+                  label={t('contact_form.city.label')}
+                  error={touched.city && errors.city ? errors.city : ''}
+                  inputProps={{
+                    id: 'city',
+                    name: 'city',
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.city,
+                    autoComplete: 'address-level2',
+                    placeholder: t('contact_form.city.placeholder'),
+                    options: map(towns, option => ({
+                      value: option?.id,
+                      label: option?.name,
+                    })),
+                  }}
+                />
+              </div>
+              <div className="col col-span-4 md:col-span-1">
+                <TextInput
+                  required
+                  label={t('contact_form.zip.label')}
+                  error={touched.zip && errors.zip ? errors.zip : ''}
+                  inputProps={{
+                    id: 'zip',
+                    name: 'zip',
+                    type: 'text',
+                    pattern: '[0-9]*',
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.zip,
+                    autoComplete: 'postal-code',
+                    placeholder: t('contact_form.zip.placeholder'),
+                  }}
+                />
               </div>
 
-              <div className="grid grid-cols-4 gap-4 mt-4 pb-4">
-                <div className="col col-span-4 md:col-span-3">
-                  <TownInput
+              <div className={'col col-span-4'}>
+                <TextInput
+                  required
+                  label={t('contact_form.street.label')}
+                  error={touched.street && errors.street ? errors.street : ''}
+                  inputProps={{
+                    id: 'street',
+                    name: 'street',
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.street,
+                    autoComplete: 'address-line1',
+                    placeholder: t('contact_form.street.placeholder'),
+                  }}
+                />
+              </div>
+
+              <div className="col col-span-4">
+                <Select2Input
+                  label={t('contact_form.country.label')}
+                  error={
+                    touched.countryId && errors.countryId
+                      ? errors.countryId
+                      : ''
+                  }
+                  inputProps={{
+                    id: 'countryId',
+                    name: 'countryId',
+                    value: values?.countryId,
+                    onChange: selectedValue => {
+                      setFieldValue('countryId', selectedValue?.value);
+                      setFieldTouched('countryId');
+                    },
+                    onBlur: handleBlur,
+                    autoComplete: 'country',
+                    options: map(countries, country => {
+                      return {
+                        value: country?.id,
+                        label: country?.name,
+                      };
+                    }),
+                    placeholder: t('contact_form.country.placeholder'),
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-3 pl-2 md:pl-2">
+              <CheckboxInput
+                label={t('contact_form.delivery_address.label')}
+                error={
+                  touched.isDifferentDeliveryAddress &&
+                  errors.isDifferentDeliveryAddress
+                    ? errors.isDifferentDeliveryAddress
+                    : ''
+                }
+                inputProps={{
+                  id: 'isDifferentDeliveryAddress',
+                  name: 'isDifferentDeliveryAddress',
+                  onChange: handleChange,
+                  onBlur: handleBlur,
+                  value: 1,
+                  checked: isDifferentDeliveryAddress,
+                }}
+              />
+            </div>
+
+            <section
+              className={`${!isDifferentDeliveryAddress ? 'hidden' : 'block'}`}
+            >
+              <h4 className="text-lg ms-1.5 mt-6 font-bold mb-3">
+                {t('contact_form.delivery_address.title')}
+              </h4>
+
+              <div className={'grid grid-cols-4 gap-4 mt-4 pb-4'}>
+                <div className={'col col-span-4 md:col-span-2'}>
+                  <TextInput
                     required
-                    label={t('contact_form.city.label')}
-                    error={touched.city && errors.city ? errors.city : ''}
+                    label={t('contact_form.delivery_name.label')}
+                    error={
+                      touched.deliveryName && errors.deliveryName
+                        ? errors.deliveryName
+                        : ''
+                    }
                     inputProps={{
-                      id: 'city',
-                      name: 'city',
+                      id: 'deliveryName',
+                      name: 'deliveryName',
                       onChange: handleChange,
                       onBlur: handleBlur,
-                      value: values?.city,
-                      autoComplete: 'address-level2',
-                      placeholder: t('contact_form.city.placeholder'),
-                      options: map(towns, option => ({
-                        value: option?.id,
-                        label: option?.name,
-                      })),
+                      value: values?.deliveryName,
+                      autoComplete: 'given-name',
+                      placeholder: t('contact_form.delivery_name.placeholder'),
                     }}
                   />
                 </div>
-                <div className="col col-span-4 md:col-span-1">
+                <div className={'col col-span-4 md:col-span-2'}>
                   <TextInput
                     required
-                    label={t('contact_form.zip.label')}
-                    error={touched.zip && errors.zip ? errors.zip : ''}
+                    label={t('contact_form.delivery_surname.label')}
+                    error={
+                      touched.deliverySurname && errors.deliverySurname
+                        ? errors.deliverySurname
+                        : ''
+                    }
                     inputProps={{
-                      id: 'zip',
-                      name: 'zip',
-                      type: 'text',
-                      pattern: '[0-9]*',
+                      id: 'deliverySurname',
+                      name: 'deliverySurname',
                       onChange: handleChange,
                       onBlur: handleBlur,
-                      value: values?.zip,
-                      autoComplete: 'postal-code',
-                      placeholder: t('contact_form.zip.placeholder'),
+                      value: values?.deliverySurname,
+                      autoComplete: 'family-name',
+                      placeholder: t(
+                        'contact_form.delivery_surname.placeholder',
+                      ),
                     }}
                   />
                 </div>
@@ -571,455 +728,347 @@ const Form = ({
                 <div className={'col col-span-4'}>
                   <TextInput
                     required
-                    label={t('contact_form.street.label')}
-                    error={touched.street && errors.street ? errors.street : ''}
-                    inputProps={{
-                      id: 'street',
-                      name: 'street',
-                      onChange: handleChange,
-                      onBlur: handleBlur,
-                      value: values?.street,
-                      autoComplete: 'address-line1',
-                      placeholder: t('contact_form.street.placeholder'),
-                    }}
-                  />
-                </div>
-
-                <div className="col col-span-4">
-                  <Select2Input
-                    label={t('contact_form.country.label')}
+                    label={t('contact_form.delivery_phone.label')}
+                    hint={t('contact_form.delivery_phone.hint')}
                     error={
-                      touched.countryId && errors.countryId
-                        ? errors.countryId
+                      touched.deliveryPhone && errors.deliveryPhone
+                        ? errors.deliveryPhone
                         : ''
                     }
                     inputProps={{
-                      id: 'countryId',
-                      name: 'countryId',
-                      value: values?.countryId,
+                      id: 'deliveryPhone',
+                      name: 'deliveryPhone',
+                      type: 'tel',
+                      // pattern: "[0-9]*",
+                      onChange: handleChange,
+                      onBlur: handleBlur,
+                      value: values?.deliveryPhone,
+                      autoComplete: 'tel',
+                      placeholder: t('contact_form.delivery_phone.placeholder'),
+                    }}
+                    setFieldTouched={setFieldTouched}
+                    setFieldValue={setFieldValue}
+                  />
+                </div>
+
+                <div className="col-span-4 md:col-span-3">
+                  <TownInput
+                    required
+                    label={t('contact_form.delivery_city.label')}
+                    error={
+                      touched.deliveryCity && errors.deliveryCity
+                        ? errors.deliveryCity
+                        : ''
+                    }
+                    inputProps={{
+                      id: 'deliveryCity',
+                      name: 'deliveryCity',
+                      onChange: handleChange,
+                      onBlur: handleBlur,
+                      value: values?.deliveryCity,
+                      autoComplete: 'address-level2',
+                      placeholder: t('contact_form.delivery_city.placeholder'),
+                      options: map(towns, option => ({
+                        value: option?.id,
+                        label: option?.name,
+                      })),
+                    }}
+                  />
+                </div>
+                <div className="col-span-4 md:col-span-1">
+                  <TextInput
+                    required
+                    label={t('contact_form.delivery_zip.label')}
+                    error={
+                      touched.deliveryZip && errors.deliveryZip
+                        ? errors.deliveryZip
+                        : ''
+                    }
+                    inputProps={{
+                      id: 'deliveryZip',
+                      name: 'deliveryZip',
+                      onChange: handleChange,
+                      onBlur: handleBlur,
+                      value: values?.deliveryZip,
+                      autoComplete: 'postal-code',
+                      placeholder: t('contact_form.delivery_zip.placeholder'),
+                    }}
+                  />
+                </div>
+                <div className={'col-span-4'}>
+                  <TextInput
+                    required
+                    label={t('contact_form.delivery_street.label')}
+                    error={
+                      touched.deliveryStreet && errors.deliveryStreet
+                        ? errors.deliveryStreet
+                        : ''
+                    }
+                    inputProps={{
+                      id: 'deliveryStreet',
+                      name: 'deliveryStreet',
+                      onChange: handleChange,
+                      onBlur: handleBlur,
+                      value: values?.deliveryStreet,
+                      autoComplete: 'address-line1',
+                      placeholder: t(
+                        'contact_form.delivery_street.placeholder',
+                      ),
+                    }}
+                  />
+                </div>
+                <div className="col-span-4">
+                  <Select2Input
+                    label={t('contact_form.delivery_country.label')}
+                    error={
+                      touched.deliveryCountryId && errors.deliveryCountryId
+                        ? errors.deliveryCountryId
+                        : ''
+                    }
+                    inputProps={{
+                      id: 'deliveryCountryId',
+                      name: 'deliveryCountryId',
+                      value: values?.deliveryCountryId,
                       onChange: selectedValue => {
-                        setFieldValue('countryId', selectedValue?.value);
-                        setFieldTouched('countryId');
+                        setFieldValue(
+                          'deliveryCountryId',
+                          selectedValue?.value,
+                        );
+                        setFieldTouched('deliveryCountryId');
                       },
                       onBlur: handleBlur,
                       autoComplete: 'country',
+                      placeholder: t('contact_form.country.placeholder'),
                       options: map(countries, country => {
                         return {
                           value: country?.id,
                           label: country?.name,
                         };
                       }),
-                      placeholder: t('contact_form.country.placeholder'),
                     }}
                   />
                 </div>
               </div>
+            </section>
 
-              <div className="mt-3 pl-2 md:pl-2">
-                <CheckboxInput
-                  label={t('contact_form.delivery_address.label')}
-                  error={
-                    touched.isDifferentDeliveryAddress &&
-                    errors.isDifferentDeliveryAddress
-                      ? errors.isDifferentDeliveryAddress
-                      : ''
-                  }
-                  inputProps={{
-                    id: 'isDifferentDeliveryAddress',
-                    name: 'isDifferentDeliveryAddress',
-                    onChange: handleChange,
-                    onBlur: handleBlur,
-                    value: 1,
-                    checked: isDifferentDeliveryAddress,
-                  }}
-                />
-              </div>
+            <div className="mt-3 pl-2 md:pl-2">
+              <CheckboxInput
+                label={t('contact_form.company.label')}
+                error={
+                  touched.isCompany && errors.isCompany ? errors.isCompany : ''
+                }
+                inputProps={{
+                  id: 'isCompany',
+                  name: 'isCompany',
+                  onChange: handleChange,
+                  onBlur: handleBlur,
+                  value: 1,
+                  checked: isCompany,
+                }}
+              />
+            </div>
 
-
-              <section
-                className={`${!isDifferentDeliveryAddress ? 'hidden' : 'block'}`}
+            <section className={`${!isCompany ? 'hidden' : 'block'}`}>
+              <h4 className="text-lg ms-1.5 font-bold mt-6 mb-3">
+                {t('contact_form.company.title')}
+              </h4>
+              <div
+                className={'grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pb-4'}
               >
-                <h4 className="text-lg ms-1.5 mt-6 font-bold mb-3">
-                  {t('contact_form.delivery_address.title')}
-                </h4>
-
-                <div className={'grid grid-cols-4 gap-4 mt-4 pb-4'}>
-                  <div className={'col col-span-4 md:col-span-2'}>
-                    <TextInput
-                      required
-                      label={t('contact_form.delivery_name.label')}
-                      error={
-                        touched.deliveryName && errors.deliveryName
-                          ? errors.deliveryName
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'deliveryName',
-                        name: 'deliveryName',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.deliveryName,
-                        autoComplete: 'given-name',
-                        placeholder: t('contact_form.delivery_name.placeholder'),
-                      }}
-                    />
-                  </div>
-                  <div className={'col col-span-4 md:col-span-2'}>
-                    <TextInput
-                      required
-                      label={t('contact_form.delivery_surname.label')}
-                      error={
-                        touched.deliverySurname && errors.deliverySurname
-                          ? errors.deliverySurname
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'deliverySurname',
-                        name: 'deliverySurname',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.deliverySurname,
-                        autoComplete: 'family-name',
-                        placeholder: t('contact_form.delivery_surname.placeholder'),
-                      }}
-                    />
-                  </div>
-
-                  <div className={'col col-span-4'}>
-                    <TextInput
-                      required
-                      label={t('contact_form.delivery_phone.label')}
-                      hint={t('contact_form.delivery_phone.hint')}
-                      error={touched.deliveryPhone && errors.deliveryPhone ? errors.deliveryPhone : ''}
-                      inputProps={{
-                        id: 'deliveryPhone',
-                        name: 'deliveryPhone',
-                        type: 'tel',
-                        // pattern: "[0-9]*",
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.deliveryPhone,
-                        autoComplete: 'tel',
-                        placeholder: t('contact_form.delivery_phone.placeholder'),
-                      }}
-                      setFieldTouched={setFieldTouched}
-                      setFieldValue={setFieldValue}
-                    />
-                  </div>
-
-                  <div className="col-span-4 md:col-span-3">
-                    <TownInput
-                      required
-                      label={t('contact_form.delivery_city.label')}
-                      error={
-                        touched.deliveryCity && errors.deliveryCity
-                          ? errors.deliveryCity
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'deliveryCity',
-                        name: 'deliveryCity',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.deliveryCity,
-                        autoComplete: 'address-level2',
-                        placeholder: t('contact_form.delivery_city.placeholder'),
-                        options: map(towns, option => ({
-                          value: option?.id,
-                          label: option?.name,
-                        })),
-                      }}
-                    />
-                  </div>
-                  <div className="col-span-4 md:col-span-1">
-                    <TextInput
-                      required
-                      label={t('contact_form.delivery_zip.label')}
-                      error={
-                        touched.deliveryZip && errors.deliveryZip
-                          ? errors.deliveryZip
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'deliveryZip',
-                        name: 'deliveryZip',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.deliveryZip,
-                        autoComplete: 'postal-code',
-                        placeholder: t('contact_form.delivery_zip.placeholder'),
-                      }}
-                    />
-                  </div>
-                  <div className={'col-span-4'}>
-                    <TextInput
-                      required
-                      label={t('contact_form.delivery_street.label')}
-                      error={
-                        touched.deliveryStreet && errors.deliveryStreet
-                          ? errors.deliveryStreet
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'deliveryStreet',
-                        name: 'deliveryStreet',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.deliveryStreet,
-                        autoComplete: 'address-line1',
-                        placeholder: t('contact_form.delivery_street.placeholder'),
-                      }}
-                    />
-                  </div>
-                  <div className="col-span-4">
-                    <Select2Input
-                      label={t('contact_form.delivery_country.label')}
-                      error={
-                        touched.deliveryCountryId && errors.deliveryCountryId
-                          ? errors.deliveryCountryId
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'deliveryCountryId',
-                        name: 'deliveryCountryId',
-                        value: values?.deliveryCountryId,
-                        onChange: selectedValue => {
-                          setFieldValue('deliveryCountryId', selectedValue?.value);
-                          setFieldTouched('deliveryCountryId');
-                        },
-                        onBlur: handleBlur,
-                        autoComplete: 'country',
-                        placeholder: t('contact_form.country.placeholder'),
-                        options: map(countries, country => {
-                          return {
-                            value: country?.id,
-                            label: country?.name,
-                          };
-                        }),
-                      }}
-                    />
-                  </div>
-                </div>
-              </section>
-
-              <div className="mt-3 pl-2 md:pl-2">
-                <CheckboxInput
-                  label={t('contact_form.company.label')}
-                  error={
-                    touched.isCompany && errors.isCompany ? errors.isCompany : ''
-                  }
-                  inputProps={{
-                    id: 'isCompany',
-                    name: 'isCompany',
-                    onChange: handleChange,
-                    onBlur: handleBlur,
-                    value: 1,
-                    checked: isCompany,
-                  }}
-                />
-              </div>
-
-              <section className={`${!isCompany ? 'hidden' : 'block'}`}>
-
-                <h4 className="text-lg ms-1.5 font-bold mt-6 mb-3">
-                  {t('contact_form.company.title')}
-                </h4>
-                <div className={'grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pb-4'}>
-                  <div className={'col'}>
-                    <TextInput
-                      required
-                      label={t('contact_form.company_name.label')}
-                      error={
-                        touched.companyName && errors.companyName
-                          ? errors.companyName
-                          : ''
-                      }
-                      inputProps={{
-                        id: 'companyName',
-                        name: 'companyName',
-                        onChange: handleChange,
-                        onBlur: handleBlur,
-                        value: values?.companyName,
-                        autoComplete: 'organization',
-                        placeholder: t('contact_form.company_name.placeholder'),
-                      }}
-                    />
-                  </div>
-                  <div className={'col'}>
-                    <TextInput
-                      required
-                      label={t('contact_form.ico.label')}
-                      error={touched.ico && errors.ico ? errors.ico : ''}
-                      inputProps={{
-                        id: 'ico',
-                        name: 'ico',
-                        onChange: handleChange,
-                        value: values?.ico,
-                        placeholder: t('contact_form.ico.placeholder'),
-                      }}
-                    />
-                  </div>
-                  <div className={'col'}>
-                    <TextInput
-                      label={t('contact_form.dic.label')}
-                      error={touched.dic && errors.dic ? errors.dic : ''}
-                      inputProps={{
-                        id: 'dic',
-                        name: 'dic',
-                        onChange: handleChange,
-                        value: values?.dic,
-                        placeholder: t('contact_form.dic.placeholder'),
-                      }}
-                    />
-                  </div>
-                  <div className={'col'}>
-                    <TextInput
-                      label={t('contact_form.ic_dph.label')}
-                      error={touched.icDPH && errors.icDPH ? errors.icDPH : ''}
-                      inputProps={{
-                        id: 'icDPH',
-                        name: 'icDPH',
-                        onChange: handleChange,
-                        value: values?.icDPH,
-                        placeholder: t('contact_form.ic_dph.placeholder'),
-                      }}
-                    />
-                  </div>
-                </div>
-              </section>
-
-              <div className={'mt-4 pb-4'}>
                 <div className={'col'}>
-                  <TextAreaInput
-                    label={t('contact_form.note.label')}
+                  <TextInput
+                    required
+                    label={t('contact_form.company_name.label')}
                     error={
-                      touched.note && errors.note
-                        ? errors.note
+                      touched.companyName && errors.companyName
+                        ? errors.companyName
                         : ''
                     }
                     inputProps={{
-                      id: 'note',
-                      name: 'note',
+                      id: 'companyName',
+                      name: 'companyName',
                       onChange: handleChange,
                       onBlur: handleBlur,
-                      value: values?.note,
-                      autoComplete: 'note',
-                      placeholder: t('contact_form.note.placeholder'),
+                      value: values?.companyName,
+                      autoComplete: 'organization',
+                      placeholder: t('contact_form.company_name.placeholder'),
+                    }}
+                  />
+                </div>
+                <div className={'col'}>
+                  <TextInput
+                    required
+                    label={t('contact_form.ico.label')}
+                    error={touched.ico && errors.ico ? errors.ico : ''}
+                    inputProps={{
+                      id: 'ico',
+                      name: 'ico',
+                      onChange: handleChange,
+                      value: values?.ico,
+                      placeholder: t('contact_form.ico.placeholder'),
+                    }}
+                  />
+                </div>
+                <div className={'col'}>
+                  <TextInput
+                    label={t('contact_form.dic.label')}
+                    error={touched.dic && errors.dic ? errors.dic : ''}
+                    inputProps={{
+                      id: 'dic',
+                      name: 'dic',
+                      onChange: handleChange,
+                      value: values?.dic,
+                      placeholder: t('contact_form.dic.placeholder'),
+                    }}
+                  />
+                </div>
+                <div className={'col'}>
+                  <TextInput
+                    label={t('contact_form.ic_dph.label')}
+                    error={touched.icDPH && errors.icDPH ? errors.icDPH : ''}
+                    inputProps={{
+                      id: 'icDPH',
+                      name: 'icDPH',
+                      onChange: handleChange,
+                      value: values?.icDPH,
+                      placeholder: t('contact_form.ic_dph.placeholder'),
                     }}
                   />
                 </div>
               </div>
-            </Box>
+            </section>
+
+            <div className={'mt-4 pb-4'}>
+              <div className={'col'}>
+                <TextAreaInput
+                  label={t('contact_form.note.label')}
+                  error={touched.note && errors.note ? errors.note : ''}
+                  inputProps={{
+                    id: 'note',
+                    name: 'note',
+                    onChange: handleChange,
+                    onBlur: handleBlur,
+                    value: values?.note,
+                    autoComplete: 'note',
+                    placeholder: t('contact_form.note.placeholder'),
+                  }}
+                />
+              </div>
+            </div>
+          </Box>
+          {isEmpty(user) ? (
             <Box>
-              {isEmpty(user) ? (
-                <div className={`${emailExists ? 'hidden' : 'block'}`}>
-                  {isRegistrationRequired
-                    ? <Alert type="info" className="mb-3"
-                             message={<div dangerouslySetInnerHTML={{ __html: createAccountMessage?.content }} />} />
-                    : (
-                      <CheckboxInput
-                        label={t('contact_form.account.label')}
-                        error={
-                          touched.createAccount && errors.createAccount
-                            ? errors.createAccount
-                            : ''
-                        }
-                        inputProps={{
-                          disabled: isRegistrationRequired,
-                          id: 'createAccount',
-                          name: 'createAccount',
-                          onChange: handleChange,
-                          onBlur: handleBlur,
-                          value: 1,
-                          checked: values?.createAccount,
-                          groupClassName: `${values?.createAccount ? '' : '!mb-0'}`,
+              <div className={`${emailExists ? 'hidden' : 'block'}`}>
+                {isRegistrationRequired ? (
+                  <Alert
+                    type="info"
+                    className="mb-3"
+                    message={
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: createAccountMessage?.content,
                         }}
                       />
-                    )
-                  }
-
-
-                  <div
-                    className={
-                      values?.createAccount ? 'block' : 'hidden'
                     }
-                  >
-                    <div className="col-12 col-md-6">
-                      <TextInput
-                        required
-                        label={t('contact_form.password.label')}
-                        error={
-                          touched.registerPassword && errors.registerPassword
-                            ? errors.registerPassword
-                            : ''
-                        }
-                        inputProps={{
-                          id: 'registerPassword',
-                          name: 'registerPassword',
-                          type: 'password',
-                          onChange: handleChange,
-                          onBlur: handleBlur,
-                          value: values?.registerPassword,
-                          autoComplete: 'new-password',
-                        }}
-                      />
-                    </div>
-                    <div className="col-12 col-md-6">
-                      <TextInput
-                        required
-                        label={t('contact_form.password_confirm.label')}
-                        error={
-                          touched.registerPasswordConfirm &&
-                          errors.registerPasswordConfirm
-                            ? errors.registerPasswordConfirm
-                            : ''
-                        }
-                        inputProps={{
-                          id: 'registerPasswordConfirm',
-                          name: 'registerPasswordConfirm',
-                          type: 'password',
-                          onChange: handleChange,
-                          onBlur: handleBlur,
-                          value: values?.registerPasswordConfirm,
-                          autoComplete: 'new-password',
-                        }}
-                      />
-                    </div>
+                  />
+                ) : (
+                  <CheckboxInput
+                    label={t('contact_form.account.label')}
+                    error={
+                      touched.createAccount && errors.createAccount
+                        ? errors.createAccount
+                        : ''
+                    }
+                    inputProps={{
+                      disabled: isRegistrationRequired,
+                      id: 'createAccount',
+                      name: 'createAccount',
+                      onChange: handleChange,
+                      onBlur: handleBlur,
+                      value: 1,
+                      checked: values?.createAccount,
+                      groupClassName: `${values?.createAccount ? '' : '!mb-0'}`,
+                    }}
+                  />
+                )}
+
+                <div className={values?.createAccount ? 'block' : 'hidden'}>
+                  <div className="col-12 col-md-6">
+                    <TextInput
+                      required
+                      label={t('contact_form.password.label')}
+                      error={
+                        touched.registerPassword && errors.registerPassword
+                          ? errors.registerPassword
+                          : ''
+                      }
+                      inputProps={{
+                        id: 'registerPassword',
+                        name: 'registerPassword',
+                        type: 'password',
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                        value: values?.registerPassword,
+                        autoComplete: 'new-password',
+                      }}
+                    />
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <TextInput
+                      required
+                      label={t('contact_form.password_confirm.label')}
+                      error={
+                        touched.registerPasswordConfirm &&
+                        errors.registerPasswordConfirm
+                          ? errors.registerPasswordConfirm
+                          : ''
+                      }
+                      inputProps={{
+                        id: 'registerPasswordConfirm',
+                        name: 'registerPasswordConfirm',
+                        type: 'password',
+                        onChange: handleChange,
+                        onBlur: handleBlur,
+                        value: values?.registerPasswordConfirm,
+                        autoComplete: 'new-password',
+                      }}
+                    />
                   </div>
                 </div>
-              ) : null}
+              </div>
             </Box>
-            {buttonContainer ? createPortal(
-              <>
-                <Button
-                  loading={isLoading || isSubmitting}
-                  htmlType={'submit'}
-                  type={'primary'}
-                  fullWidth
-                  onClick={() => handleSubmit()}
-                  round
-                >
-                  <span>{t('cart_title.step2.button')} </span>
-                </Button>
-                <Button
-                  type="link"
-                  fullWidth
-                  htmlType={'a'}
-                  href={CART_STEPS[step - 1]}
-                  loading={isLoading}
-                  prefetch
-                  className="mt-3"
-                  round
-                >
-                  <BackButtonContent step={step} />
-                </Button>
-              </>,
-              buttonContainer,
-            ) : ''}
-
-          </form>
-        )
-      }
+          ) : null}
+          {buttonContainer
+            ? createPortal(
+                <>
+                  <Button
+                    loading={isLoading || isSubmitting}
+                    htmlType={'submit'}
+                    type={'primary'}
+                    fullWidth
+                    onClick={() => handleSubmit()}
+                    round
+                  >
+                    <span>{t('cart_title.step2.button')} </span>
+                  </Button>
+                  <Button
+                    type="link"
+                    fullWidth
+                    htmlType={'a'}
+                    href={CART_STEPS[step - 1]}
+                    loading={isLoading}
+                    prefetch
+                    className="mt-3"
+                    round
+                  >
+                    <BackButtonContent step={step} />
+                  </Button>
+                </>,
+                buttonContainer,
+              )
+            : ''}
+        </form>
+      )}
     </>
   );
 };

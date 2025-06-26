@@ -1,18 +1,13 @@
 'use client';
 
-import find from 'lodash/find';
-import debounce from 'lodash/debounce';
 import useCart from '@/grandus-lib/hooks/useCart';
-import { useCallback, useEffect, useState } from 'react';
-import AmountInputCart from '@/modules/cart/components/AmountInputCart';
 import Image from '@/grandus-utils/wrappers/image/Image';
 import IconRemove from '@/components/_other/icons/IconRemove';
 import Button from '@/components/_other/button/Button';
-import Link from 'next/link';
 import PriceDynamic from '@/components/price/PriceDynamic';
-import BundleInfo from '@/components/product/BundleInfo';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
+import useStaticBlock from '@/grandus-lib/hooks/useStaticBlock';
 
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
@@ -43,17 +38,39 @@ const ItemBundleInfo = ({ item }) => {
 };
 
 const CartListingItemVirtual = ({ item }) => {
+  const { staticBlocks } = useStaticBlock({
+    hash: 'cart_insurance_title',
+    expand: 'photo',
+  });
+
+  let photo = null;
+
+  if (get(item, 'parameters.productId') === 'cart_insurance') {
+    photo = get(staticBlocks, '[0].photo');
+  }
+
   return (
     <>
       <div className="col col-span-3 md:col-span-2 p-2 ps-0 flex gap-4 items-center h-full relative">
         <div className="w-[50px] h-[60px] sm:w-[80px] sm:h-[100px] bg-grey flex-shrink-0">
-          <PlaceHolderImage
-            width={80}
-            height={100}
-            type={'jpg'}
-            title={get(item, 'parameters.name', 'Virtual item')}
-            alt={get(item, 'parameters.name', 'Virtual item')}
-          />
+          {photo ? (
+            <Image
+              width={80}
+              height={100}
+              photo={photo}
+              type={'jpg'}
+              title={get(item, 'parameters.name', 'Virtual item')}
+              alt={get(item, 'parameters.name', 'Virtual item')}
+            />
+          ) : (
+            <PlaceHolderImage
+              width={80}
+              height={100}
+              type={'jpg'}
+              title={get(item, 'parameters.name', 'Virtual item')}
+              alt={get(item, 'parameters.name', 'Virtual item')}
+            />
+          )}
         </div>
         <p className="text-left">
           {get(item, 'parameters.name', 'Virtual item')}
