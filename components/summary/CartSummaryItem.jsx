@@ -5,6 +5,10 @@ import Image from '@/grandus-utils/wrappers/image/Image';
 import Link from 'next/link';
 
 const CartSummaryItem = ({ item }) => {
+  if (!item?.product) {
+    return '';
+  }
+
   return (
     <>
       <div className="col col-span-3 p-2 ps-0 flex gap-4 items-center h-full relative">

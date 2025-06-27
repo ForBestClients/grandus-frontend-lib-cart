@@ -86,6 +86,10 @@ const ItemBundleInfo = ({ item }) => {
 
 const CartListingItem = ({ item }) => {
 
+  if (!item?.product) {
+    return '';
+  }
+
   const itemInfos = [];
 
   if (item?.product?.ean) {
