@@ -46,8 +46,6 @@ const InsuranceForm = ({ textBlock, priceBlock, titleBlock }) => {
       insuranceActive: yup.bool().transform(v => !!toNumber(v)), //convert to boolean before validation
     }),
     onSubmit: async values => {
-      console.log(values, cartItem);
-
       if (values?.insuranceActive) {
         if (!cartItem) {
           const virtualItem = {
@@ -72,7 +70,6 @@ const InsuranceForm = ({ textBlock, priceBlock, titleBlock }) => {
           await itemsAdd([virtualItem]);
         }
       } else {
-        console.log('aaaaa', cartItem);
         if (cartItem) {
           await itemRemove(cartItem.id);
         }

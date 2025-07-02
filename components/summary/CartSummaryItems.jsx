@@ -6,6 +6,7 @@ import { useTranslation } from '@/app/i18n/client';
 import filter from 'lodash/filter';
 import { CART_ITEM_TYPE_VIRTUAL } from '@/constants/AppConstants';
 import CartSummaryItemVirtual from '@/modules/cart/components/summary/CartSummaryItemVirtual';
+import CartExtraSummaryItem from '@/modules/cart/components/summary/CartExtraSummaryItem';
 
 const CartSummaryItems = ({ cart }) => {
   const { t } = useTranslation();
@@ -24,6 +25,12 @@ const CartSummaryItems = ({ cart }) => {
     <div className="grid grid-cols-4 items-center">
       {map(cartItems, (item, i) => {
         return <CartSummaryItem key={`cart-item-${i}`} item={item} />;
+      })}
+
+      {map(cart?.extraItems, (item, i) => {
+        return (
+          <CartExtraSummaryItem key={`cart-extra-item-${i}`} item={item} />
+        );
       })}
 
       {map(cartItemsVirtual, (item, i) => {
