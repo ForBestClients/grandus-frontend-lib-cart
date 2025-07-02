@@ -64,28 +64,32 @@ const ItemCountInput = ({ item }) => {
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
 
-  return <Button
-    type={'text'}
-    color={'secondary'}
-    onClick={() => itemRemove(item?.id)} loading={isLoading}
-    className={className}>
-    <IconRemove className={'h-6'} />
-  </Button>;
+  return (
+    <Button
+      type={'text'}
+      color={'secondary'}
+      onClick={() => itemRemove(item?.id)}
+      loading={isLoading}
+      className={className}
+    >
+      <IconRemove className={'h-6'} />
+    </Button>
+  );
 };
 
 const ItemBundleInfo = ({ item }) => {
-  const measureUnit = get(item, 'product.store[0].name', item?.measureUnit) ?? 'ks';
+  const measureUnit =
+    get(item, 'product.store[0].name', item?.measureUnit) ?? 'ks';
   const piecesInBundle = get(item, 'product.store[0].piecesInBundle', 1);
 
   if (piecesInBundle > 1) {
-    return `${item.count} bal (${item.count * piecesInBundle} ${measureUnit})`
+    return `${item.count} bal (${item.count * piecesInBundle} ${measureUnit})`;
   }
 
   return `${item.count} ${measureUnit}`;
-}
+};
 
 const CartListingItem = ({ item }) => {
-
   if (!item?.product) {
     return '';
   }
@@ -103,7 +107,10 @@ const CartListingItem = ({ item }) => {
   return (
     <>
       <div className="col col-span-3 md:col-span-2 p-2 ps-0 flex gap-4 items-center h-full relative">
-        <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
+        <Link
+          href={`/produkt/${item.product.urlTitle}`}
+          className="absolute w-full h-full"
+        />
         <div className="w-[50px] h-[60px] sm:w-[80px] sm:h-[100px] bg-grey flex-shrink-0">
           {item?.product?.photo ? (
             <Image
@@ -126,7 +133,7 @@ const CartListingItem = ({ item }) => {
         </div>
         <p className="text-left">
           {item?.product?.name}
-          <br/>
+          <br />
           <span className={'text-sm'}>{itemInfos.join(' | ')}</span>
         </p>
       </div>
@@ -137,7 +144,7 @@ const CartListingItem = ({ item }) => {
       </div>
 
       <div className={'col hidden text-center md:block col-span-1 p-2'}>
-        <span className={'text-sm'}>spolu:</span> <br/>
+        <span className={'text-sm'}>spolu:</span> <br />
         <ItemBundleInfo item={item} />
       </div>
 

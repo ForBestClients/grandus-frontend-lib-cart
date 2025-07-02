@@ -10,6 +10,7 @@ import { useTranslation } from '@/app/i18n/client';
 import filter from 'lodash/filter';
 import { CART_ITEM_TYPE_VIRTUAL } from '@/constants/AppConstants';
 import CartListingItemVirtual from '@/modules/cart/components/CartListingItemVirtual';
+import CartExtraItem from '@/modules/cart/components/CartExtraItem';
 
 const CartListingItems = () => {
   const { cart, isLoading } = useCart();
@@ -52,6 +53,10 @@ const CartListingItems = () => {
 
         {map(cartItems, (item, i) => {
           return <CartListingItem key={`cart-item-${i}`} item={item} />;
+        })}
+
+        {map(cart?.extraItems, (item, i) => {
+          return <CartExtraItem key={`cart-extra-item-${i}`} item={item} />;
         })}
 
         {map(cartItemsVirtual, (item, i) => {
