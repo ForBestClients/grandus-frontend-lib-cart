@@ -13,6 +13,9 @@ import PriceDynamic from '@/components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
+import TagManager from '@/grandus-lib/utils/gtag';
+import EnhancedEcommerce from '@/grandus-lib/utils/ecommerce';
+import FBPixel from '@/grandus-lib/utils/fbpixel';
 
 const ItemCountInput = ({ item }) => {
   const { product, store, count } = item;
@@ -41,6 +44,24 @@ const ItemCountInput = ({ item }) => {
             if (newCount !== newItem?.count) {
               setAmount(newItem?.count);
             }
+
+            if (newCount > oldCount) {
+              TagManager.push(
+                EnhancedEcommerce.add_to_cart(
+                  item?.product,
+                  null,
+                  Math.abs(newCount - oldCount),
+                ),
+              );
+              FBPixel.addToCart(item?.product, {
+                quantity: Math.abs(newCount - oldCount),
+              });
+            } else {
+              EnhancedEcommerce.remove_from_cart(
+                item?.product,
+                Math.abs(newCount - oldCount),
+              );
+            }
           });
         }
       } catch {
@@ -64,11 +85,19 @@ const ItemCountInput = ({ item }) => {
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
 
+  const handleRemove = e => {
+    e.preventDefault();
+    const count = item.count;
+    itemRemove(item?.id, cart => {
+      TagManager.push(EnhancedEcommerce.remove_from_cart(item, count));
+    });
+  };
+
   return (
     <Button
       type={'text'}
       color={'secondary'}
-      onClick={() => itemRemove(item?.id)}
+      onClick={handleRemove}
       loading={isLoading}
       className={className}
     >
