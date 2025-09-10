@@ -48,10 +48,19 @@ const CartHeader = () => {
         link: '/kosik/kontakt',
       },
     },
+    {
+      step: 4,
+      text: upperFirst(t('cart_title.step4.short')),
+      link: CART_STEPS[3],
+      title: {
+        text: upperFirst(t('cart_title.step4.description')),
+        link: CART_STEPS[3],
+      },
+    },
     // {
-    //   step: 4,
+    //   step: 5,
     //   text: upperFirst(t('cart_title.step4.short')),
-    //   link: CART_STEPS[3],
+    //   link: CART_STEPS[4],
     //   title: {
     //     text: upperFirst(t('cart_title.step4.description')),
     //     link: '/kosik/doprava-a-platba',
@@ -64,36 +73,37 @@ const CartHeader = () => {
   return (
     <nav className={styles.wrapper}>
       {steps.map(stepItem => {
+        const classNames = [styles.navLink];
+
         if (stepItem.step === currentStep.step) {
-          return (
-            <Link
-              href={stepItem?.link}
-              key={`step-${stepItem?.step}`}
-              className={`${styles.navLink} ${styles.active}`}
-            >
-              <span className={styles.stepCount}>{stepItem.step}</span>
-              <span>{stepItem?.text}</span>
-            </Link>
-          );
+          classNames.push(styles.active)
+        }
+
+        if (stepItem.step === currentStep.step-1) {
+          classNames.push(styles.prev)
         }
 
         if (stepItem.step < currentStep.step) {
+          classNames.push(styles.finished)
+        }
+
+        if (stepItem.step <= currentStep.step) {
           return (
             <Link
               href={stepItem?.link}
               key={`step-${stepItem?.step}`}
-              className={`${styles.navLink} ${styles.finished}`}
+              className={classNames.join(' ')}
             >
               <span className={styles.stepCount}>{stepItem.step}</span>
-              <span>{stepItem?.text}</span>
+              <span className={styles.label}>{stepItem?.text}</span>
             </Link>
           );
         }
 
         return (
-          <span className={styles.navLink} key={`step-${stepItem?.step}`}>
+          <span className={classNames.join(' ')} key={`step-${stepItem?.step}`}>
             <span className={styles.stepCount}>{stepItem.step}</span>
-            <span>{stepItem?.text}</span>
+            <span className={styles.label}>{stepItem?.text}</span>
           </span>
         );
       })}

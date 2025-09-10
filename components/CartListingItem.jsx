@@ -99,7 +99,7 @@ const CartListingItem = ({ item }) => {
   return (
     <>
       <div className="col col-span-3 md:col-span-2 p-2 ps-0 flex gap-4 items-center h-full relative">
-        <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
+        <Link href={`/destinacia/${item.product.urlTitle}`} className="absolute w-full h-full" />
         <div className="w-[50px] h-[60px] sm:w-[80px] sm:h-[100px] bg-grey flex-shrink-0">
           {item?.product?.photo ? (
             <Image

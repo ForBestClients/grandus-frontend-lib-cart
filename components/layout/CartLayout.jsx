@@ -11,7 +11,7 @@ import LoadingCart from "@/modules/cart/components/LoadingCart";
 import ProcessingOrder from "@/modules/cart/components/processingOrder/ProcessingOrder";
 import {useCartStep} from "@/utils/cart";
 
-const CartLayout = ({ children, contact }) => {
+const CartLayout = ({ children, passengersData }) => {
     const { cart, isLoading } = useCart();
     const step = useCartStep();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -29,8 +29,8 @@ const CartLayout = ({ children, contact }) => {
         return <EmptyCart />;
     }
 
-    const leftColSpan = step === 2 ? 'md:col-span-4' : 'md:col-span-3'
-    const rightColSpan = step === 2 ? 'md:col-span-2' : 'md:col-span-3'
+    const leftColSpan = step === 2 || step === 1 ? 'md:col-span-4' : 'md:col-span-3'
+    const rightColSpan =  step === 2 || step === 1 ? 'md:col-span-2' : 'md:col-span-3'
 
     return (
         <Suspense fallback={<LoadingCart />}>
@@ -45,7 +45,7 @@ const CartLayout = ({ children, contact }) => {
                         </Suspense>
                     </div>
                     <div className={`col col-span-full ${rightColSpan} flex flex-col gap-6`}>
-                        <CartSummarySection setIsProcessing={setIsProcessing} contact={contact} />
+                        <CartSummarySection setIsProcessing={setIsProcessing} passengersData={passengersData} />
                     </div>
                 </div>
             )}

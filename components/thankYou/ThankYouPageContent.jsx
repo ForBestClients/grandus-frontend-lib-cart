@@ -12,6 +12,8 @@ import {useEffect} from "react";
 import TagManager from "@/grandus-lib/utils/gtag";
 import EnhancedEcommerce from "@/grandus-lib/utils/ecommerce";
 import useUser from "@/grandus-lib/hooks/useUser";
+import reduce from 'lodash/reduce';
+import concat from 'lodash/concat';
 
 const ThankYouPageContent = ({order}) => {
   const {t} = useTranslation();
@@ -23,6 +25,19 @@ const ThankYouPageContent = ({order}) => {
       TagManager.push(EnhancedEcommerce.purchaseG4(order, user));
     }
   }, [order, user, userIsLoading]);
+
+  const items = reduce(
+    order.suborders,
+    (carry, order) => {
+      const items = map(order?.orderItems, (item) => {
+        item.deliveryAt = order?.deliveryAt?.date;
+        return item;
+      });
+
+      return concat(carry, items ?? []);
+    },
+    order?.orderItems ?? [],
+  );
 
   return (
       <>
@@ -52,7 +67,7 @@ const ThankYouPageContent = ({order}) => {
                   <strong>{t('order.thank_you.price')}</strong>
                 </div>
               </div>
-              {map(order.orderItems, (orderItem, index) => {
+              {map(items, (orderItem, index) => {
                 return (<div key={`order-item-${index}`} className={'grid grid-cols-4 gap-2 pb-3'}>
                   <div className={'col-span-2'}>
                     {orderItem.name}

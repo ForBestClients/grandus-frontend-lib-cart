@@ -27,8 +27,8 @@ const ButtonContent = ({ step }) => {
     case 1:
       buttonText = t('cart_title.step2.button');
       break;
-    case 2:
-      buttonText = t('cart_title.step3.button');
+    case 3:
+      buttonText = t('cart_title.step4.button');
       break;
   }
 
@@ -47,7 +47,7 @@ export const BackButtonContent = ({ step }) => {
   }
 };
 
-const OrderButton = ({ setIsProcessing, contact }) => {
+const OrderButton = ({ setIsProcessing }) => {
   const { cart, createOrder, removeContact, cartDestroy, isLoading } = useCart();
   const { t } = useTranslation();
 
@@ -88,6 +88,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
       privacyPolicy: privacyPolicyAccepted,
       termsAndConditions: termsAndConditionsAccepted,
       specificDeliveryType: cart?.specificDeliveryType ?? null,
+      passengers: cart?.jsonData?.passengers ?? null,
     };
 
     schema.validate(values, { abortEarly: false })
@@ -139,75 +140,78 @@ const OrderButton = ({ setIsProcessing, contact }) => {
             });
         });
       }).catch(e => {
-      let err = {};
+        let err = {};
 
-      e.inner.forEach((error) => {
-        err[error.path] = error.message;
+        e.inner.forEach((error) => {
+          err[error.path] = error.message;
+        });
+
+        setErrors(err);
       });
-
-      setErrors(err);
-    });
   };
   return (
     <div className="mt-4">
       <div className="ml-2">
-        {requirePrivacyPolicyAgreement
-          ? (
-            <CheckboxInput
-              label={
-                <>
-                  {t('cart_summary.privacy_policy.label')}
-                  {get(settings, 'conditions_for_processing_personal_data_link')
-                    ? <>
-                      {' '} (
-                      <Link
-                        className="underline"
-                        href={get(settings, 'conditions_for_processing_personal_data_link', '#')}
-                        target="_blank"
-                        passHref
-                      >
-                        {t('cart_summary.privacy_policy.read_more')}
-                      </Link>)
-                    </>
-                    : null}
-                </>
-              }
-              error={errors?.privacyPolicy}
-              inputProps={{
-                id: 'privacy_policy',
-                name: 'privacy_policy',
-                onChange: e => {
-                  setPrivacyPolicyAccepted(e.target.checked);
-                },
-                value: 1,
-                checked: privacyPolicyAccepted,
-                groupClassName: 'indent-label',
-              }}
-            />
-          )
-          : null
-        }
+        {requirePrivacyPolicyAgreement ? (
+          <CheckboxInput
+            label={
+              <>
+                {t('cart_summary.privacy_policy.label')}
+                {get(
+                  settings,
+                  'require_consent_for_processing_personal_data',
+                ) ? (
+                  <>
+                    {' '}
+                    <Link
+                      className="underline"
+                      href={get(
+                        settings,
+                        'conditions_for_processing_personal_data_link',
+                        '#',
+                      )}
+                      target="_blank"
+                      passHref
+                    >
+                      ({t('cart_summary.privacy_policy.read_more')})
+                      <IconExternalLink />
+                    </Link>
+                  </>
+                ) : null}
+              </>
+            }
+            error={errors?.termsAndConditions}
+            inputProps={{
+              id: 'privacy_policy',
+              name: 'privacy_policy',
+              onChange: e => {
+                setPrivacyPolicyAccepted(e.target.checked);
+              },
+              value: 1,
+              checked: privacyPolicyAccepted,
+              groupClassName: 'indent-label',
+            }}
+          />
+        ) : null}
 
         <CheckboxInput
           label={
             <>
               {t('cart_summary.terms_and_conditions.label')}
-              {get(settings, 'terms_and_conditions_link')
-                ? <>
-                  {' '} (<Link
-                  className="underline"
-                  href={get(
-                    settings,
-                    'terms_and_conditions_link',
-                    '#',
-                  )}
-                  target="_blank"
-                  passHref
-                >
-                  {t('cart_summary.terms_and_conditions.read_more')}
-                </Link>)
+              {get(settings, 'terms_and_conditions_link') ? (
+                <>
+                  {' '}
+                  <Link
+                    className="underline"
+                    href={get(settings, 'terms_and_conditions_link', '#')}
+                    target="_blank"
+                    passHref
+                  >
+                    ({t('cart_summary.terms_and_conditions.read_more')})
+                    <IconExternalLink />
+                  </Link>
                 </>
-                : null}
+              ) : null}
             </>
           }
           error={errors?.termsAndConditions}
@@ -234,20 +238,19 @@ const OrderButton = ({ setIsProcessing, contact }) => {
           loading={isLoading}
           onClick={handleSubmit}
         >
-          <ButtonContent step={2} />
+          <ButtonContent step={3} />
         </Button>
       </div>
     </div>
   );
 };
 
-export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
-  const { t } = useTranslation();
-  const { cart, isLoading } = useCart();
+export const CheckoutButton = ({ step, setIsProcessing }) => {
+  const { isLoading } = useCart();
 
-  if (step === 2) {
+  if (step === 3) {
     return <>
-      <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
+      <OrderButton setIsProcessing={setIsProcessing} />
       <Button
         className="mt-3"
         type="link"
@@ -264,7 +267,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
 
   return (
     <div id={'contact_confirm'} className={'mt-4 text-center'}>
-      {step !== 1 ?
+      {step !== 1 && step !== 2 ?
         <Button
           type="primary"
           fullWidth
@@ -275,7 +278,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
         >
           <ButtonContent step={step} />
         </Button> : ''}
-      {step > 1 ?
+      {step > 2 ?
         <Button
           type="link"
           fullWidth

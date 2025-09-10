@@ -1,21 +1,25 @@
 @use "sass:selector";
 
 .wrapper {
-  @apply mt-4 bg-grey rounded-full overflow-hidden relative flex w-full justify-between items-center flex-col md:flex-row;
+  @apply mt-4 bg-grey rounded-full overflow-hidden relative flex w-full justify-between items-center flex-row;
 
   .stepCount {
-    @apply w-[20px] h-[20px] relative inline-block text-grey mr-3;
+    @apply w-[20px] h-[20px] relative inline-block text-grey lg:mr-3;
   }
 
   .navLink {
     @apply flex grow basis-1 justify-center items-center px-3.5 py-3 whitespace-nowrap font-normal  text-font w-full;
 
     &:not(.finished) {
-      @apply -ml-[20px];
+      @apply lg:-ml-[20px];
     }
 
     .stepCount {
-      @apply bg-white text-primary rounded-full flex items-center justify-center p-3 text-sm leading-none;
+      @apply bg-white text-primary rounded-full flex items-center justify-center p-3 text-sm leading-none md:mr-3;
+    }
+
+    .label {
+      @apply hidden md:flex;
     }
 
     @at-root #{selector.unify(&, 'span')} {
@@ -32,6 +36,23 @@
       &.active {
         //@apply bg-primary text-white rounded-full;
         @apply bg-alt text-black rounded-full;
+        &:not(:first-child) {
+          @apply -ml-[15px] lg:-ml-3;
+        }
+
+        .stepCount {
+          @apply mr-3;
+        }
+
+        .label {
+          @apply flex;
+        }
+      }
+
+      &.prev {
+        .stepCount {
+          @apply mr-3;
+        }
       }
 
       &.finished {

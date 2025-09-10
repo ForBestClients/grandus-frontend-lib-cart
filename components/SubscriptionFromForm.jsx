@@ -59,7 +59,7 @@ const SubscriptionFromForm = ({setDeliveryStartFrom, deliveryStartFrom}) => {
       <select
         name="subscription-from"
         id="subscription-from"
-        className={'rounded border border-text text-[14px] w-[100%] md:w-auto'}
+        className={'rounded border border-text w-[100%] md:w-auto'}
         onChange={onChange}
         value={deliveryStartFrom}
       >

@@ -1,4 +1,4 @@
-import {isEmpty} from "lodash";
+import isEmpty from 'lodash/isEmpty';
 import getOrder from "@/grandus-utils/fetches/ssr/order/OrderByAccessToken";
 import EmptyState from "@/modules/cart/components/thankYou/EmptyState";
 import ThankYouPageContent from "@/modules/cart/components/thankYou/ThankYouPageContent";
