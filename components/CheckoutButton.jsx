@@ -16,6 +16,8 @@ import find from 'lodash/find';
 import map from 'lodash/map';
 import Alert from '@/components/_other/alert/Alert';
 import toNumber from 'lodash/toNumber';
+import TagManager from '@/grandus-lib/utils/gtag';
+import EnhancedEcommerce from '@/grandus-lib/utils/ecommerce';
 
 const ButtonContent = ({ step }) => {
   const { t } = useTranslation();
@@ -93,6 +95,8 @@ const OrderButton = ({ setIsProcessing, contact }) => {
     schema.validate(values, { abortEarly: false })
       .then(async _ => {
         setIsProcessing(true);
+        await TagManager.push(EnhancedEcommerce.deliveryInfo(cart));
+        await TagManager.push(EnhancedEcommerce.paymentInfo(cart));
         await createOrder(values, response => {
           response
             .then(async order => {
@@ -139,14 +143,15 @@ const OrderButton = ({ setIsProcessing, contact }) => {
             });
         });
       }).catch(e => {
-      let err = {};
+        console.log(e);
+        let err = {};
 
-      e.inner.forEach((error) => {
-        err[error.path] = error.message;
+        e?.inner?.forEach((error) => {
+          err[error.path] = error.message;
+        });
+
+        setErrors(err);
       });
-
-      setErrors(err);
-    });
   };
   return (
     <div className="mt-4">

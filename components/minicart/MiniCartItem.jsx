@@ -13,12 +13,16 @@ import PriceDynamic from 'components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
+import TagManager from '@/grandus-lib/utils/gtag';
+import EnhancedEcommerce from '@/utils/ecommerce';
+import useUser from '@/grandus-lib/hooks/useUser';
 
 const ItemCountInput = ({ item }) => {
   const { product, store, count } = item;
 
   const { itemUpdate, isLoading } = useCart();
   const [amount, setAmount] = useState(count);
+  const {user} = useUser()
 
   useEffect(() => {
     setAmount(count);
@@ -40,6 +44,26 @@ const ItemCountInput = ({ item }) => {
               const newItem = find(cart?.items, { id: item?.id });
               if (newCount !== newItem?.count) {
                 setAmount(newItem?.count);
+              }
+
+              const itemsDifference = newItem?.count - oldCount;
+              if (itemsDifference < 0) {
+                TagManager.push(
+                  EnhancedEcommerce.cartRemove(
+                    item,
+                    Math.abs(itemsDifference),
+                    user
+                  )
+                );
+              } else if (itemsDifference > 0) {
+                TagManager.push(
+                  EnhancedEcommerce.cartAdd(
+                    item?.product,
+                    Math.abs(itemsDifference),
+                    user
+
+                  )
+                );
               }
             });
           }
@@ -64,10 +88,16 @@ const ItemCountInput = ({ item }) => {
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
 
+  const handleRemove = e => {
+    e.preventDefault();
+    itemRemove(item?.id)
+    TagManager.push(EnhancedEcommerce.cartRemove(item?.product, item?.count));
+  }
+
   return <Button
       type={'text'}
       color={'secondary'}
-      onClick={() => itemRemove(item?.id)} loading={isLoading}
+      onClick={handleRemove} loading={isLoading}
       className={className}>
     <IconRemove className={'h-6'} />
   </Button>;

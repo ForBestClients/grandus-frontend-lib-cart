@@ -24,12 +24,15 @@ export default async function CartContact(props) {
   ]);
 
   return (
-    <CartLayout>
-      <ContactForm
-        countries={countries}
-        towns={towns}
-        contact={contact}
-      />
-    </CartLayout>
+    <>
+      <CartAnalytics />
+      <CartLayout>
+        <ContactForm
+          countries={countries}
+          towns={towns}
+          contact={contact}
+        />
+      </CartLayout>
+    </>
   );
 }
