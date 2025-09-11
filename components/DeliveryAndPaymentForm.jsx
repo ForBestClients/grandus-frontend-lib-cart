@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useReducer } from 'react';
-import Box from "@/components/_other/box/Box";
+import Box from '@/components/_other/box/Box';
 import ShippingSelect from '@/modules/cart/components/ShippingSelect';
 import PaymentSelect from '@/modules/cart/components/PaymentSelect';
 import useCart from '@/grandus-lib/hooks/useCart';
@@ -40,7 +40,12 @@ export const reducer = (state, action) => {
   return state;
 };
 
-export const initialState = { deliveryGroup: null, delivery: null, payment: null, specificPayment: null };
+export const initialState = {
+  deliveryGroup: null,
+  delivery: null,
+  payment: null,
+  specificPayment: null,
+};
 
 const DeliveryAndPaymentForm = ({ countries }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
