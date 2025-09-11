@@ -17,7 +17,7 @@ import map from 'lodash/map';
 import Alert from '@/components/_other/alert/Alert';
 import toNumber from 'lodash/toNumber';
 import TagManager from '@/grandus-lib/utils/gtag';
-import EnhancedEcommerce from '@/grandus-lib/utils/ecommerce';
+import EnhancedEcommerce from '@/utils/ecommerce';
 
 const ButtonContent = ({ step }) => {
   const { t } = useTranslation();

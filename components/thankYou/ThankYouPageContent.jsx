@@ -10,7 +10,7 @@ import {useSearchParams} from "next/navigation";
 import Alert from "@/components/_other/alert/Alert";
 import {useEffect} from "react";
 import TagManager from "@/grandus-lib/utils/gtag";
-import EnhancedEcommerce from "@/grandus-lib/utils/ecommerce";
+import EnhancedEcommerce from "@/utils/ecommerce";
 import useUser from "@/grandus-lib/hooks/useUser";
 
 const ThankYouPageContent = ({order}) => {
