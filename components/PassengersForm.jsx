@@ -131,24 +131,23 @@ const PassengersForm = ({ countries, towns, contactFormRef, contact = {}, passen
       ID_EXPIRATION_DATE: yup.date()
         .min(dayjs(), t('contact_form.global.date_min_validation'))
         .required(t('contact_form.global.required_validation')),
-      PASSPORT_NUMBER: yup.string().trim()
-        .min(2, t('contact_form.passport_number.min_validation'))
-        .required(t('contact_form.global.required_validation')),
-      PASSPORT_EXPIRATION_DATE: yup.date()
-        .min(dayjs(), t('contact_form.global.date_min_validation'))
-        .required(t('contact_form.global.required_validation')),
+      // PASSPORT_NUMBER: yup.string().trim()
+      //   .min(2, t('contact_form.passport_number.min_validation'))
+      //   .required(t('contact_form.global.required_validation')),
+      // PASSPORT_EXPIRATION_DATE: yup.date()
+      //   .min(dayjs(), t('contact_form.global.date_min_validation'))
+      //   .required(t('contact_form.global.required_validation')),
       INSTAGRAM_ACCOUNT: yup.string().trim(),
       BIRTH_DATE: yup.date()
         .max(dayjs(), t('contact_form.global.date_max_validation'))
         .required(t('contact_form.global.required_validation')),
-      NAMEDAY_DATE: yup.string().trim()
-        .required(t('contact_form.global.required_validation')),
+      NAMEDAY_DATE: yup.string().trim(),
       ICE_CONTACT_NAME: yup.string().trim()
         .required(t('contact_form.global.required_validation')),
       ICE_CONTACT_PHONE: yup.string().trim()
         .required(t('contact_form.global.required_validation')),
-      JOB: yup.string().trim()
-        .required(t('contact_form.global.required_validation')),
+      // JOB: yup.string().trim()
+      //   .required(t('contact_form.global.required_validation')),
       TRIP_EXPECTATIONS: yup.string().trim()
         .required(t('contact_form.global.required_validation')),
     })
@@ -192,14 +191,14 @@ const PassengersForm = ({ countries, towns, contactFormRef, contact = {}, passen
           params: {
             ID_NUMBER: '',
             ID_EXPIRATION_DATE: '',
-            PASSPORT_NUMBER: '',
-            PASSPORT_EXPIRATION_DATE: '',
+            // PASSPORT_NUMBER: '',
+            // PASSPORT_EXPIRATION_DATE: '',
             INSTAGRAM_ACCOUNT: '',
             BIRTH_DATE: '',
             NAMEDAY_DATE: '',
             ICE_CONTACT_NAME: '',
             ICE_CONTACT_PHONE: '',
-            JOB: '',
+            // JOB: '',
             TRIP_EXPECTATIONS: ''
           }
         })}
@@ -708,47 +707,47 @@ const Form = ({
                                 />
                               </div>
 
-                              <div className={'col-span-2 md:col-span-1'}>
-                                <TextInput
-                                  required
-                                  label={t('contact_form.passport_number.label')}
-                                  error={
-                                    get(touched, `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`) &&
-                                    get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`)
-                                      ? get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`)
-                                      : ''
-                                  }
-                                  inputProps={{
-                                    id: `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`,
-                                    name: `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`,
-                                    onChange: handleChange,
-                                    onBlur: handleBlur,
-                                    value: u?.params?.PASSPORT_NUMBER,
-                                    placeholder: t('contact_form.passport_number.placeholder'),
-                                  }}
-                                />
-                              </div>
-                              <div className={'col-span-2 md:col-span-1'}>
-                                <DateInput
-                                  required
-                                  label={t('contact_form.passport_expiration_date.label')}
-                                  error={
-                                    get(touched, `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`) &&
-                                    get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`)
-                                      ? get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`)
-                                      : ''
-                                  }
-                                  withHeader={true}
-                                  inputProps={{
-                                    id: `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`,
-                                    name: `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`,
-                                    value: u?.params?.PASSPORT_EXPIRATION_DATE,
-                                    placeholder: t('contact_form.passport_expiration_date.placeholder'),
-                                    minDate: new Date(),
-                                    maxDate: null,
-                                  }}
-                                />
-                              </div>
+                              {/*<div className={'col-span-2 md:col-span-1'}>*/}
+                              {/*  <TextInput*/}
+                              {/*    required*/}
+                              {/*    label={t('contact_form.passport_number.label')}*/}
+                              {/*    error={*/}
+                              {/*      get(touched, `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`) &&*/}
+                              {/*      get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`)*/}
+                              {/*        ? get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`)*/}
+                              {/*        : ''*/}
+                              {/*    }*/}
+                              {/*    inputProps={{*/}
+                              {/*      id: `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`,*/}
+                              {/*      name: `products.${pIdx}.users.${uIdx}.params.PASSPORT_NUMBER`,*/}
+                              {/*      onChange: handleChange,*/}
+                              {/*      onBlur: handleBlur,*/}
+                              {/*      value: u?.params?.PASSPORT_NUMBER,*/}
+                              {/*      placeholder: t('contact_form.passport_number.placeholder'),*/}
+                              {/*    }}*/}
+                              {/*  />*/}
+                              {/*</div>*/}
+                              {/*<div className={'col-span-2 md:col-span-1'}>*/}
+                              {/*  <DateInput*/}
+                              {/*    required*/}
+                              {/*    label={t('contact_form.passport_expiration_date.label')}*/}
+                              {/*    error={*/}
+                              {/*      get(touched, `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`) &&*/}
+                              {/*      get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`)*/}
+                              {/*        ? get(errors, `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`)*/}
+                              {/*        : ''*/}
+                              {/*    }*/}
+                              {/*    withHeader={true}*/}
+                              {/*    inputProps={{*/}
+                              {/*      id: `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`,*/}
+                              {/*      name: `products.${pIdx}.users.${uIdx}.params.PASSPORT_EXPIRATION_DATE`,*/}
+                              {/*      value: u?.params?.PASSPORT_EXPIRATION_DATE,*/}
+                              {/*      placeholder: t('contact_form.passport_expiration_date.placeholder'),*/}
+                              {/*      minDate: new Date(),*/}
+                              {/*      maxDate: null,*/}
+                              {/*    }}*/}
+                              {/*  />*/}
+                              {/*</div>*/}
 
                               <div className={'col-span-2 md:col-span-1'}>
                                 <DateInput
@@ -773,7 +772,6 @@ const Form = ({
                               </div>
                               <div className={'col-span-2 md:col-span-1'}>
                                 <TextInput
-                                  required
                                   label={t('contact_form.nameday_date.label')}
                                   error={
                                     get(touched, `products.${pIdx}.users.${uIdx}.params.NAMEDAY_DATE`) &&
@@ -850,26 +848,26 @@ const Form = ({
                                   }}
                                 />
                               </div>
-                              <div className={'col-span-2'}>
-                                <TextInput
-                                  required
-                                  label={t('contact_form.job.label')}
-                                  error={
-                                    get(touched, `products.${pIdx}.users.${uIdx}.params.JOB`) &&
-                                    get(errors, `products.${pIdx}.users.${uIdx}.params.JOB`)
-                                      ? get(errors, `products.${pIdx}.users.${uIdx}.params.JOB`)
-                                      : ''
-                                  }
-                                  inputProps={{
-                                    id: `products.${pIdx}.users.${uIdx}.params.JOB`,
-                                    name: `products.${pIdx}.users.${uIdx}.params.JOB`,
-                                    onChange: handleChange,
-                                    onBlur: handleBlur,
-                                    value: u?.params?.JOB,
-                                    placeholder: t('contact_form.job.placeholder'),
-                                  }}
-                                />
-                              </div>
+                              {/*<div className={'col-span-2'}>*/}
+                              {/*  <TextInput*/}
+                              {/*    required*/}
+                              {/*    label={t('contact_form.job.label')}*/}
+                              {/*    error={*/}
+                              {/*      get(touched, `products.${pIdx}.users.${uIdx}.params.JOB`) &&*/}
+                              {/*      get(errors, `products.${pIdx}.users.${uIdx}.params.JOB`)*/}
+                              {/*        ? get(errors, `products.${pIdx}.users.${uIdx}.params.JOB`)*/}
+                              {/*        : ''*/}
+                              {/*    }*/}
+                              {/*    inputProps={{*/}
+                              {/*      id: `products.${pIdx}.users.${uIdx}.params.JOB`,*/}
+                              {/*      name: `products.${pIdx}.users.${uIdx}.params.JOB`,*/}
+                              {/*      onChange: handleChange,*/}
+                              {/*      onBlur: handleBlur,*/}
+                              {/*      value: u?.params?.JOB,*/}
+                              {/*      placeholder: t('contact_form.job.placeholder'),*/}
+                              {/*    }}*/}
+                              {/*  />*/}
+                              {/*</div>*/}
                               <div className={'col-span-2'}>
                                 <TextAreaInput
                                   required
