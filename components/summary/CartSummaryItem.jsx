@@ -57,7 +57,7 @@ const CartSummaryItem = ({item}) => {
   return (
     <>
       <div className="col col-span-3 p-2 ps-0 flex gap-4 items-center h-full relative">
-        <Link href={`/destinacia/${item.product.urlTitle}`} className="absolute w-full h-full" />
+        <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
         <div className="w-[50px] h-[60px] bg-grey flex-shrink-0">
         {item?.product?.photo ? (
           <Image

@@ -81,7 +81,9 @@ const OrderButton = ({ setIsProcessing }) => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const params = {};
+    const params = {
+      MARKETING_AGREEMENT: marketingAgreement ? 1 : 0,
+    };
 
     const values = {
       ...{ params: params },
@@ -152,6 +154,19 @@ const OrderButton = ({ setIsProcessing }) => {
   return (
     <div className="mt-4">
       <div className="ml-2">
+        <CheckboxInput
+          label={t('cart_summary.marketing_agreement.label')}
+          error={errors?.marketingAgreement}
+          inputProps={{
+            id: 'marketingAgreement',
+            name: 'marketingAgreement',
+            onChange: e => {
+              setMarketingAgreement(e.target.checked);
+            },
+            value: 1,
+            checked: marketingAgreement,
+          }}
+        />
         {requirePrivacyPolicyAgreement ? (
           <CheckboxInput
             label={
