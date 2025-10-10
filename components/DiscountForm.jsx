@@ -40,7 +40,6 @@ const DiscountForm = () => {
                   id={`discount-isic`}
                   value={'isic'}
                   className={'!text-left'}
-                  round
                 >
                   {t('discount_form.isic.label.on')}
                 </Button>

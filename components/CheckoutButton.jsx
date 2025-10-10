@@ -246,24 +246,26 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
   const { cart, isLoading } = useCart();
 
   if (step === 2) {
-    return <>
-      <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
-      <Button
-        className="mt-3"
-        type="link"
-        fullWidth
-        htmlType={'a'}
-        href={CART_STEPS[step - 1]}
-        loading={isLoading}
-        prefetch
-      >
-        <BackButtonContent step={step} />
-      </Button>
-    </>;
+    return (
+      <div className="px-6">
+        <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
+        <Button
+          className="mt-3"
+          type="link"
+          fullWidth
+          htmlType={'a'}
+          href={CART_STEPS[step - 1]}
+          loading={isLoading}
+          prefetch
+        >
+          <BackButtonContent step={step} />
+        </Button>
+      </div>
+    )
   }
 
   return (
-    <div id={'contact_confirm'} className={'mt-4 text-center'}>
+    <div id={'contact_confirm'} className={'mt-4 px-6 text-center'}>
       {step !== 1 ?
         <Button
           type="primary"

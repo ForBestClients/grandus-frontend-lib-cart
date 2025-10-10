@@ -1,6 +1,5 @@
 import CartIcon from '@/components/_other/icons/CartIcon';
 import Button from '@/components/_other/button/Button';
-import CustomButton from '@/components/_other/button/CustomButton';
 import CloseIcon from '@/components/_other/icons/CloseIcon';
 import { useEffect, useState } from 'react';
 import { CART_STEPS } from '@/constants/AppConstants';
@@ -66,9 +65,9 @@ export const MiniCart = ({ isOpen, handleClose }) => {
             <Divider className="my-8" />
             <MiniCartItems />
           </div>
-          <CustomButton type={'primary'} fullWidth  className="mt-6" htmlType={'a'} href={CART_STEPS[0]} icon={<CartIcon />}>
+          <Button type={'primary'} fullWidth  className="mt-6" htmlType={'a'} href={CART_STEPS[0]} icon={<CartIcon />}>
             {t('cart.proceed_to_cart')}
-          </CustomButton>
+          </Button>
         </div>
       </div>,
       document.getElementById('mini-cart-drawer'),

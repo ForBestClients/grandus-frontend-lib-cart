@@ -991,7 +991,6 @@ const Form = ({
                                     type={"primary"}
                                     fullWidth
                                     onClick ={()=> handleSubmit()}
-                                    round
                                 >
                                     <span>{t('cart_title.step2.button')} </span>
                                 </Button>
@@ -1003,7 +1002,6 @@ const Form = ({
                                     loading={isLoading}
                                     prefetch
                                     className="mt-3"
-                                    round
                                 >
                                     <BackButtonContent step={step}/>
                                 </Button>

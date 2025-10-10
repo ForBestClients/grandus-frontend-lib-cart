@@ -22,7 +22,7 @@ const AmountInputCart = ({
   }, 500);
 
   return (
-      <NumberInput key={amount} onValueChange={handleChange} loading={loading} inputProps={{ name: 'amount', groupClassName: '!mb-0', readOnly: true, min: 1, max: MAX, value: amount }} />
+      <NumberInput key={amount} onValueChange={handleChange} loading={loading} showButtons={true}  inputProps={{ name: 'amount', groupClassName: '!mb-0 !mt-0', readOnly: true, min: 1, max: MAX, value: amount }} hasFeedback={false} />
   );
 };
 

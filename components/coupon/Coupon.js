@@ -84,18 +84,15 @@ const Coupon = ({}) => {
                 size={"smallWithNormalText"}
                 onClick={onRemoveCouponClick}
                 fullWidth={true}
-                round
               >
                 <span>{t('coupon.remove')}</span>
               </Button>
             ) : (
               <Button
-                size={"smallWithNormalText"}
                 onClick={onApplyCouponClick}
                 disabled={!value}
                 loading={isLoading}
                 fullWidth={true}
-                round
               >
                 <span>{t('coupon.apply')}</span>
               </Button>

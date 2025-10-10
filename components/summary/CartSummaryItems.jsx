@@ -9,7 +9,7 @@ const CartSummaryItems = ({cart}) => {
   const {t} = useTranslation();
 
   return (
-      <div className="grid grid-cols-4 items-center">
+      <div className="grid grid-cols-3 items-center">
         {map(cart?.items, (item, i) => {
           return <CartSummaryItem key={`cart-item-${i}`} item={item}/>
         })}

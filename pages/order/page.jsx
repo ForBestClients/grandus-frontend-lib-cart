@@ -6,7 +6,7 @@ import ThankYou from "@/modules/cart/components/thankYou/ThankYou";
 import ThankYouSkeleton from "@/modules/cart/components/thankYou/ThankYouSkeleton";
 
 
-export async function generateMetadata({params}) {
+export async function generateMetadata({ params }) {
   const {t} = await initTranslations(params?.locale);
 
   return SEO.getDefaultMetaObject(
@@ -15,12 +15,14 @@ export async function generateMetadata({params}) {
   );
 }
 
-const Page = ({ searchParams }) => {
+const Page = async ({ searchParams }) => {
+  const searchParamsData = await searchParams;
+
   return (
     <main className="bg-white py-16">
       <div className={'container'}>
         <Suspense fallback={<ThankYouSkeleton />}>
-          <ThankYou orderToken={ get(searchParams, 'orderToken', '') } />
+          <ThankYou orderToken={get(searchParamsData, 'orderToken', '')} />
         </Suspense>
       </div>
     </main>
