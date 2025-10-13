@@ -16,6 +16,7 @@ import find from 'lodash/find';
 import map from 'lodash/map';
 import Alert from '@/components/_other/alert/Alert';
 import toNumber from 'lodash/toNumber';
+import IconExternalLink from '@/components/_other/icons/IconExternalLink';
 
 const ButtonContent = ({ step }) => {
   const { t } = useTranslation();
@@ -217,13 +218,12 @@ const OrderButton = ({ setIsProcessing }) => {
                 <>
                   {' '}
                   <Link
-                    className="underline"
+                    className="underline inline-flex items-center"
                     href={get(settings, 'terms_and_conditions_link', '#')}
                     target="_blank"
                     passHref
                   >
-                    ({t('cart_summary.terms_and_conditions.read_more')})
-                    <IconExternalLink />
+                    ({t('cart_summary.terms_and_conditions.read_more')}<IconExternalLink />)
                   </Link>
                 </>
               ) : null}
