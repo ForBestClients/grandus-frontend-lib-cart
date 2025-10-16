@@ -8,7 +8,7 @@ import { useTranslation } from '@/app/i18n/client';
 import MiniCartItems from '@/modules/cart/components/minicart/MiniCartItems';
 import { createPortal } from 'react-dom';
 
-export const MiniCart = ({ isOpen, handleClose }) => {
+export const MiniCart = () => {
   const { t } = useTranslation();
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -19,16 +19,19 @@ export const MiniCart = ({ isOpen, handleClose }) => {
       element.id = 'mini-cart-drawer';
       document.body.appendChild(element);
     }
-    setIsEnabled(true);
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isEnabled) {
       document.body.classList.add('noScroll');
     } else {
       document.body.classList.remove('noScroll');
     }
-  }, [isOpen]);
+  }, [isEnabled]);
+
+  const handleClose = () => {
+    setIsEnabled(false);
+  }
 
   const onMiniCartOpen = () => {
     setIsEnabled(true);
@@ -49,7 +52,7 @@ export const MiniCart = ({ isOpen, handleClose }) => {
   return createPortal(
     <div
       className={`fixed left-0 top-0 w-full h-full z-50 bg-grey/70 transition-all backdrop-blur-sm
-      duration-500 pointer-events-none ${!isOpen ? 'opacity-0' : 'opacity-1'}`}
+      duration-500 pointer-events-none ${!isEnabled ? 'opacity-0' : 'opacity-1'}`}
     >
       <div
         className={`
@@ -63,7 +66,7 @@ export const MiniCart = ({ isOpen, handleClose }) => {
       transition-all
       duration-1000
       ${
-          isOpen
+          isEnabled
             ? 'translate-0 translate-y-0'
             : 'sm:translate-x-full translate-y-full sm:translate-y-0'
         }
