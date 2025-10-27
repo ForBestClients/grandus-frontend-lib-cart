@@ -8,21 +8,12 @@ import Divider from "@/components/_other/divider/Divider";
 import {useTranslation} from "@/app/i18n/client";
 import {useSearchParams} from "next/navigation";
 import Alert from "@/components/_other/alert/Alert";
-import {useEffect} from "react";
-import TagManager from "@/grandus-lib/utils/gtag";
-import EnhancedEcommerce from "@/grandus-lib/utils/ecommerce";
 import useUser from "@/grandus-lib/hooks/useUser";
 
 const ThankYouPageContent = ({order}) => {
   const {t} = useTranslation();
   const searchParams = useSearchParams();
   const { user, isLoading: userIsLoading } = useUser();
-
-  useEffect(() => {
-    if (order && !userIsLoading) {
-      TagManager.push(EnhancedEcommerce.purchaseG4(order, user));
-    }
-  }, [order, user, userIsLoading]);
 
   return (
       <>

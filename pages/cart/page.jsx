@@ -7,6 +7,7 @@ import {CartSummarySection} from "@/modules/cart/components/CartSummarySection";
 import CartLayout from "@/modules/cart/components/layout/CartLayout";
 import { initTranslations } from "@/app/i18n";
 import SEO from "@/utils/seo";
+import CartAnalytics from '@/app/components/cart/CartAnalytics';
 
 export async function generateMetadata({params}) {
     const {t} = await initTranslations(params?.locale);
@@ -19,6 +20,8 @@ export async function generateMetadata({params}) {
 
 export default async function CartPage(props) {
   return (
+    <>
+      <CartAnalytics />
       <CartLayout>
           <div className="grid grid-cols-6 gap-6 py-8">
               <div className="col col-span-full">
@@ -37,5 +40,6 @@ export default async function CartPage(props) {
               </div>
           </div>
       </CartLayout>
+    </>
   );
 }

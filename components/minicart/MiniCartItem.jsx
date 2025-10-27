@@ -13,6 +13,8 @@ import PriceDynamic from 'components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
+import TagManager from '@/grandus-lib/utils/gtag';
+import EnhancedEcommerce from '@/utils/ecommerce';
 
 const ItemCountInput = ({ item }) => {
   const { product, store, count } = item;
@@ -41,6 +43,23 @@ const ItemCountInput = ({ item }) => {
               if (newCount !== newItem?.count) {
                 setAmount(newItem?.count);
               }
+
+              const itemsDifference = newItem?.count - oldCount;
+              if (itemsDifference < 0) {
+                TagManager.push(
+                  EnhancedEcommerce.remove_from_cart(
+                    item,
+                    Math.abs(itemsDifference)
+                  )
+                );
+              } else if (itemsDifference > 0) {
+                TagManager.push(
+                  EnhancedEcommerce.add_to_cart(
+                    item,
+                    Math.abs(itemsDifference)
+                  )
+                );
+              }
             });
           }
         } catch {
@@ -64,10 +83,16 @@ const ItemCountInput = ({ item }) => {
 const ItemRemoveButton = ({ item, className }) => {
   const { itemRemove, isLoading } = useCart();
 
+  const removeItemFromCart = () => {
+    itemRemove(item?.id);
+    TagManager.push(EnhancedEcommerce.remove_from_cart(item, item?.count));
+  }
+
   return <Button
       type={'text'}
       color={'secondary'}
-      onClick={() => itemRemove(item?.id)} loading={isLoading}
+      onClick={removeItemFromCart}
+      loading={isLoading}
       className={className}>
     <IconRemove className={'h-6'} />
   </Button>;

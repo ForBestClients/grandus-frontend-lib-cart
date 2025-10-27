@@ -17,6 +17,10 @@ import map from 'lodash/map';
 import Alert from '@/components/_other/alert/Alert';
 import toNumber from 'lodash/toNumber';
 
+import TagManager from '@/grandus-lib/utils/gtag';
+import EnhancedEcommerce from '@/utils/ecommerce';
+import FBPixel from '@/grandus-lib/utils/fbpixel';
+
 const ButtonContent = ({ step }) => {
   const { t } = useTranslation();
   let buttonText = '';
@@ -93,10 +97,20 @@ const OrderButton = ({ setIsProcessing, contact }) => {
     schema.validate(values, { abortEarly: false })
       .then(async _ => {
         setIsProcessing(true);
+
+        await TagManager.push(EnhancedEcommerce.add_shipping_info(cart));
+        await TagManager.push(EnhancedEcommerce.add_payment_info(cart));
+        await FBPixel.addPaymentInfo(cart);
+
         await createOrder(values, response => {
           response
             .then(async order => {
               if (!isEmpty(order) && get(order, 'accessToken')) {
+                await Promise.all([
+                  TagManager.push(EnhancedEcommerce.purchaseG4(order, true)),
+                  FBPixel.addPurchase(order)
+                ]);
+
                 try {
                   await Promise.all([
                     removeContact(),
