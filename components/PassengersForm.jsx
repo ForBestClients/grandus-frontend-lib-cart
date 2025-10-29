@@ -702,7 +702,7 @@ const Form = ({
                                     value: u?.params?.ID_EXPIRATION_DATE,
                                     placeholder: t('contact_form.id_expiration_date.placeholder'),
                                     minDate: new Date(),
-                                    maxDate: null,
+                                    maxDate: dayjs().add(10, 'year').toDate(),
                                   }}
                                 />
                               </div>

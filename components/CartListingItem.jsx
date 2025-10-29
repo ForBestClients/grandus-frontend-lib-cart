@@ -13,6 +13,8 @@ import PriceDynamic from '@/components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
 import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
+import TagManager from '@/grandus-lib/utils/gtag';
+import EnhancedEcommerce from '@/utils/ecommerce';
 
 const ItemCountInput = ({ item }) => {
   const { product, store, count } = item;
@@ -40,6 +42,23 @@ const ItemCountInput = ({ item }) => {
             const newItem = find(cart?.items, { id: item?.id });
             if (newCount !== newItem?.count) {
               setAmount(newItem?.count);
+            }
+
+            const itemsDifference = newItem?.count - oldCount;
+            if (itemsDifference < 0) {
+              TagManager.push(
+                EnhancedEcommerce.remove_from_cart(
+                  newItem,
+                  Math.abs(itemsDifference)
+                )
+              );
+            } else if (itemsDifference > 0) {
+              TagManager.push(
+                EnhancedEcommerce.add_to_cart(
+                  newItem,
+                  Math.abs(itemsDifference)
+                )
+              );
             }
           });
         }

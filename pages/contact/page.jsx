@@ -6,6 +6,7 @@ import { initTranslations } from "@/app/i18n";
 import SEO from "@/utils/seo";
 import ContactForm from '@/modules/cart/components/ContactForm';
 import CartLayout from "@/modules/cart/components/layout/CartLayout";
+import CartAnalytics from '@/components/cart/CartAnalytics';
 
 export async function generateMetadata({params}) {
   const {t} = await initTranslations(params?.locale);
@@ -24,12 +25,15 @@ export default async function CartContact(props) {
   ]);
 
   return (
-    <CartLayout>
-      <ContactForm
-        countries={countries}
-        towns={towns}
-        contact={contact}
-      />
-    </CartLayout>
+    <>
+      <CartAnalytics type="begin_checkout"/>
+      <CartLayout>
+        <ContactForm
+          countries={countries}
+          towns={towns}
+          contact={contact}
+        />
+      </CartLayout>
+    </>
   );
 }
