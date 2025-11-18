@@ -117,7 +117,7 @@ const CartListingItem = ({ item }) => {
 
   return (
     <>
-      <div className="col col-span-3 md:col-span-2 p-2 ps-0 flex gap-4 items-center h-full relative">
+      <div className="col col-span-3 p-2 ps-0 flex gap-4 items-center h-full relative">
         <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
         <div className="w-[50px] h-[60px] sm:w-[80px] sm:h-[100px] bg-grey flex-shrink-0">
           {item?.product?.photo ? (
@@ -148,13 +148,13 @@ const CartListingItem = ({ item }) => {
 
       <div className="col hidden sm:block text-center p-2 whitespace-nowrap">
         <ItemCountInput item={item} className={'justify-center'} />
-        <BundleInfo product={item?.product} className="ms-2" />
+        {/*<BundleInfo product={item?.product} className="ms-2" />*/}
       </div>
 
-      <div className={'col hidden text-center md:block col-span-1 p-2'}>
-        <span className={'text-sm'}>spolu:</span> <br/>
-        <ItemBundleInfo item={item} />
-      </div>
+      {/*<div className={'col hidden text-center md:block col-span-1 p-2'}>*/}
+      {/*  <span className={'text-sm'}>spolu:</span> <br/>*/}
+      {/*  <ItemBundleInfo item={item} />*/}
+      {/*</div>*/}
 
       <div className="col col-span-2 sm:col-span-1 text-right sm:text-center p-2 whitespace-nowrap">
         <strong>

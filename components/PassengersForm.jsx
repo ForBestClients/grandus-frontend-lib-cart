@@ -145,11 +145,15 @@ const PassengersForm = ({ countries, towns, contactFormRef, contact = {}, passen
       ICE_CONTACT_NAME: yup.string().trim()
         .required(t('contact_form.global.required_validation')),
       ICE_CONTACT_PHONE: yup.string().trim()
-        .required(t('contact_form.global.required_validation')),
+        .required(t('contact_form.phone.required_validation'))
+        .matches(PHONE_NUMBER_REGEX, {
+          excludeEmptyString: true,
+          message: t('contact_form.phone.matches_validation'),
+        }),
       // JOB: yup.string().trim()
       //   .required(t('contact_form.global.required_validation')),
-      TRIP_EXPECTATIONS: yup.string().trim()
-        .required(t('contact_form.global.required_validation')),
+      TRIP_EXPECTATIONS: yup.string().trim(),
+        // .required(t('contact_form.global.required_validation')),
     })
   });
 
@@ -832,6 +836,7 @@ const Form = ({
                                 <TextInput
                                   required
                                   label={t('contact_form.ice_contact_phone.label')}
+                                  hint={t('contact_form.phone.hint')}
                                   error={
                                     get(touched, `products.${pIdx}.users.${uIdx}.params.ICE_CONTACT_PHONE`) &&
                                     get(errors, `products.${pIdx}.users.${uIdx}.params.ICE_CONTACT_PHONE`)
@@ -841,6 +846,7 @@ const Form = ({
                                   inputProps={{
                                     id: `products.${pIdx}.users.${uIdx}.params.ICE_CONTACT_PHONE`,
                                     name: `products.${pIdx}.users.${uIdx}.params.ICE_CONTACT_PHONE`,
+                                    type: 'tel',
                                     onChange: handleChange,
                                     onBlur: handleBlur,
                                     value: u?.params?.ICE_CONTACT_PHONE,
@@ -870,7 +876,6 @@ const Form = ({
                               {/*</div>*/}
                               <div className={'col-span-2'}>
                                 <TextAreaInput
-                                  required
                                   label={t('contact_form.trip_expectations.label')}
                                   error={
                                     get(touched, `products.${pIdx}.users.${uIdx}.params.TRIP_EXPECTATIONS`) &&
