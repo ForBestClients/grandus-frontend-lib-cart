@@ -7,7 +7,6 @@ import { formatter } from '@/utils/price';
 
 const CartSummaryItems = ({cart}) => {
   const {t} = useTranslation();
-
   return (
     <div className="grid grid-cols-4 items-center">
       <div className="col col-span-2 p-2 ps-0">
@@ -34,20 +33,20 @@ const CartSummaryItems = ({cart}) => {
         )
         : ''}
 
-      {cart?.delivery
-        ? (
-          <>
-            <div className="col col-span-2 p-2 ps-0">
-              {cart.delivery.name}
-            </div>
-            <div className="col col-span-2 p-2 text-end">
-              <span className={'whitespace-nowrap lg:text-lg font-bold '}>
-                <Price priceData={cart?.delivery.priceData} className={'!items-end'} />
-              </span>
-            </div>
-          </>
-        )
-        : ''}
+      {/*{cart?.delivery*/}
+      {/*  ? (*/}
+      {/*    <>*/}
+      {/*      <div className="col col-span-2 p-2 ps-0">*/}
+      {/*        {cart.delivery.groupName}*/}
+      {/*      </div>*/}
+      {/*      <div className="col col-span-2 p-2 text-end">*/}
+      {/*        <span className={'whitespace-nowrap lg:text-lg font-bold '}>*/}
+      {/*          <Price priceData={cart?.delivery.priceData} className={'!items-end'} />*/}
+      {/*        </span>*/}
+      {/*      </div>*/}
+      {/*    </>*/}
+      {/*  )*/}
+      {/*  : ''}*/}
 
       {cart?.payment
         ? (
