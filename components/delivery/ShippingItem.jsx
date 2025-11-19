@@ -1,4 +1,4 @@
-import useCart from '@/grandus-lib/hooks/useCart';
+import { useCart } from '@/grandus-lib/hooks/useCart';
 import { useOptimistic, useTransition } from 'react';
 import Image from '@/grandus-utils/wrappers/image/Image';
 import Price from '@/components/price/Price';

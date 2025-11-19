@@ -1,6 +1,6 @@
 'use client';
 import Button from '@/components/_other/button/Button';
-import useCart from '@/grandus-lib/hooks/useCart';
+import { useCart } from '@/grandus-lib/hooks/useCart';
 import { CART_STEPS } from '@/constants/AppConstants';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
@@ -261,7 +261,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
 
   if (step === 2) {
     return (
-      <div className="px-6">
+      <>
         <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
         <Button
           className="mt-3"
@@ -274,7 +274,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
         >
           <BackButtonContent step={step} />
         </Button>
-      </div>
+      </>
     )
   }
 

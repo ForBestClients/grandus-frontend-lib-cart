@@ -2,7 +2,7 @@
 import {useEffect, useState} from "react";
 import TagManager from "grandus-lib/utils/gtag";
 import FBPixel from "grandus-lib/utils/fbpixel";
-import useCart from "grandus-lib/hooks/useCart";
+import { useCart } from 'grandus-lib/hooks/useCart';
 import useUser from "grandus-lib/hooks/useUser";
 import EnhancedEcommerce from "grandus-lib/utils/ecommerce";
 

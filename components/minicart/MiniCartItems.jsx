@@ -2,7 +2,7 @@
 
 import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
-import useCart from '@/grandus-lib/hooks/useCart';
+import { useCart } from '@/grandus-lib/hooks/useCart';
 import Divider from "@/components/_other/divider/Divider";
 import CartItemsSkeleton from "@/modules/cart/components/skeletons/CartItemsSkeleton";
 import {useTranslation} from "@/app/i18n/client";

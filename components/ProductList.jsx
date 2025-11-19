@@ -1,6 +1,6 @@
 'use client';
 
-import useCart from "grandus-lib/hooks/useCart";
+import { useCart } from 'grandus-lib/hooks/useCart';
 import find from "lodash/find";
 import first from "lodash/first";
 import LoadingIcon from "components/_other/icons/LoadingIcon";

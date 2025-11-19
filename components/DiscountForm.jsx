@@ -1,5 +1,5 @@
 'use client';
-import useCart from 'grandus-lib/hooks/useCart';
+import { useCart } from 'grandus-lib/hooks/useCart';
 import { useEffect, useState } from 'react';
 import Coupon from '@/modules/cart/components/coupon/Coupon';
 import Isic from '@/modules/cart/components/isic/Isic';

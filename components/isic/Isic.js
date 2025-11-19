@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import * as yup from 'yup';
 import {useFormikContext, Formik} from 'formik';
-import useCart from 'grandus-lib/hooks/useCart';
+import { useCart } from 'grandus-lib/hooks/useCart';
 import get from 'lodash/get';
 import toNumber from 'lodash/toNumber';
 import Button from 'components/_other/button/Button';

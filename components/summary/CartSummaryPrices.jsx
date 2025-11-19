@@ -27,7 +27,7 @@ const CartSummaryItems = ({cart}) => {
             </div>
             <div className="col col-span-2 p-2 text-end">
               <span className={'whitespace-nowrap lg:text-lg font-bold '}>
-                <Price priceData={cart.coupon.discountData} isDiscount className={'!items-end'} />
+                -<Price priceData={cart.coupon.discountData} isDiscount className={'!items-end'} />
               </span>
             </div>
           </>

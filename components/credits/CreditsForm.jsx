@@ -10,7 +10,7 @@ import {useState} from "react";
 import find from "lodash/find";
 import useWebInstance from "@/grandus-lib/hooks/useWebInstance";
 import useStaticBlock from "@/grandus-lib/hooks/useStaticBlock";
-import useCart from "@/grandus-lib/hooks/useCart";
+import { useCart } from '@/grandus-lib/hooks/useCart';
 import useUser from "@/grandus-lib/hooks/useUser";
 import {useTranslation} from "@/app/i18n/client";
 

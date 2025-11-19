@@ -64,36 +64,37 @@ const CartHeader = () => {
   return (
     <nav className={styles.wrapper}>
       {steps.map(stepItem => {
+        const classNames = [styles.navLink];
+
         if (stepItem.step === currentStep.step) {
-          return (
-            <Link
-              href={stepItem?.link}
-              key={`step-${stepItem?.step}`}
-              className={`${styles.navLink} ${styles.active}`}
-            >
-              <span className={styles.stepCount}>{stepItem.step}</span>
-              <span>{stepItem?.text}</span>
-            </Link>
-          );
+          classNames.push(styles.active)
+        }
+
+        if (stepItem.step === currentStep.step-1) {
+          classNames.push(styles.prev)
         }
 
         if (stepItem.step < currentStep.step) {
+          classNames.push(styles.finished)
+        }
+
+        if (stepItem.step <= currentStep.step) {
           return (
             <Link
               href={stepItem?.link}
               key={`step-${stepItem?.step}`}
-              className={`${styles.navLink} ${styles.finished}`}
+              className={classNames.join(' ')}
             >
               <span className={styles.stepCount}>{stepItem.step}</span>
-              <span>{stepItem?.text}</span>
+              <span className={styles.label}>{stepItem?.text}</span>
             </Link>
           );
         }
 
         return (
-          <span className={styles.navLink} key={`step-${stepItem?.step}`}>
+          <span className={classNames.join(' ')} key={`step-${stepItem?.step}`}>
             <span className={styles.stepCount}>{stepItem.step}</span>
-            <span>{stepItem?.text}</span>
+            <span className={styles.label}>{stepItem?.text}</span>
           </span>
         );
       })}

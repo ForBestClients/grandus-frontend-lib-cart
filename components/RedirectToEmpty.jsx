@@ -1,5 +1,5 @@
 "use client"
-import useCart from '@/grandus-lib/hooks/useCart';
+import { useCart } from '@/grandus-lib/hooks/useCart';
 import { useRouter } from 'next/navigation';
 import isEmpty  from 'lodash/isEmpty';
 
