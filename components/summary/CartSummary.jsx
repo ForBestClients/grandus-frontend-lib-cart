@@ -1,6 +1,6 @@
 'use client';
 
-import { useCart } from '@/grandus-lib/hooks/useCart';
+import useCart from '@/grandus-lib/hooks/useCart';
 import {useState} from "react";
 import isEmpty from "lodash/isEmpty";
 import Box from "@/components/_other/box/Box";

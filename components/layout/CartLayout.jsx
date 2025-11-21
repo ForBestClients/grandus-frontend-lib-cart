@@ -3,7 +3,7 @@ import {Suspense, useState} from "react";
 import CartHeader from "@/modules/cart/components/header/CartHeader";
 import CartTitle from "@/modules/cart/components/CartTitle";
 import {CartSummarySection} from "@/modules/cart/components/CartSummarySection";
-import { useCart } from '@/grandus-lib/hooks/useCart';
+import useCart from '@/grandus-lib/hooks/useCart';
 import isEmpty from "lodash/isEmpty";
 import get from "lodash/get";
 import EmptyCart from "@/modules/cart/components/EmptyCart";
