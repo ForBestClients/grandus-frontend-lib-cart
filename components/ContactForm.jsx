@@ -12,7 +12,7 @@ import first from 'lodash/first';
 import map from 'lodash/map';
 
 import useWebInstance from 'grandus-lib/hooks/useWebInstance';
-import { useCart } from 'grandus-lib/hooks/useCart';
+import useCart from 'grandus-lib/hooks/useCart';
 import useUser from 'grandus-lib/hooks/useUser';
 
 import {

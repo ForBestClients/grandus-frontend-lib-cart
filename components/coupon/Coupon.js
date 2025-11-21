@@ -1,7 +1,7 @@
 'use client';
 
 import {useState} from 'react';
-import { useCart } from 'grandus-lib/hooks/useCart';
+import useCart from 'grandus-lib/hooks/useCart';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import Button from 'components/_other/button/Button';

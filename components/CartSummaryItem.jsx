@@ -2,7 +2,7 @@
 
 import find from "lodash/find";
 import debounce from "lodash/debounce";
-import { useCart } from 'grandus-lib/hooks/useCart';
+import useCart from 'grandus-lib/hooks/useCart';
 import {useCallback, useState} from "react";
 import AmountInputCart from "@/modules/cart/components/AmountInputCart";
 import Price from "components/price/Price";

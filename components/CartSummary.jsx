@@ -1,6 +1,6 @@
 'use client';
 
-import { useCart } from 'grandus-lib/hooks/useCart';
+import useCart from 'grandus-lib/hooks/useCart';
 import CartSummaryItems from "@/modules/cart/components/CartSummaryItems";
 import {useState} from "react";
 import CheckboxInput from "components/_other/form/CheckboxInput";

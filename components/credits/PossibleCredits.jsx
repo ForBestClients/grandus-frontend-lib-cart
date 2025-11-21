@@ -1,4 +1,4 @@
-import { useCart } from 'grandus-lib/hooks/useCart';
+import useCart from 'grandus-lib/hooks/useCart';
 import useStaticBlock from 'grandus-lib/hooks/useStaticBlock';
 import first from 'lodash/first';
 import useWebInstance from 'grandus-lib/hooks/useWebInstance';

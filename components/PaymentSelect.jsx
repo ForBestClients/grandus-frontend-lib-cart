@@ -1,6 +1,6 @@
 'use client';
 
-import { useCart } from 'grandus-lib/hooks/useCart';
+import useCart from 'grandus-lib/hooks/useCart';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import { useOptimistic, useTransition } from 'react';
