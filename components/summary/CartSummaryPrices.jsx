@@ -9,14 +9,14 @@ const CartSummaryItems = ({cart}) => {
   const {t} = useTranslation();
   return (
     <div className="grid grid-cols-4 items-center">
-      <div className="col col-span-2 p-2 ps-0">
-        <p>{t('cart_summary_items.totalProducts')}</p>
-      </div>
-      <div className="col col-span-2 p-2 text-end">
-        <span className={'whitespace-nowrap text-lg lg:text-xl font-bold '}>
-           <Price priceData={cart.sumData} className={'!items-end'} />
-        </span>
-      </div>
+      {/*<div className="col col-span-2 p-2 ps-0">*/}
+      {/*  <p>{t('cart_summary_items.totalProducts')}</p>*/}
+      {/*</div>*/}
+      {/*<div className="col col-span-2 p-2 text-end">*/}
+      {/*  <span className={'whitespace-nowrap text-lg lg:text-xl font-bold '}>*/}
+      {/*     <Price priceData={cart.sumData} className={'!items-end'} />*/}
+      {/*  </span>*/}
+      {/*</div>*/}
 
       {cart?.coupon
         ? (
@@ -65,24 +65,6 @@ const CartSummaryItems = ({cart}) => {
 
       <div className="col-span-full">
         <Divider />
-      </div>
-
-      <div className="col col-span-2 p-2 ps-0">
-        <p>{t('cart_summary_items.totalWithoutVAT')}</p>
-      </div>
-      <div className="col col-span-2 p-2 text-end">
-        <span className={'lg:text-lg font-bold whitespace-nowrap'}>
-          <Price priceData={cart.sumData} withVat={false} />
-        </span>
-      </div>
-
-      <div className="col col-span-2 p-2 ps-0">
-        <p>{t('cart_summary_items.VAT')}</p>
-      </div>
-      <div className="col col-span-2 p-2 text-end">
-        <span className={'whitespace-nowrap font-bold lg:text-lg'}>
-          {formatter.format(cart.sumData.vatFraction)}
-        </span>
       </div>
 
       <div className="col col-span-2 p-2 ps-0">
