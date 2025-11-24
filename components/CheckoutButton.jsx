@@ -20,6 +20,11 @@ import IconExternalLink from '@/components/_other/icons/IconExternalLink';
 import EnhancedEcommerce from '@/utils/ecommerce';
 import TagManager from '@/grandus-lib/utils/gtag';
 import FBPixel from '@/grandus-lib/utils/fbpixel';
+import { isVoucherCart } from '@/utils/cart';
+import { unset } from 'lodash';
+import filter from 'lodash/filter';
+import { useRouter } from 'next/navigation';
+import cart from '@/pages/api/lib/v1/cart';
 
 const ButtonContent = ({ step }) => {
   const { t } = useTranslation();
@@ -39,11 +44,11 @@ const ButtonContent = ({ step }) => {
   return <span>{buttonText}</span>
 };
 
-export const BackButtonContent = ({ step }) => {
+export const BackButtonContent = ({ step, cart }) => {
   const { t } = useTranslation();
   switch (step) {
     case 1:
-      return t('cart_title.step2.back_button');
+        return t('cart_title.step2.back_button');
     case 2:
       return t('cart_title.step3.back_button');
     default:
@@ -275,7 +280,13 @@ const OrderButton = ({ setIsProcessing }) => {
 };
 
 export const CheckoutButton = ({ step, setIsProcessing }) => {
-  const { isLoading } = useCart();
+  const { cart, isLoading } = useCart();
+  const router = useRouter();
+
+  if (isVoucherCart(cart?.items) && step === 2) {
+    router.push(CART_STEPS[step + 1]);
+    return;
+  }
 
   if (step === 3) {
     return <>

@@ -37,7 +37,7 @@ import find from 'lodash/find';
 import useStaticBlock from '@/grandus-lib/hooks/useStaticBlock';
 import Alert from '@/components/_other/alert/Alert';
 import { BackButtonContent } from '@/modules/cart/components/CheckoutButton';
-import { useCartStep } from '@/utils/cart';
+import { isVoucherCart, useCartStep } from '@/utils/cart';
 import SelectInput from '@/components/_other/form/SelectInput';
 import EmailChecker from '@/modules/cart/components/emailChecker/EmailChecker';
 import LoggedUserInfo from '@/modules/cart/components/loggedUserInfo/LoggedUserInfo';
@@ -322,7 +322,7 @@ const Form = ({
   isRegistrationRequired,
 }) => {
   const { t } = useTranslation();
-  const { isLoading } = useCart();
+  const { cart, isLoading } = useCart();
   const step = useCartStep();
   const [buttonContainer, setButtonContainer] = useState(null);
 
@@ -730,7 +730,7 @@ const Form = ({
               onClick={() => handleSubmit()}
               round
             >
-              <span>{t('cart_title.step2.button')} </span>
+              <span>{isVoucherCart(cart?.items) ? t('cart_title.step3.button') : t('cart_title.step2.button')} </span>
             </Button>
             <Button
               type="link"
@@ -742,7 +742,7 @@ const Form = ({
               className="mt-3"
               round
             >
-              <BackButtonContent step={step} />
+              <BackButtonContent step={step} cart={cart} />
             </Button>
           </>,
           buttonContainer,

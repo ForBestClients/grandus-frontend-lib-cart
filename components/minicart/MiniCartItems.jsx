@@ -7,6 +7,7 @@ import Divider from "@/components/_other/divider/Divider";
 import CartItemsSkeleton from "@/modules/cart/components/skeletons/CartItemsSkeleton";
 import {useTranslation} from "@/app/i18n/client";
 import MiniCartItem from '@/modules/cart/components/minicart/MiniCartItem';
+import forEach from 'lodash/forEach';
 
 const MiniCartItems = () => {
   const { cart, isLoading } = useCart()
