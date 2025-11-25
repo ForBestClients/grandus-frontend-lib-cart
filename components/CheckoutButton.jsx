@@ -1,7 +1,12 @@
 'use client';
 import Button from '@/components/_other/button/Button';
 import useCart from '@/grandus-lib/hooks/useCart';
-import { CART_STEPS } from '@/constants/AppConstants';
+import {
+  CART_STEPS,
+  DEFAULT_ORDER_CREATED_STATUS_ID,
+  TRIP_ORDER_CREATED_STATUS_ID,
+  VOUCHER_ORDER_CREATED_STATUS_ID,
+} from '@/constants/AppConstants';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
 import forEach from 'lodash/forEach';
@@ -100,7 +105,12 @@ const OrderButton = ({ setIsProcessing }) => {
       termsAndConditions: termsAndConditionsAccepted,
       specificDeliveryType: cart?.specificDeliveryType ?? null,
       passengers: cart?.jsonData?.passengers ?? null,
+      orderStatusId: DEFAULT_ORDER_CREATED_STATUS_ID
     };
+
+    if (!isVoucherCart(cart?.items)) {
+      values.orderStatusId = TRIP_ORDER_CREATED_STATUS_ID;
+    }
 
     schema.validate(values, { abortEarly: false })
       .then(async _ => {

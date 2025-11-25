@@ -9,6 +9,7 @@ import Image from '@/grandus-utils/wrappers/image/Image';
 import ShippingAndPaymentSkeleton from '@/modules/cart/components/skeletons/ShippingAndPaymentSkeleton';
 import { useTranslation } from '@/app/i18n/client';
 import RadioInput from '@/components/_other/form/RadioInput';
+import { isVoucherCart } from '@/utils/cart';
 
 const PaymentItem = ({ payment, handleChange, selected = false }) => {
   const [isPending, startTransition] = useTransition();
@@ -80,10 +81,15 @@ const PaymentSelect = ({ options, selected, handleChange }) => {
     return <ShippingAndPaymentSkeleton />;
   }
 
+  let paymentOptions = options;
+  if (isVoucherCart(cart?.items)) {
+    paymentOptions = options.filter(option => option.hash !== 'PARTIAL_IN_ADVANCE_PAYMENT');
+  }
+
   return (
     <div>
       <h3 className="text-lg mb-3">{t('cart_form.payment.title')}</h3>
-      {isEmpty(options) ? (
+      {isEmpty(paymentOptions) ? (
         <p>
           {t(
             cart?.delivery === null
@@ -93,7 +99,7 @@ const PaymentSelect = ({ options, selected, handleChange }) => {
         </p>
       ) : (
         <>
-          {map(options, (payment, i) => {
+          {map(paymentOptions, (payment, i) => {
             return (
               <PaymentItem
                 key={`payment-item-${i}`}
