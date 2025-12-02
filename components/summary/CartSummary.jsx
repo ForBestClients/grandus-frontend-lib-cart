@@ -9,6 +9,7 @@ import Alert from "@/components/_other/alert/Alert";
 import CartSummaryItems from '@/modules/cart/components/summary/CartSummaryItems';
 import CartSummaryPrices from '@/modules/cart/components/summary/CartSummaryPrices';
 import {useTranslation} from "@/app/i18n/client";
+import CartMessages from '@/modules/cart/components/messages/CartMessages';
 
 const OMIT_ERROR_FIELDS = [
   'deliveryType',
@@ -25,6 +26,7 @@ const CartSummary = ({isFirstStep}) => {
 
   return (
     <>
+      <CartMessages />
       <Box>
         <h5 className={"mb-2"}>{t('cart_summary.title')}</h5>
         {!isFirstStep ? <CartSummaryItems cart={cart}/> : ""}

@@ -7,6 +7,7 @@ import Divider from '@/components/_other/divider/Divider';
 import { useTranslation } from '@/app/i18n/client';
 import MiniCartItems from '@/modules/cart/components/minicart/MiniCartItems';
 import { createPortal } from 'react-dom';
+import CartMessages from '@/modules/cart/components/messages/CartMessages';
 
 export const MiniCart = () => {
   const { t } = useTranslation();
@@ -88,6 +89,7 @@ export const MiniCart = () => {
         </div>
         <Divider className="mt-2 mb-1" />
         <div className={'flex-1 overflow-y-auto py-0 px-4'}>
+          <CartMessages />
           <MiniCartItems />
         </div>
         <div className={'flex flex-col justify-end flex-shrink-0 w-full'}>
