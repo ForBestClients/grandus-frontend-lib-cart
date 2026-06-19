@@ -65,7 +65,7 @@ const DeliveryAndPaymentForm = ({ countries }) => {
   }, [cart]);
 
   const setSelectedDeliveryGroupToState = delivery => {
-    dispatch({ type: 'CART_DELIVERY)GROUP', payload: delivery });
+    dispatch({ type: 'CART_DELIVERY_GROUP', payload: delivery });
   };
 
   const setSelectedDeliveryToState = delivery => {

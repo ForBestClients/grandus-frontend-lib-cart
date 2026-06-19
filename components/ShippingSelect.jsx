@@ -9,6 +9,7 @@ import styles from "./ShippingSelect.module.scss"
 import ShippingItem from "@/modules/cart/components/delivery/ShippingItem";
 import {groupBy, pickBy} from "lodash";
 import ShippingItemGroup from "@/modules/cart/components/delivery/ShippingItemGroup";
+import { PACKETERY_TYPE } from "@/grandus-lib/components/v2/delivery/provider";
 
 const ShippingSelect = ({ countries, selected, selectedGroup, handleChange, handleGroupChange }) => {
   const { cart, isLoading } = useCart();
@@ -20,7 +21,10 @@ const ShippingSelect = ({ countries, selected, selectedGroup, handleChange, hand
 
   const deliveries = cart?.deliveryOptions
 
+  // Packeta deliveries (serviceProviderType === 1) are always rendered as individual
+  // ShippingItem (never grouped) so the pickup-point widget shows up via DeliveryProvider.
   const deliveryOptionsGrouped = groupBy(deliveries, (item) => {
+    if (item?.serviceProviderType === PACKETERY_TYPE) return "nogroup";
     return item.group ? item.group : "nogroup";
   });
   const nogroup = deliveryOptionsGrouped["nogroup"];

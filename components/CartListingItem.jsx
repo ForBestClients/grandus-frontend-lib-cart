@@ -100,8 +100,16 @@ const ItemRemoveButton = ({ item, className }) => {
 };
 
 const ItemBundleInfo = ({ item }) => {
-  const measureUnit = get(item, 'product.store[0].name', item?.measureUnit) ?? 'ks';
-  const piecesInBundle = get(item, 'product.store[0].piecesInBundle', 1);
+  const selectedStore = find(
+    get(item, 'product.store', []),
+    s => s?.id === get(item, 'store.id'),
+  );
+  const measureUnit =
+    get(selectedStore, 'name') ||
+    get(item, 'store.name') ||
+    item?.measureUnit ||
+    'ks';
+  const piecesInBundle = get(selectedStore, 'piecesInBundle', 1);
 
   if (piecesInBundle > 1) {
     return `${item.count} bal (${item.count * piecesInBundle} ${measureUnit})`
