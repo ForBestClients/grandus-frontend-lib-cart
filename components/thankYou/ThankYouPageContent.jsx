@@ -9,8 +9,9 @@ import {useTranslation} from "@/app/i18n/client";
 import {useSearchParams} from "next/navigation";
 import Alert from "@/components/_other/alert/Alert";
 import useUser from "@/grandus-lib/hooks/useUser";
+import BankTransferInfo from "./BankTransferInfo";
 
-const ThankYouPageContent = ({order}) => {
+const ThankYouPageContent = ({order, bankSettings = null}) => {
   const {t} = useTranslation();
   const searchParams = useSearchParams();
   const { user, isLoading: userIsLoading } = useUser();
@@ -124,6 +125,8 @@ const ThankYouPageContent = ({order}) => {
                 </div>
               </div>
             </Box>
+
+            <BankTransferInfo order={order} settings={bankSettings} />
           </div>
         </div>
       </>
