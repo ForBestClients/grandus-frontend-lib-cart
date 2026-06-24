@@ -6,6 +6,7 @@ import { CART_STEPS } from '@/constants/AppConstants';
 import Divider from '@/components/_other/divider/Divider';
 import { useTranslation } from '@/app/i18n/client';
 import MiniCartItems from '@/modules/cart/components/minicart/MiniCartItems';
+import Services from '@/modules/cart/components/Services';
 import { createPortal } from 'react-dom';
 import CartMessages from '@/modules/cart/components/messages/CartMessages';
 
@@ -91,9 +92,9 @@ export const MiniCart = () => {
         <div className={'flex-1 overflow-y-auto py-0 px-4'}>
           <CartMessages />
           <MiniCartItems />
+          <Services compact />
         </div>
         <div className={'flex flex-col justify-end flex-shrink-0 w-full'}>
-          <Divider />
           <Button
             fullWidth
             htmlType={'a'}

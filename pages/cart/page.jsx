@@ -1,4 +1,5 @@
 import CartListingItems from '@/modules/cart/components/CartListingItems';
+import Services from '@/modules/cart/components/Services';
 import Box from "@/components/_other/box/Box";
 import DiscountForm from "@/modules/cart/components/DiscountForm";
 import Credits from "@/modules/cart/components/credits/Credits";
@@ -29,6 +30,11 @@ export default async function CartPage(props) {
                       <Box>
                         <CartListingItems/>
                       </Box>
+                  </Suspense>
+              </div>
+              <div className="col col-span-full">
+                  <Suspense>
+                      <Services/>
                   </Suspense>
               </div>
               <div className="col col-span-full md:col-span-3 flex flex-col gap-6">

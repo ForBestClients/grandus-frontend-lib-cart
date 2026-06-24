@@ -2,11 +2,13 @@
 
 import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
+import filter from "lodash/filter";
+import some from "lodash/some";
 import useCart from '@/grandus-lib/hooks/useCart';
-import Divider from "@/components/_other/divider/Divider";
 import CartItemsSkeleton from "@/modules/cart/components/skeletons/CartItemsSkeleton";
 import {useTranslation} from "@/app/i18n/client";
 import MiniCartItem from '@/modules/cart/components/minicart/MiniCartItem';
+import {CART_SERVICES_CATEGORY} from "@/constants/AppConstants";
 
 const MiniCartItems = () => {
   const { cart, isLoading } = useCart()
@@ -16,7 +18,14 @@ const MiniCartItems = () => {
     return <CartItemsSkeleton />
   }
 
-  if (isEmpty(cart?.items)) {
+  // Doplnkové služby (kategória `sluzby`) skryjeme zo zoznamu položiek –
+  // spravujú sa cez checkbox v <Services/> nižšie v mini-košíku.
+  const items = filter(
+    cart?.items,
+    item => !some(item?.product?.categories, c => c?.urlName === CART_SERVICES_CATEGORY),
+  );
+
+  if (isEmpty(items)) {
     return <div className={'pt-4'}>{t('cart_summary_items.empty')}</div>;
   }
 
@@ -34,12 +43,9 @@ const MiniCartItems = () => {
           </div>
           <div className={"hidden xs:block"}/>
 
-          {map(cart?.items, (item, i) => {
+          {map(items, (item, i) => {
             return <MiniCartItem key={`cart-item-${i}`} item={item}/>
           })}
-          <div className="col-span-full">
-            <Divider />
-          </div>
         </div>
       </>
   )

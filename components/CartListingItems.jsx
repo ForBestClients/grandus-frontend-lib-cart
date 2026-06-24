@@ -2,11 +2,14 @@
 
 import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
+import filter from "lodash/filter";
+import some from "lodash/some";
 import CartListingItem from '@/modules/cart/components/CartListingItem';
 import useCart from '@/grandus-lib/hooks/useCart';
 import Divider from "@/components/_other/divider/Divider";
 import CartItemsSkeleton from "@/modules/cart/components/skeletons/CartItemsSkeleton";
 import {useTranslation} from "@/app/i18n/client";
+import {CART_SERVICES_CATEGORY} from "@/constants/AppConstants";
 
 const CartListingItems = () => {
   const { cart, isLoading } = useCart()
@@ -17,6 +20,17 @@ const CartListingItems = () => {
   }
 
   if (isEmpty(cart?.items)) {
+    return <div className={'pt-4'}>{t('cart_summary_items.empty')}</div>;
+  }
+
+  // Doplnkové služby (napr. darčekové balenie) sú produkty z kategórie `sluzby`.
+  // V zozname položiek ich skryjeme – spravujú sa cez checkbox v <Services/>.
+  const items = filter(
+    cart?.items,
+    item => !some(item?.product?.categories, c => c?.urlName === CART_SERVICES_CATEGORY),
+  );
+
+  if (isEmpty(items)) {
     return <div className={'pt-4'}>{t('cart_summary_items.empty')}</div>;
   }
 
@@ -37,7 +51,7 @@ const CartListingItems = () => {
         </div>
         <div className={"hidden sm:block"}/>
 
-        {map(cart?.items, (item, i) => {
+        {map(items, (item, i) => {
           return <CartListingItem key={`cart-item-${i}`} item={item}/>
         })}
         <div className="col-span-full">
