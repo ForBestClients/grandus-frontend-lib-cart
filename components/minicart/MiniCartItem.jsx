@@ -15,6 +15,7 @@ import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
 import get from 'lodash/get';
 import TagManager from '@/grandus-lib/utils/gtag';
 import EnhancedEcommerce from '@/utils/ecommerce';
+import { useTranslation } from 'react-i18next';
 
 const ItemCountInput = ({ item }) => {
   const { product, store, count } = item;
@@ -110,6 +111,7 @@ const ItemBundleInfo = ({ item }) => {
 }
 
 const MiniCartItem = ({ item }) => {
+  const { t } = useTranslation();
 
   const itemInfos = [];
 
@@ -118,7 +120,7 @@ const MiniCartItem = ({ item }) => {
   }
 
   if (get(item, 'product.store[0].weight')) {
-    itemInfos.push(`Hmotnosť: ${get(item, 'product.store[0].weight')} kg`);
+    itemInfos.push(`${t('Hmotnosť')}: ${get(item, 'product.store[0].weight')} kg`);
   }
 
   return (
