@@ -1,13 +1,13 @@
 import getCountries from '@/grandus-utils/fetches/ssr/Countries';
-import SEO from '@/utils/seo';
+import { buildSystemMetadata } from '@/utils/metadata';
 import { initTranslations } from '@/app/i18n';
 import CartLayout from "@/modules/cart/components/layout/CartLayout";
 import DeliveryAndPaymentForm from '@/modules/cart/components/DeliveryAndPaymentForm';
 
-export async function generateMetadata({ params }) {
-  const { t } = await initTranslations(params?.locale);
+export async function generateMetadata() {
+  const { t } = await initTranslations();
 
-  return SEO.getDefaultMetaObject(t('Kontaktné informácie'), '');
+  return buildSystemMetadata({ title: t('seo.checkout_delivery'), follow: false });
 }
 
 export default async function DeliveryAndPaymentPage(props) {

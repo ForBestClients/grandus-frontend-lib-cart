@@ -45,7 +45,6 @@ const EmailChecker = ({
                 label={t('contact_form.email.label')}
                 error={error}
                 handleEmailChange={handleEmailCheck}
-                successText={emailExists ? statusTexts?.found : null}
                 inputProps={{
                   ref: emailCheckerInputRef,
                   id: 'email',
@@ -71,8 +70,8 @@ const EmailChecker = ({
                       inputClassName={inputClassName}
                       layout={'block'}
                   />
-                  <div className={'text-center'}>
-                      <Button type="ghost" fullWidth onClick={() => handleEmailChange()}>
+                  <div className={'mt-3 text-center'}>
+                      <Button type="outline" fullWidth onClick={() => handleEmailChange()}>
                           {t('contact_form.use_different_email')}
                       </Button>
                   </div>

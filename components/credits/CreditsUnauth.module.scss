@@ -1,12 +1,11 @@
-
 .login {
-  @apply flex flex-col md:flex-row gap-4 md:items-center;
+  @apply flex flex-col gap-4 md:flex-row md:items-center md:justify-between;
+
+  .text {
+    @apply mb-0 text-[15px] leading-relaxed text-ink md:max-w-[420px];
+  }
 
   .button {
-    @apply w-full max-w-[262px] ms-auto;
-
-    button {
-      @apply w-full;
-    }
+    @apply w-full shrink-0 md:w-auto;
   }
 }

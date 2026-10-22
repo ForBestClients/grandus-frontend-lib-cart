@@ -2,63 +2,56 @@
 
 import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
-import filter from "lodash/filter";
-import some from "lodash/some";
+import reject from "lodash/reject";
 import CartListingItem from '@/modules/cart/components/CartListingItem';
 import useCart from '@/grandus-lib/hooks/useCart';
 import Divider from "@/components/_other/divider/Divider";
 import CartItemsSkeleton from "@/modules/cart/components/skeletons/CartItemsSkeleton";
 import {useTranslation} from "@/app/i18n/client";
-import {CART_SERVICES_CATEGORY} from "@/constants/AppConstants";
+import {isCartServiceItem} from "@/modules/cart/components/ui/cartServices";
+
+const HEADER_CELL = 'text-base font-medium leading-snug text-ink md:text-xl';
 
 const CartListingItems = () => {
   const { cart, isLoading } = useCart()
   const {t} = useTranslation();
 
-  if (isLoading) {
+  // skeleton only for the first load; revalidations keep the list in place
+  if (isLoading && isEmpty(cart?.items)) {
     return <CartItemsSkeleton />
-  }
-
-  if (isEmpty(cart?.items)) {
-    return <div className={'pt-4'}>{t('cart_summary_items.empty')}</div>;
   }
 
   // Doplnkové služby (napr. darčekové balenie) sú produkty z kategórie `sluzby`.
   // V zozname položiek ich skryjeme – spravujú sa cez checkbox v <Services/>.
-  const items = filter(
-    cart?.items,
-    item => !some(item?.product?.categories, c => c?.urlName === CART_SERVICES_CATEGORY),
-  );
+  const items = reject(cart?.items, isCartServiceItem);
 
   if (isEmpty(items)) {
-    return <div className={'pt-4'}>{t('cart_summary_items.empty')}</div>;
+    return <p className={'mb-0 pt-2 text-ink-muted'}>{t('cart_summary_items.empty')}</p>;
   }
 
   return (
-    <>
-      <div className="grid grid-cols-5 sm:grid-cols-6 items-center text-left">
-        <div className="col col-span-3 md:col-span-2 p-2 pl-2.5 ps-0 text-left">
-          <h5>{t('cart_summary_items.products')}</h5>
-        </div>
-        <div className="hidden sm:block col text-center p-2">
-          <h5>{t('cart_summary_items.count')}</h5>
-        </div>
-        <div className="hidden md:block col text-center p-2">
-          <h5>{t('cart_summary_items.package')}</h5>
-        </div>
-        <div className="col col-span-2 sm:col-span-1 text-right sm:text-center p-2">
-          <h5>{t('cart_summary_items.price')}</h5>
-        </div>
-        <div className={"hidden sm:block"}/>
-
-        {map(items, (item, i) => {
-          return <CartListingItem key={`cart-item-${i}`} item={item}/>
-        })}
-        <div className="col-span-full">
-          <Divider />
-        </div>
+    <div className="grid grid-cols-5 items-center text-left sm:grid-cols-6">
+      <div className="col col-span-3 py-2 pe-2 md:col-span-2">
+        <span className={HEADER_CELL}>{t('cart_summary_items.products')}</span>
       </div>
-    </>
+      <div className="col hidden p-2 text-center sm:block">
+        <span className={HEADER_CELL}>{t('cart_summary_items.count')}</span>
+      </div>
+      <div className="col hidden p-2 text-center md:block">
+        <span className={HEADER_CELL}>{t('cart_summary_items.package')}</span>
+      </div>
+      <div className="col col-span-2 py-2 ps-2 text-right sm:col-span-1 sm:px-2 sm:text-center">
+        <span className={HEADER_CELL}>{t('cart_summary_items.price')}</span>
+      </div>
+      <div className={"hidden sm:block"}/>
+
+      {map(items, (item, i) => {
+        return <CartListingItem key={`cart-item-${item?.id ?? i}`} item={item}/>
+      })}
+      <div className="col-span-full">
+        <Divider />
+      </div>
+    </div>
   )
 }
 

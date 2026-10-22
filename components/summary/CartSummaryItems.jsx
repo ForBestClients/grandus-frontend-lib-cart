@@ -1,19 +1,20 @@
 'use client';
 
 import map from "lodash/map";
+import isEmpty from "lodash/isEmpty";
 import CartSummaryItem from "@/modules/cart/components/summary/CartSummaryItem";
-import Divider from "@/components/_other/divider/Divider";
-import {useTranslation} from "@/app/i18n/client";
 
 const CartSummaryItems = ({cart}) => {
-  const {t} = useTranslation();
+  if (isEmpty(cart?.items)) {
+    return null;
+  }
 
   return (
-      <div className="grid grid-cols-3 items-center">
-        {map(cart?.items, (item, i) => {
-          return <CartSummaryItem key={`cart-item-${i}`} item={item}/>
-        })}
-      </div>
+    <ul className="m-0 flex list-none flex-col gap-3 p-0 pb-4 pt-1">
+      {map(cart?.items, (item, i) => {
+        return <CartSummaryItem key={`cart-item-${item?.id ?? i}`} item={item}/>
+      })}
+    </ul>
   )
 }
 

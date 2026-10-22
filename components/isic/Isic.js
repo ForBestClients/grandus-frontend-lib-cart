@@ -56,7 +56,7 @@ const Isic = () => {
     <>
       {!isEmpty(message) ? (
         <Alert
-          type={success ? 'success' : 'danger'}
+          type={success ? 'success' : 'error'}
           message={message}
           className="mt-2"
         />
@@ -115,6 +115,7 @@ const IsicForm = () => {
         </div>
       </div>
       <Button
+        type="dark"
         size={"smallWithNormalText"}
         fullWidth
         disabled={!(values?.code && values?.surname)}

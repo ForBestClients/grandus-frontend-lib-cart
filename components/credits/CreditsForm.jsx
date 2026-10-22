@@ -17,7 +17,7 @@ import {useTranslation} from "@/app/i18n/client";
 const Feedback = ({ touched, status, message }) => {
     if (touched && message && status) {
         return (
-            <Alert type={status} message={message} className={styles?.feedback} />
+            <Alert type={status === 'danger' ? 'error' : status} message={message} className={styles?.feedback} />
         );
     }
     return null;
@@ -88,9 +88,9 @@ const CreditsForm = ({}) => {
     return (
         <div className={styles?.creditsForm}>
             {!isEmpty(cartCreditDescription) ? (
-                <div dangerouslySetInnerHTML={{__html: cartCreditDescription}}/>
+                <div className={styles?.description} dangerouslySetInnerHTML={{__html: cartCreditDescription}}/>
             ) : (
-                <div>
+                <div className={styles?.description}>
                     {t(
                         'Sekcia slúži na aplikovanie kreditov ({{name}}), ktoré ste nazbierali za svoje nákupy. Na základe množstva aplikovaných kreditov sa Vám z celkovej ceny odráta čiastka uhradená kreditom. Hodnota jedného kreditu je {{value}} {{currency}} (1 kredit = {{value}} {{currency}}).',
                         {
@@ -111,11 +111,13 @@ const CreditsForm = ({}) => {
             <form onSubmit={handleSubmit}>
                 <NumberInput
                     showButtons={false}
+                    size="lg"
                     inputProps={{
                         id: fieldName,
                         name: fieldName,
                         value: value,
-                        placeholder: 'Vložiť počet kreditov',
+                        placeholder: t('credits_form.placeholder'),
+                        'aria-label': t('credits_form.placeholder'),
                         onChange: handleChange,
                         onBlur: handleBlur,
                         groupClassName: styles?.inputGroup,
@@ -124,16 +126,16 @@ const CreditsForm = ({}) => {
                         max: get(user, 'credit', 0),
                     }}
                 />
-                <span className="px-3">z {user?.credit}</span>
+                <span className={styles?.total}>
+                    {t('credits_form.available', { credit: user?.credit ?? 0 })}
+                </span>
                 <Button
                     htmlType="submit"
-                    size="smallWithNormalText"
-                    type={value ? 'primary' : 'disabled'}
-                    // size="small"
+                    type="dark"
                     disabled={value <= 0 || isLoading}
                     loading={isLoading}
                 >
-                    Použiť
+                    {t('credits_form.apply')}
                 </Button>
             </form>
         </div>

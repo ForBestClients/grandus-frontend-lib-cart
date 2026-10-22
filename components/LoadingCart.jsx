@@ -1,21 +1,19 @@
 "use client"
-import { Suspense } from 'react';
-import CartIcon from '@/components/_other/icons/CartIcon';
+import { CartStroke } from '@/components/_other/icons/StrokeIcons';
 import {useTranslation} from "@/app/i18n/client";
 import upperFirst from "lodash/upperFirst";
 
-export default function LoadingCart(props) {
+export default function LoadingCart() {
     const {t} = useTranslation();
     return (
-        <main className="bg-white rounded-lg py-8">
-            <div className="container">
-                <div className={"flex flex-col text-center items-center justify-center min-h-[500px]"}>
-                    <Suspense>
-                        <CartIcon className={"h-52 w-auto text-grey mb-16"}/>
-                        <h1 className="text-lg">{upperFirst(t('cart.loading'))}</h1>
-                    </Suspense>
-                </div>
-            </div>
-        </main>
+        <section
+            className="flex min-h-[420px] flex-col items-center justify-center py-10 text-center"
+            aria-busy="true"
+        >
+            <span className="mb-6 grid h-24 w-24 animate-pulse place-items-center rounded-full bg-brand-soft text-brand-deep md:h-28 md:w-28">
+                <CartStroke className="h-10 w-10 md:h-12 md:w-12" strokeWidth={1.5} />
+            </span>
+            <p className="mb-0 text-base text-ink-muted" role="status">{upperFirst(t('cart.loading'))}</p>
+        </section>
     );
 }

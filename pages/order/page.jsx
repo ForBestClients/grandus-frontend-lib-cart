@@ -1,30 +1,26 @@
 import get from "lodash/get";
 import {initTranslations} from "@/app/i18n";
-import SEO from "@/utils/seo";
+import { buildSystemMetadata } from "@/utils/metadata";
 import {Suspense} from "react";
 import ThankYou from "@/modules/cart/components/thankYou/ThankYou";
 import ThankYouSkeleton from "@/modules/cart/components/thankYou/ThankYouSkeleton";
 
 
-export async function generateMetadata({ params }) {
-  const {t} = await initTranslations(params?.locale);
+// URL carries the order access token: noindex,nofollow
+export async function generateMetadata() {
+  const {t} = await initTranslations();
 
-  return SEO.getDefaultMetaObject(
-    t('seo.thank_you.title'),
-    '',
-  );
+  return buildSystemMetadata({ title: t('seo.thank_you.title'), follow: false });
 }
 
 const Page = async ({ searchParams }) => {
   const searchParamsData = await searchParams;
 
   return (
-    <main className="bg-white py-16">
-      <div className={'container'}>
-        <Suspense fallback={<ThankYouSkeleton />}>
-          <ThankYou orderToken={get(searchParamsData, 'orderToken', '')} />
-        </Suspense>
-      </div>
+    <main className="container mx-auto px-4 pb-16 pt-10 md:px-6 md:pb-20 md:pt-16">
+      <Suspense fallback={<ThankYouSkeleton />}>
+        <ThankYou orderToken={get(searchParamsData, 'orderToken', '')} />
+      </Suspense>
     </main>
   );
 }

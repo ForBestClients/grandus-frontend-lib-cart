@@ -1,16 +1,16 @@
 'use client';
 
-import Link from "next/link";
+import Button from "@/components/_other/button/Button";
 import {useTranslation} from "@/app/i18n/client";
 
 const MainPageLink = ({}) => {
   const {t} = useTranslation();
 
-  return (<>
-    <Link href={'/'}>
-      {t('main_page_link.back')}
-    </Link>
-  </>);
+  return (
+    <Button type="primary" htmlType="a" href={'/'}>
+      {t('order.thank_you.continue_shopping')}
+    </Button>
+  );
 }
 
 export default MainPageLink;

@@ -1,9 +1,28 @@
+// Packeta pickup-point block (grandus-lib packetery markup): it sits inside the
+// selected delivery card; the button is a dark pill (brief 4.1).
 .shipping {
   :global(.packetery__custom) {
-    @apply bg-white rounded-lg mt-2 ml-8;
+    @apply m-0 justify-start rounded-input border border-line-card bg-white p-3 md:p-4;
+  }
 
-    button {
-      @apply bg-primary text-white rounded-lg p-2.5;
+  :global(.packetery__custom--selected) {
+    @apply flex-wrap justify-between gap-3 md:gap-4;
+
+    p {
+      @apply mb-0 text-sm leading-snug text-ink;
+    }
+  }
+
+  :global(.packetery__custom) button {
+    @apply inline-flex min-h-[40px] items-center justify-center rounded-full bg-petrol px-5 text-xs font-semibold uppercase leading-tight tracking-[0.14em] text-white transition-colors;
+
+    &:hover {
+      @apply bg-brand-ink;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brand-deep);
+      outline-offset: 2px;
     }
   }
 }

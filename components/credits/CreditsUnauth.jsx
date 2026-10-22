@@ -2,9 +2,10 @@ import styles from "@/modules/cart/components/credits/CreditsUnauth.module.scss"
 import Button from "@/components/_other/button/Button";
 import LoginForm from "@/components/forms/login/LoginForm";
 import {useState} from "react";
+import {useTranslation} from "@/app/i18n/client";
 
 const CreditsUnauth = () => {
-
+    const {t} = useTranslation();
     const [loginToggle, setLoginToggle] = useState(false);
 
     const handleLoginToggleButton = () => {
@@ -14,13 +15,21 @@ const CreditsUnauth = () => {
     return (
         <>
             <div className={styles.login}>
-                Pre uplatnenie a využívanie kreditov sa musíte prihlásiť do svojho
-                konta.
+                <p className={styles.text}>{t('credits_form.login_required')}</p>
                 <div className={styles.button}>
-                    <Button type="ghost" onClick={handleLoginToggleButton}>Prihlásiť sa</Button>
+                    <Button
+                        type="dark"
+                        size="small"
+                        onClick={handleLoginToggleButton}
+                        aria-expanded={loginToggle}
+                        aria-controls="credits-login-form"
+                        className="w-full md:w-auto"
+                    >
+                        {t('credits_form.login')}
+                    </Button>
                 </div>
             </div>
-            <div className={loginToggle ? 'block' : 'hidden'}>
+            <div id="credits-login-form" className={loginToggle ? 'mt-5 block' : 'hidden'}>
                 <LoginForm />
             </div>
         </>

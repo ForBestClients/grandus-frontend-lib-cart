@@ -7,11 +7,11 @@ const EmptyState = () => {
   const {t} = useTranslation()
 
   return (
-    <>
-      <Box className="text-center">
-        <h1>{t('order.empty_state.title')}</h1>
-      </Box>
-    </>
+    <Box className="!py-10 text-center md:!py-12">
+      <h1 className="mb-0 text-2xl font-medium leading-tight text-ink md:text-3xl">
+        {t('order.empty_state.title')}
+      </h1>
+    </Box>
   );
 };
 

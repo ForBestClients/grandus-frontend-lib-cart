@@ -29,11 +29,24 @@ const Services = ({ compact = false }) => {
     return null;
   }
 
+  if (compact) {
+    return (
+      <section className="mt-1 border-t border-line pb-2 pt-4">
+        <h3 className="mb-3 text-base font-medium leading-snug text-ink">
+          {t('cart_services.title')}
+        </h3>
+        <ProductList products={products} compact />
+      </section>
+    );
+  }
+
   return (
-    <div className={compact ? 'pt-4 mt-2 border-t' : ''}>
-      <h3 className={compact ? 'text-base mb-0' : ''}>{t('cart_services.title')}</h3>
+    <section>
+      <h2 className="mb-4 text-2xl font-medium leading-tight text-ink md:text-3xl">
+        {t('cart_services.title')}
+      </h2>
       <ProductList products={products} />
-    </div>
+    </section>
   );
 };
 

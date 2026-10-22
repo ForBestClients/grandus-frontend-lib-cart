@@ -3,23 +3,29 @@
 import find from 'lodash/find';
 import debounce from 'lodash/debounce';
 import useCart from '@/grandus-lib/hooks/useCart';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import AmountInputCart from '@/modules/cart/components/AmountInputCart';
-import Image from '@/grandus-utils/wrappers/image/Image';
 import IconRemove from '@/components/_other/icons/IconRemove';
-import Button from '@/components/_other/button/Button';
+import IconButton from '@/components/_other/button/IconButton';
 import Link from 'next/link';
 import PriceDynamic from '@/components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
-import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
+import CartThumb from '@/modules/cart/components/ui/CartThumb';
 import get from 'lodash/get';
-import TagManager from '@/grandus-lib/utils/gtag';
-import EnhancedEcommerce from '@/utils/ecommerce';
+import { trackAddToCart, trackRemoveFromCart } from '@/utils/tracking';
+import { useTranslation } from '@/app/i18n/client';
+import { getItemInfos, getItemMeasureUnit } from '@/modules/cart/components/ui/cartItem';
 
-const ItemCountInput = ({ item }) => {
+// The rows only write: they must not refetch the cart when they mount, and
+// their loaders show only while their own change is saved (useCart's isLoading
+// is also true during every cart revalidation).
+const ROW_CART_OPTIONS = { revalidateOnMount: false, revalidateIfStale: false };
+
+const ItemCountInput = ({ item, wide = false }) => {
   const { product, store, count } = item;
 
-  const { itemUpdate, isLoading } = useCart();
+  const { itemUpdate } = useCart(false, ROW_CART_OPTIONS);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [amount, setAmount] = useState(count);
 
   useEffect(() => {
@@ -33,12 +39,13 @@ const ItemCountInput = ({ item }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCountChange = useCallback(
-    debounce(value => {
+    debounce(async value => {
       try {
         const oldCount = +item?.count || 1;
         let newCount = +value || 1;
         if (newCount !== oldCount) {
-          itemUpdate(item?.id, { count: newCount }, cart => {
+          setIsUpdating(true);
+          await itemUpdate(item?.id, { count: newCount }, cart => {
             const newItem = find(cart?.items, { id: item?.id });
             if (newCount !== newItem?.count) {
               setAmount(newItem?.count);
@@ -46,25 +53,17 @@ const ItemCountInput = ({ item }) => {
 
             const itemsDifference = newItem?.count - oldCount;
             if (itemsDifference < 0) {
-              TagManager.push(
-                EnhancedEcommerce.remove_from_cart(
-                  item,
-                  Math.abs(itemsDifference)
-                )
-              );
+              trackRemoveFromCart(item, Math.abs(itemsDifference));
             } else if (itemsDifference > 0) {
-              TagManager.push(
-                EnhancedEcommerce.add_to_cart(
-                  item,
-                  Math.abs(itemsDifference)
-                )
-              );
+              // GA4 add_to_cart + Meta AddToCart
+              trackAddToCart(item, itemsDifference);
             }
           });
         }
       } catch {
         console.log('error');
       }
+      setIsUpdating(false);
     }, 500),
   );
 
@@ -74,29 +73,42 @@ const ItemCountInput = ({ item }) => {
       amount={amount}
       setAmount={setAmount}
       afterChange={handleCountChange}
-      loading={isLoading}
+      loading={isUpdating}
       item={item}
+      inputClassName={wide ? 'md:!w-20' : ''}
     />
   );
 };
 
-const ItemRemoveButton = ({ item, className }) => {
-  const { itemRemove, isLoading } = useCart();
+const ItemRemoveButton = ({ item, className = '' }) => {
+  const { itemRemove } = useCart(false, ROW_CART_OPTIONS);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const { t } = useTranslation();
 
-  const handleRemove = e => {
+  const handleRemove = async e => {
     e.preventDefault();
-    itemRemove(item?.id)
-    TagManager.push(EnhancedEcommerce.remove_from_cart(item, item?.count));
+    setIsRemoving(true);
+    const removing = itemRemove(item?.id);
+    trackRemoveFromCart(item, item?.count);
+    try {
+      await removing;
+    } finally {
+      setIsRemoving(false);
+    }
   }
 
-  return <Button
-    type={'text'}
-    color={'secondary'}
-    onClick={handleRemove}
-    loading={isLoading}
-    className={className}>
-    <IconRemove className={'h-6'} />
-  </Button>;
+  return (
+    <IconButton
+      variant="ghost"
+      size="md"
+      label={`${t('cart.remove_item')}: ${item?.product?.name ?? ''}`}
+      onClick={handleRemove}
+      loading={isRemoving}
+      className={`group ${className}`}
+    >
+      <IconRemove className="h-[18px] w-[18px] text-ink transition-colors group-hover:text-brand-deep" />
+    </IconButton>
+  );
 };
 
 const ItemBundleInfo = ({ item }) => {
@@ -104,11 +116,7 @@ const ItemBundleInfo = ({ item }) => {
     get(item, 'product.store', []),
     s => s?.id === get(item, 'store.id'),
   );
-  const measureUnit =
-    get(selectedStore, 'name') ||
-    get(item, 'store.name') ||
-    item?.measureUnit ||
-    'ks';
+  const measureUnit = getItemMeasureUnit(item);
   const piecesInBundle = get(selectedStore, 'piecesInBundle', 1);
 
   if (piecesInBundle > 1) {
@@ -119,74 +127,67 @@ const ItemBundleInfo = ({ item }) => {
 }
 
 const CartListingItem = ({ item }) => {
-
-  const itemInfos = [];
-
-  if (item?.product?.ean) {
-    itemInfos.push(item.product.ean);
-  }
-
-  if (get(item, 'product.store[0].weight')) {
-    itemInfos.push(`Hmotnosť: ${get(item, 'product.store[0].weight')} kg`);
-  }
+  const { t } = useTranslation();
+  const itemInfos = getItemInfos(item, t);
 
   return (
     <>
-      <div className="col col-span-3 md:col-span-2 p-2 ps-0 flex gap-4 items-center h-full relative">
-        <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
-        <div className="w-[50px] h-[60px] sm:w-[80px] sm:h-[100px] bg-grey flex-shrink-0">
-          {item?.product?.photo ? (
-            <Image
-              width={80}
-              height={100}
-              photo={item?.product?.photo}
-              type={'jpg'}
-              title={item?.product?.name}
-              alt={item?.product?.name ?? 'product'}
-            />
-          ) : (
-            <PlaceHolderImage
-              width={80}
-              height={100}
-              type={'jpg'}
-              title={item?.product?.name}
-              alt={item?.product?.name ?? 'product'}
-            />
-          )}
+      <div className="col group relative col-span-3 flex h-full items-center gap-3 py-2 pe-2 sm:gap-4 md:col-span-2">
+        <Link
+          href={`/produkt/${item.product.urlTitle}`}
+          aria-label={item?.product?.name}
+          className="absolute inset-0 z-[1] rounded-[12px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep"
+        />
+        <CartThumb
+          photo={item?.product?.photo}
+          alt={item?.product?.name ?? 'product'}
+          title={item?.product?.name}
+          size="lg"
+        />
+        <div className="min-w-0 text-left">
+          <p className="mb-0 text-[15px] leading-snug text-ink transition-colors group-hover:text-brand-deep">
+            {item?.product?.name}
+          </p>
+          {itemInfos.length ? (
+            <p className="mb-0 mt-1 text-xs leading-snug text-ink sm:text-sm">
+              {itemInfos.map((info, index) => (
+                <Fragment key={`info-${index}`}>
+                  {index ? ' | ' : ''}
+                  <span className="whitespace-nowrap">{info}</span>
+                </Fragment>
+              ))}
+            </p>
+          ) : null}
         </div>
-        <p className="text-left">
-          {item?.product?.name}
-          <br/>
-          <span className={'text-sm'}>{itemInfos.join(' | ')}</span>
-        </p>
       </div>
 
-      <div className="col hidden sm:block text-center p-2 whitespace-nowrap">
-        <ItemCountInput item={item} className={'justify-center'} />
-        <BundleInfo product={item?.product} className="ms-2" />
+      <div className="col hidden flex-col items-center p-2 sm:flex">
+        <ItemCountInput item={item} wide />
+        <BundleInfo product={item?.product} className="mt-1 text-xs text-ink-muted" />
       </div>
 
-      <div className={'col hidden text-center md:block col-span-1 p-2'}>
-        <span className={'text-sm'}>spolu:</span> <br/>
-        <ItemBundleInfo item={item} />
+      <div className={'col hidden p-2 text-center leading-snug text-ink md:block'}>
+        <span className={'text-sm'}>{t('cart_summary_items.package_total')}</span>
+        <br />
+        <span className={'text-[15px]'}>
+          <ItemBundleInfo item={item} />
+        </span>
       </div>
 
-      <div className="col col-span-2 sm:col-span-1 text-right sm:text-center p-2 whitespace-nowrap">
-        <strong>
-          <PriceDynamic
-            priceData={item.priceTotalData}
-            standartPriceData={item?.product?.standardPriceData}
-            count={item.count}
-          />
-        </strong>
+      <div className="col col-span-2 whitespace-nowrap py-2 ps-2 text-right text-[15px] sm:col-span-1 sm:px-2 sm:text-center">
+        <PriceDynamic
+          priceData={item.priceTotalData}
+          standartPriceData={item?.product?.standardPriceData}
+          count={item.count}
+        />
       </div>
 
-      <div className="col col-span-3 block sm:hidden p-2">
+      <div className="col col-span-3 block pb-3 sm:hidden">
         <ItemCountInput item={item} />
       </div>
 
-      <div className="col col-span-2 sm:col-span-1 p-2 text-right block">
-        <ItemRemoveButton item={item} />
+      <div className="col col-span-2 flex justify-end pb-3 sm:col-span-1 sm:py-2">
+        <ItemRemoveButton item={item} className="-me-2" />
       </div>
     </>
   );

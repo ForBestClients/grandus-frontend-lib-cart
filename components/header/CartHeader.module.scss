@@ -1,71 +1,74 @@
-@use "sass:selector";
-
+// Checkout steps (brief 4.4, image15 / image17): white pill with a #DDF7F6
+// border; finished steps and the active one share one continuous #DDF7F6
+// fill that ends with a round cap. Upcoming steps stay white and grey.
 .wrapper {
-  @apply mt-4 bg-grey rounded-full overflow-hidden relative flex w-full justify-between items-center flex-row;
+  @apply relative w-full overflow-hidden rounded-full border border-brand-soft bg-white;
+}
+
+.list {
+  @apply m-0 flex h-12 w-full list-none p-0;
+}
+
+// flex-1 from a zero basis: equal thirds on desktop; on mobile the active
+// step keeps its full label (min-width auto) and the others shrink
+.item {
+  @apply flex flex-1 basis-0;
+}
+
+.navLink {
+  @apply flex w-full items-center justify-center gap-3 whitespace-nowrap px-3 text-sm leading-none text-ink-muted no-underline transition-colors md:gap-4 md:text-base;
+}
+
+.stepCount {
+  @apply grid h-5 w-5 shrink-0 place-items-center rounded-full text-xs leading-none tabular-nums;
+}
+
+// below md only the active step shows its label; the others stay readable
+// for screen readers (visually hidden, not display: none)
+.label {
+  @media (max-width: 767.98px) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+}
+
+.done,
+.active {
+  @apply bg-brand-soft text-brand-deep;
 
   .stepCount {
-    @apply w-[20px] h-[20px] relative inline-block text-grey lg:mr-3;
+    @apply bg-white text-ink;
   }
+}
 
-  .navLink {
-    @apply flex grow basis-1 justify-center items-center px-3.5 py-3 whitespace-nowrap font-normal  text-font w-full;
+.active {
+  @apply rounded-r-full;
 
-    &:not(.finished) {
-      @apply lg:-ml-[20px];
-    }
-
-    .stepCount {
-      @apply bg-white text-primary rounded-full flex items-center justify-center p-3 text-sm leading-none md:mr-3;
-    }
-
-    .label {
-      @apply hidden md:flex;
-    }
-
-    @at-root #{selector.unify(&, 'span')} {
-      @apply opacity-70;
-
-      .stepCount {
-        @apply text-font;
-      }
-    }
-
-    @at-root #{selector.unify(&, 'a')} {
-      @apply flex justify-center items-center font-normal no-underline;
-
-      &.active {
-        //@apply bg-primary text-white rounded-full;
-        @apply bg-alt text-black rounded-full;
-        &:not(:first-child) {
-          @apply -ml-[17px] lg:-ml-5;
-        }
-
-        .stepCount {
-          @apply mr-3;
-        }
-
-        .label {
-          @apply flex;
-        }
-      }
-
-      &.prev {
-        .stepCount {
-          @apply mr-3;
-        }
-      }
-
-      &.finished {
-        @apply bg-alt/40 text-font;
-
-        &:hover {
-          @apply bg-primary text-white;
-        }
-      }
+  .label {
+    @media (max-width: 767.98px) {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
     }
   }
+}
 
-  p {
-    @apply mb-0;
+a.done {
+  &:hover .label {
+    @apply underline underline-offset-4;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-deep);
+    outline-offset: -2px;
   }
 }

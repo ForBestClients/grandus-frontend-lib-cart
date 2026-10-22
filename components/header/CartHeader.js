@@ -14,7 +14,7 @@ const CartHeader = () => {
   let step = useCartStep();
   const { t } = useTranslation();
 
-  if (step === undefined) {
+  if (step === undefined || step < 0) {
     step = 0;
   }
 
@@ -25,79 +25,60 @@ const CartHeader = () => {
       step: 1,
       text: upperFirst(t('cart_title.step1.short')),
       link: CART_STEPS[0],
-      title: {
-        text: upperFirst(t('cart_title.step1.description')),
-        link: CART_STEPS[0],
-      },
     },
     {
       step: 2,
       text: upperFirst(t('cart_title.step2.short')),
       link: CART_STEPS[1],
-      title: {
-        text: upperFirst(t('cart_title.step2.description')),
-        link: '/kosik',
-      },
     },
     {
       step: 3,
       text: upperFirst(t('cart_title.step3.short')),
       link: CART_STEPS[2],
-      title: {
-        text: upperFirst(t('cart_title.step3.description')),
-        link: '/kosik/kontakt',
-      },
     },
-    // {
-    //   step: 4,
-    //   text: upperFirst(t('cart_title.step4.short')),
-    //   link: CART_STEPS[3],
-    //   title: {
-    //     text: upperFirst(t('cart_title.step4.description')),
-    //     link: '/kosik/doprava-a-platba',
-    //   },
-    // },
   ];
 
-  const currentStep = find(steps, { step: step });
+  const currentStep = find(steps, { step: step }) ?? steps[0];
 
   return (
-    <nav className={styles.wrapper}>
-      {steps.map(stepItem => {
-        const classNames = [styles.navLink];
-
-        if (stepItem.step === currentStep.step) {
-          classNames.push(styles.active)
-        }
-
-        if (stepItem.step === currentStep.step-1) {
-          classNames.push(styles.prev)
-        }
-
-        if (stepItem.step < currentStep.step) {
-          classNames.push(styles.finished)
-        }
-
-        if (stepItem.step <= currentStep.step) {
-          return (
-            <Link
-              href={stepItem?.link}
-              key={`step-${stepItem?.step}`}
-              className={classNames.join(' ')}
-            >
+    <nav aria-label={t('cart_title.steps_label')} className={styles.wrapper}>
+      <ol className={styles.list}>
+        {steps.map(stepItem => {
+          const content = (
+            <>
               <span className={styles.stepCount}>{stepItem.step}</span>
-              <span className={styles.label}>{stepItem?.text}</span>
-            </Link>
+              <span className={styles.label}>{stepItem.text}</span>
+            </>
           );
-        }
 
-        return (
-          <span className={classNames.join(' ')} key={`step-${stepItem?.step}`}>
-            <span className={styles.stepCount}>{stepItem.step}</span>
-            <span className={styles.label}>{stepItem?.text}</span>
-          </span>
-        );
-      })}
+          // finished steps stay links back, the active one is marked as current
+          if (stepItem.step < currentStep.step) {
+            return (
+              <li key={`step-${stepItem.step}`} className={styles.item}>
+                <Link
+                  href={stepItem.link}
+                  className={`${styles.navLink} ${styles.done}`}
+                >
+                  {content}
+                </Link>
+              </li>
+            );
+          }
+
+          const isActive = stepItem.step === currentStep.step;
+
+          return (
+            <li key={`step-${stepItem.step}`} className={styles.item}>
+              <span
+                className={`${styles.navLink} ${isActive ? styles.active : styles.upcoming}`}
+                aria-current={isActive ? 'step' : undefined}
+              >
+                {content}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
     </nav>
   );
 };

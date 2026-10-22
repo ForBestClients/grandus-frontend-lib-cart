@@ -8,12 +8,12 @@ import LoadingIcon from "@/components/_other/icons/LoadingIcon";
 const ProcessingOrder = () => {
     const { t } = useTranslation();
     return (
-        <div className={styles?.wrapper}>
+        <div className={styles?.wrapper} role="status" aria-live="polite">
             <div className={styles?.icon}>
-                <LoadingIcon />
+                <LoadingIcon className="h-4 w-12" />
             </div>
 
-            <h2 className="d-block mb-4">
+            <h2 className="mb-0 text-xl font-medium leading-snug text-ink md:text-2xl">
                 {upperFirst(t('cart.processing_order'))}
             </h2>
         </div>

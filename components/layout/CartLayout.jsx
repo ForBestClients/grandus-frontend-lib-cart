@@ -1,7 +1,6 @@
 "use client"
 import {Suspense, useState} from "react";
 import CartHeader from "@/modules/cart/components/header/CartHeader";
-import CartTitle from "@/modules/cart/components/CartTitle";
 import {CartSummarySection} from "@/modules/cart/components/CartSummarySection";
 import useCart from '@/grandus-lib/hooks/useCart';
 import isEmpty from "lodash/isEmpty";
@@ -10,6 +9,7 @@ import EmptyCart from "@/modules/cart/components/EmptyCart";
 import LoadingCart from "@/modules/cart/components/LoadingCart";
 import ProcessingOrder from "@/modules/cart/components/processingOrder/ProcessingOrder";
 import {useCartStep} from "@/utils/cart";
+import {CheckoutSelectionProvider} from "@/modules/cart/components/delivery/CheckoutSelection";
 
 const CartLayout = ({ children, contact }) => {
     const { cart, isLoading } = useCart();
@@ -29,27 +29,28 @@ const CartLayout = ({ children, contact }) => {
         return <EmptyCart />;
     }
 
-    const leftColSpan = step === 2 ? 'md:col-span-4' : 'md:col-span-3'
-    const rightColSpan = step === 2 ? 'md:col-span-2' : 'md:col-span-3'
+    // delivery & payment: wider options column once the container is 1420px
+    // wide (below that the summary would be too narrow for the order button)
+    const leftColSpan = step === 2 ? 'md:col-span-3 min-[1420px]:col-span-4' : 'md:col-span-3'
+    const rightColSpan = step === 2 ? 'md:col-span-3 min-[1420px]:col-span-2' : 'md:col-span-3'
 
     return (
         <Suspense fallback={<LoadingCart />}>
-            <div className="mt-4">
+            <CheckoutSelectionProvider>
                 <CartHeader />
-            </div>
-            {step === 0 ? children : (
-                <div className="grid grid-cols-6 gap-6 py-12">
-                    <div className={`col col-span-full ${leftColSpan}`}>
-                        <Suspense>
-                            {children}
-                        </Suspense>
+                {step === 0 ? children : (
+                    <div className="grid grid-cols-6 gap-6 pt-8 md:pt-12">
+                        <div className={`col col-span-full ${leftColSpan}`}>
+                            <Suspense>
+                                {children}
+                            </Suspense>
+                        </div>
+                        <div className={`col col-span-full ${rightColSpan} flex flex-col gap-6`}>
+                            <CartSummarySection setIsProcessing={setIsProcessing} contact={contact} />
+                        </div>
                     </div>
-                    <div className={`col col-span-full ${rightColSpan} flex flex-col gap-6`}>
-                        <CartSummarySection setIsProcessing={setIsProcessing} contact={contact} />
-                    </div>
-                </div>
-            )}
-
+                )}
+            </CheckoutSelectionProvider>
         </Suspense>
     )
 }

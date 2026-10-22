@@ -35,13 +35,13 @@ const ShippingSelect = ({ countries, selected, selectedGroup, handleChange, hand
 
   return (
       <div className={styles.shipping}>
-        <h3 className="text-lg mb-3">
+        <h2 id="cart-delivery-title" className="mb-4 text-lg font-medium leading-snug text-ink md:text-xl">
           {t('cart_form.delivery.title')}
-        </h3>
+        </h2>
         {
           isEmpty(nogroup) && isEmpty(groups)
-              ? <p>{t('delivery_select.empty')}</p>
-              : (<>
+              ? <p className="mb-0 text-ink-muted">{t('delivery_select.empty')}</p>
+              : (<div className="flex flex-col gap-3" role="radiogroup" aria-labelledby="cart-delivery-title">
                     {map(nogroup, (delivery, i) => {
                       return <ShippingItem key={`delivery-item-${i}`} delivery={delivery} countries={countries} selected={selected?.id === delivery.id} handleChange={handleChange} />
                     })}
@@ -58,7 +58,7 @@ const ShippingSelect = ({ countries, selected, selectedGroup, handleChange, hand
                           handleChange={handleChange}
                       />
                     })}
-                  </>
+                  </div>
               )
         }
       </div>

@@ -56,20 +56,15 @@ const DiscountForm = () => {
       )}
 
       <Box className={isIsicEnabled ? 'mt-4' : ''}>
-        <div className="flex">
-          <div className="flex-grow">
-            <label
-              htmlFor={`discount-coupon`}
-              className={'flex items-center justify-start'}
-            >
-              <h6 className="px-2 py-3">{t('discount_form.coupon.label.on')}</h6>
-            </label>
-          </div>
-        </div>
+        {/* visible label of the coupon field (#discountCode in Coupon) */}
+        <label
+          htmlFor="discountCode"
+          className="mb-6 block text-base font-medium leading-snug tracking-[0.02em] text-ink md:mb-8 md:mt-3 md:text-lg"
+        >
+          {t('discount_form.coupon.label.on')}
+        </label>
 
-        <div className={'block'}>
-          <Coupon />
-        </div>
+        <Coupon />
       </Box>
     </>
   );

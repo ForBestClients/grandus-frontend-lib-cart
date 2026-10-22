@@ -16,10 +16,10 @@ import find from 'lodash/find';
 import map from 'lodash/map';
 import Alert from '@/components/_other/alert/Alert';
 import toNumber from 'lodash/toNumber';
+import omit from 'lodash/omit';
+import { useCheckoutSelection } from '@/modules/cart/components/delivery/CheckoutSelection';
 
-import TagManager from '@/grandus-lib/utils/gtag';
-import EnhancedEcommerce from '@/utils/ecommerce';
-import FBPixel from '@/grandus-lib/utils/fbpixel';
+import { trackCheckoutSteps } from '@/utils/tracking';
 
 const ButtonContent = ({ step }) => {
   const { t } = useTranslation();
@@ -54,6 +54,7 @@ export const BackButtonContent = ({ step }) => {
 const OrderButton = ({ setIsProcessing, contact }) => {
   const { cart, createOrder, removeContact, cartDestroy, isLoading } = useCart();
   const { t } = useTranslation();
+  const selection = useCheckoutSelection()?.selection;
 
   const [termsAndConditionsAccepted, setTermsAndConditionsAccepted] = useState(false);
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
@@ -82,8 +83,31 @@ const OrderButton = ({ setIsProcessing, contact }) => {
 
   const schema = yup.object().shape(schemaFields);
 
+  // the order takes the delivery and payment saved in the cart: wait until the
+  // options picked in the form are chosen and saved
+  const savedDeliveryId = cart?.delivery?.id ?? null;
+  const savedPaymentId = cart?.payment?.id ?? null;
+  const deliveryId = selection ? selection.deliveryId : savedDeliveryId;
+  const paymentId = selection ? selection.paymentId : savedPaymentId;
+  const isSaving = Boolean(selection?.isSaving);
+  let missingChoice = null;
+  if (!deliveryId) {
+    missingChoice = t('cart_summary.order_hint.delivery');
+  } else if (!paymentId) {
+    missingChoice = t('cart_summary.order_hint.payment');
+  }
+  const isOrderBlocked =
+    isSaving ||
+    Boolean(missingChoice) ||
+    deliveryId !== savedDeliveryId ||
+    paymentId !== savedPaymentId;
+
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (isOrderBlocked) {
+      return;
+    }
 
     const params = {};
 
@@ -98,19 +122,14 @@ const OrderButton = ({ setIsProcessing, contact }) => {
       .then(async _ => {
         setIsProcessing(true);
 
-        await TagManager.push(EnhancedEcommerce.add_shipping_info(cart));
-        await TagManager.push(EnhancedEcommerce.add_payment_info(cart));
-        await FBPixel.addPaymentInfo(cart);
+        // GA4 add_shipping_info + add_payment_info, Meta AddPaymentInfo. The
+        // purchase is tracked once on the thank-you page (OrderAnalytics).
+        trackCheckoutSteps(cart);
 
         await createOrder(values, response => {
           response
             .then(async order => {
               if (!isEmpty(order) && get(order, 'accessToken')) {
-                await Promise.all([
-                  TagManager.push(EnhancedEcommerce.purchaseG4(order, true)),
-                  FBPixel.addPurchase(order)
-                ]);
-
                 try {
                   await Promise.all([
                     removeContact(),
@@ -162,9 +181,13 @@ const OrderButton = ({ setIsProcessing, contact }) => {
       setErrors(err);
     });
   };
+  // consent errors are shown inline under their checkbox; the rest (pickup
+  // point, API messages) has no field on screen, so it goes to an Alert
+  const alertErrors = omit(errors, ['termsAndConditions', 'privacyPolicy']);
+
   return (
-    <div className="mt-4">
-      <div className="ml-2">
+    <div className="mt-5">
+      <div className="flex flex-col gap-2">
         {requirePrivacyPolicyAgreement
           ? (
             <CheckboxInput
@@ -175,7 +198,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
                     ? <>
                       {' '} (
                       <Link
-                        className="underline"
+                        className="ac-link"
                         href={get(settings, 'conditions_for_processing_personal_data_link', '#')}
                         target="_blank"
                         passHref
@@ -192,6 +215,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
                 name: 'privacy_policy',
                 onChange: e => {
                   setPrivacyPolicyAccepted(e.target.checked);
+                  setErrors(prev => omit(prev, ['privacyPolicy']));
                 },
                 value: 1,
                 checked: privacyPolicyAccepted,
@@ -209,7 +233,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
               {get(settings, 'terms_and_conditions_link')
                 ? <>
                   {' '} (<Link
-                  className="underline"
+                  className="ac-link"
                   href={get(
                     settings,
                     'terms_and_conditions_link',
@@ -230,6 +254,7 @@ const OrderButton = ({ setIsProcessing, contact }) => {
             name: 'termsAndConditions',
             onChange: e => {
               setTermsAndConditionsAccepted(e.target.checked);
+              setErrors(prev => omit(prev, ['termsAndConditions']));
             },
             value: 1,
             checked: termsAndConditionsAccepted,
@@ -237,19 +262,35 @@ const OrderButton = ({ setIsProcessing, contact }) => {
           }}
         />
       </div>
-      <div className={'mt-4'}>
-        {!isEmpty(errors) ? map(errors, (error, field) => <Alert type="error" message={error} key={field}
-                                                                 className="mb-2" />) : null}
-      </div>
 
-      <div className={'mt-4 text-center'}>
+      {!isEmpty(alertErrors) ? (
+        <div className={'mt-4 flex flex-col gap-2'}>
+          {map(alertErrors, (error, field) => <Alert type="error" message={error} key={field} />)}
+        </div>
+      ) : null}
+
+      <div className={'mt-5'}>
+        {/* narrower padding and tracking on phones: the legally required
+            wording stays on one line */}
         <Button
           fullWidth
-          loading={isLoading}
+          loading={isLoading || isSaving}
+          disabled={isOrderBlocked}
+          aria-describedby={missingChoice ? 'order-missing-choice' : undefined}
           onClick={handleSubmit}
+          className="max-sm:!px-4 max-sm:!tracking-[0.08em]"
         >
           <ButtonContent step={2} />
         </Button>
+        {missingChoice ? (
+          <p
+            id="order-missing-choice"
+            role="status"
+            className="mb-0 mt-2 text-center text-[13px] leading-snug text-ink-muted"
+          >
+            {missingChoice}
+          </p>
+        ) : null}
       </div>
     </div>
   );
@@ -261,7 +302,7 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
 
   if (step === 2) {
     return (
-      <>
+      <div className={'md:px-6'}>
         <OrderButton setIsProcessing={setIsProcessing} contact={contact} />
         <Button
           className="mt-3"
@@ -274,12 +315,12 @@ export const CheckoutButton = ({ step, setIsProcessing, contact }) => {
         >
           <BackButtonContent step={step} />
         </Button>
-      </>
+      </div>
     )
   }
 
   return (
-    <div id={'contact_confirm'} className={'mt-4 px-6 text-center'}>
+    <div id={'contact_confirm'} className={'mt-4 text-center md:px-6'}>
       {step !== 1 ?
         <Button
           type="primary"

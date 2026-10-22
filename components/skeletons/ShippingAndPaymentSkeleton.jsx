@@ -1,15 +1,15 @@
 const ShippingAndPaymentSkeleton = () => {
     return (
-        <div className="animate-pulse">
-            <div className="w-full bg-grey max-w-[400px] h-6"></div>
+        <div className="animate-pulse" aria-hidden="true">
+            <div className="h-6 w-full max-w-[260px] rounded-[8px] bg-brand-soft"></div>
 
-            <div className={'mt-4 flex justify-center items-center'}>
-                <div className="w-[50px] h-[60px] bg-grey flex-shrink-0 me-3"></div>
+            <div className={'mt-4 flex items-center gap-4 rounded-input border border-line-card p-4'}>
+                <div className="h-5 w-5 flex-shrink-0 rounded-full bg-brand-soft"></div>
                 <div className={'flex-grow'}>
-                    <div className="w-full bg-grey max-w-[300px] h-4"></div>
-                    <div className="w-full bg-grey h-9 max-w-[300px] mt-3"></div>
+                    <div className="h-4 w-full max-w-[220px] rounded-[8px] bg-brand-soft"></div>
+                    <div className="mt-3 h-4 w-full max-w-[320px] rounded-[8px] bg-brand-soft"></div>
                 </div>
-                <div className="w-full bg-grey h-6 max-w-[100px]"></div>
+                <div className="h-5 w-full max-w-[64px] rounded-[8px] bg-brand-soft"></div>
             </div>
         </div>
     )

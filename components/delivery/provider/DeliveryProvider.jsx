@@ -3,8 +3,14 @@ import BaseDeliveryProvider from "@/grandus-lib/components/v2/delivery/provider"
 import {useTranslation} from "@/app/i18n/client";
 import {lowerCase} from "lodash";
 
-const DeliveryProvider = ({ delivery, country, selected = false }) => {
+const DeliveryProvider = ({ delivery, country, selected = false, className = '' }) => {
     const { t } = useTranslation();
+
+    // deliveries without a provider widget (e.g. courier) render nothing
+    if (!delivery?.serviceProviderType) {
+        return null;
+    }
+
     const options = {
         packetery: {
             country: lowerCase(country?.twoLetterCode),
@@ -15,7 +21,7 @@ const DeliveryProvider = ({ delivery, country, selected = false }) => {
         }
     }
     return (
-    <div className={!selected ? 'hidden' : ''}>
+    <div className={`${!selected ? 'hidden' : ''} ${className}`}>
         <BaseDeliveryProvider
             options={options}
             delivery={delivery}

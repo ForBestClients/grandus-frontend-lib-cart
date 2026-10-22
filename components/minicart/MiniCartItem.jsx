@@ -3,23 +3,28 @@
 import find from 'lodash/find';
 import debounce from 'lodash/debounce';
 import useCart from '@/grandus-lib/hooks/useCart';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import AmountInputCart from '@/modules/cart/components/AmountInputCart';
-import Image from '@/grandus-utils/wrappers/image/Image';
 import IconRemove from '@/components/_other/icons/IconRemove';
-import Button from '@/components/_other/button/Button';
+import IconButton from '@/components/_other/button/IconButton';
 import Link from 'next/link';
 import PriceDynamic from 'components/price/PriceDynamic';
 import BundleInfo from '@/components/product/BundleInfo';
-import PlaceHolderImage from '@/components/_other/placeholder/PlaceHolderImage';
-import get from 'lodash/get';
-import TagManager from '@/grandus-lib/utils/gtag';
-import EnhancedEcommerce from '@/utils/ecommerce';
+import CartThumb from '@/modules/cart/components/ui/CartThumb';
+import { trackAddToCart, trackRemoveFromCart } from '@/utils/tracking';
+import { useTranslation } from '@/app/i18n/client';
+import { getItemInfos } from '@/modules/cart/components/ui/cartItem';
+
+// The rows only write: they must not refetch the cart when the drawer opens,
+// and their loaders show only while their own change is saved (useCart's
+// isLoading is also true during every cart revalidation).
+const ROW_CART_OPTIONS = { revalidateOnMount: false, revalidateIfStale: false };
 
 const ItemCountInput = ({ item }) => {
   const { product, store, count } = item;
 
-  const { itemUpdate, isLoading } = useCart();
+  const { itemUpdate } = useCart(false, ROW_CART_OPTIONS);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [amount, setAmount] = useState(count);
 
   useEffect(() => {
@@ -33,12 +38,13 @@ const ItemCountInput = ({ item }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCountChange = useCallback(
-      debounce(value => {
+      debounce(async value => {
         try {
           const oldCount = +item?.count || 1;
           let newCount = +value || 1;
           if (newCount !== oldCount) {
-            itemUpdate(item?.id, { count: newCount }, cart => {
+            setIsUpdating(true);
+            await itemUpdate(item?.id, { count: newCount }, cart => {
               const newItem = find(cart?.items, { id: item?.id });
               if (newCount !== newItem?.count) {
                 setAmount(newItem?.count);
@@ -46,25 +52,17 @@ const ItemCountInput = ({ item }) => {
 
               const itemsDifference = newItem?.count - oldCount;
               if (itemsDifference < 0) {
-                TagManager.push(
-                  EnhancedEcommerce.remove_from_cart(
-                    item,
-                    Math.abs(itemsDifference)
-                  )
-                );
+                trackRemoveFromCart(item, Math.abs(itemsDifference));
               } else if (itemsDifference > 0) {
-                TagManager.push(
-                  EnhancedEcommerce.add_to_cart(
-                    item,
-                    Math.abs(itemsDifference)
-                  )
-                );
+                // GA4 add_to_cart + Meta AddToCart
+                trackAddToCart(item, itemsDifference);
               }
             });
           }
         } catch {
           console.log('error');
         }
+        setIsUpdating(false);
       }, 500),
   );
 
@@ -74,107 +72,98 @@ const ItemCountInput = ({ item }) => {
           amount={amount}
           setAmount={setAmount}
           afterChange={handleCountChange}
-          loading={isLoading}
+          loading={isUpdating}
           item={item}
+          pillSize="sm"
       />
   );
 };
 
-const ItemRemoveButton = ({ item, className }) => {
-  const { itemRemove, isLoading } = useCart();
+const ItemRemoveButton = ({ item, className = '' }) => {
+  const { itemRemove } = useCart(false, ROW_CART_OPTIONS);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const { t } = useTranslation();
 
-  const removeItemFromCart = () => {
-    itemRemove(item?.id);
-    TagManager.push(EnhancedEcommerce.remove_from_cart(item, item?.count));
-  }
-
-  return <Button
-      type={'text'}
-      color={'secondary'}
-      onClick={removeItemFromCart}
-      loading={isLoading}
-      className={className}>
-    <IconRemove className={'h-6'} />
-  </Button>;
-};
-
-const ItemBundleInfo = ({ item }) => {
-  const measureUnit = get(item, 'product.store[0].name', item?.measureUnit) ?? 'ks';
-  const piecesInBundle = get(item, 'product.store[0].piecesInBundle', 1);
-
-  if (piecesInBundle > 1) {
-    return `${item.count} bal (${item.count * piecesInBundle} ${measureUnit})`
-  }
-
-  return `${item.count} ${measureUnit}`;
-}
-
-const MiniCartItem = ({ item }) => {
-
-  const itemInfos = [];
-
-  if (item?.product?.ean) {
-    itemInfos.push(item.product.ean);
-  }
-
-  if (get(item, 'product.store[0].weight')) {
-    itemInfos.push(`Hmotnosť: ${get(item, 'product.store[0].weight')} kg`);
+  const removeItemFromCart = async () => {
+    setIsRemoving(true);
+    const removing = itemRemove(item?.id);
+    trackRemoveFromCart(item, item?.count);
+    try {
+      await removing;
+    } finally {
+      setIsRemoving(false);
+    }
   }
 
   return (
-      <>
-        <div className="col col-span-3 p-2 flex gap-4 items-center h-full relative">
-          <Link href={`/produkt/${item.product.urlTitle}`} className="absolute w-full h-full" />
-          <div className="w-[50px] h-[60px] xs:w-[80px] xs:h-[100px] bg-grey flex-shrink-0">
-            {item?.product?.photo ? (
-                <Image
-                    width={80}
-                    height={100}
-                    photo={item?.product?.photo}
-                    type={'jpg'}
-                    title={item?.product?.name}
-                    alt={item?.product?.name ?? 'product'}
-                />
-            ) : (
-                <PlaceHolderImage
-                    width={80}
-                    height={100}
-                    type={'jpg'}
-                    title={item?.product?.name}
-                    alt={item?.product?.name ?? 'product'}
-                />
-            )}
+    <IconButton
+      variant="ghost"
+      size="md"
+      label={`${t('cart.remove_item')}: ${item?.product?.name ?? ''}`}
+      onClick={removeItemFromCart}
+      loading={isRemoving}
+      className={`group ${className}`}
+    >
+      <IconRemove className="h-4 w-4 text-ink transition-colors group-hover:text-brand-deep" />
+    </IconButton>
+  );
+};
+
+const MiniCartItem = ({ item }) => {
+  const { t } = useTranslation();
+  // chosen option (scent), EAN and weight of the chosen store
+  const itemInfos = getItemInfos(item, t);
+  const productUrl = `/produkt/${item.product.urlTitle}`;
+
+  return (
+      <li className="flex gap-3 py-4 sm:gap-4">
+        <Link href={productUrl} tabIndex={-1} aria-hidden="true" className="shrink-0">
+          <CartThumb
+              photo={item?.product?.photo}
+              alt={item?.product?.name ?? 'product'}
+              title={item?.product?.name}
+              size="md"
+          />
+        </Link>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 pt-0.5">
+              <Link
+                  href={productUrl}
+                  className="text-[15px] font-medium leading-snug text-ink transition-colors hover:text-brand-deep"
+              >
+                {item?.product?.name}
+              </Link>
+              {itemInfos.length ? (
+                  <p className="mb-0 mt-0.5 text-xs leading-snug text-ink-muted">
+                    {itemInfos.map((info, index) => (
+                        <Fragment key={`info-${index}`}>
+                          {index ? ' | ' : ''}
+                          <span className="whitespace-nowrap">{info}</span>
+                        </Fragment>
+                    ))}
+                  </p>
+              ) : null}
+            </div>
+            <ItemRemoveButton item={item} className="-me-2 -mt-1.5" />
           </div>
-          <p className="text-left">
-            {item?.product?.name}
-            <br/>
-            <span className={'text-xs'}>{itemInfos.join(' | ')}</span>
-          </p>
-        </div>
 
-        <div className="col hidden xs:block text-center p-2 whitespace-nowrap">
-          <ItemCountInput item={item} className={'justify-center'} />
-          <BundleInfo product={item?.product} className="ms-2" />
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <ItemCountInput item={item} />
+              <BundleInfo product={item?.product} className="text-xs text-ink-muted" />
+            </div>
+            <div className="whitespace-nowrap text-right text-[15px]">
+              <PriceDynamic
+                  priceData={item.priceTotalData}
+                  standartPriceData={item?.product?.standardPriceData}
+                  count={item.count}
+              />
+            </div>
+          </div>
         </div>
-
-        <div className="col col-span-2 xs:col-span-1 text-right xs:text-center p-2 whitespace-nowrap">
-          <strong>
-            <PriceDynamic
-                priceData={item.priceTotalData}
-                standartPriceData={item?.product?.standardPriceData}
-                count={item.count}
-            />
-          </strong>
-        </div>
-
-        <div className="col col-span-3 block xs:hidden p-2">
-          <ItemCountInput item={item} />
-        </div>
-
-        <div className="col col-span-2 xs:col-span-1 p-2 text-right block">
-          <ItemRemoveButton item={item} />
-        </div>
-      </>
+      </li>
   );
 };
 

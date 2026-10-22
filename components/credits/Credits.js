@@ -24,10 +24,10 @@ const Credits = () => {
 
   return (
     <Box className="mt-4">
-      <strong className="text-primary">
-        {settings?.credits_name ? `${settings?.credits_name}: ` : ''}{' '}
+      <p className="mb-1 text-[15px] font-semibold leading-snug text-ink">
+        {settings?.credits_name ? `${settings?.credits_name}: ` : ''}
         {t('credits_form.title')}
-      </strong>
+      </p>
       { user ? <CreditsForm /> : <CreditsUnauth /> }
     </Box>
   );

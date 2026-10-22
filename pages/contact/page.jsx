@@ -3,17 +3,14 @@ import getTowns from "@/grandus-utils/fetches/ssr/Towns";
 import {getCookieValue} from "@/utils/cookie";
 import {CART_CONTACT_CONSTANT} from "@/grandus-lib/constants/SessionConstants";
 import { initTranslations } from "@/app/i18n";
-import SEO from "@/utils/seo";
+import { buildSystemMetadata } from "@/utils/metadata";
 import ContactForm from '@/modules/cart/components/ContactForm';
 import CartLayout from "@/modules/cart/components/layout/CartLayout";
 
-export async function generateMetadata({params}) {
-  const {t} = await initTranslations(params?.locale);
+export async function generateMetadata() {
+  const {t} = await initTranslations();
 
-  return SEO.getDefaultMetaObject(
-      t('Kontaktné informácie'),
-      '',
-  );
+  return buildSystemMetadata({ title: t('seo.checkout_contact'), follow: false });
 }
 
 export default async function CartContact(props) {

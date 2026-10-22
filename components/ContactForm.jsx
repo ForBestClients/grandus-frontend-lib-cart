@@ -431,7 +431,7 @@ const Form = ({
 
   return (
     <>
-      <Box className="mb-8 p-6">
+      <Box className="mb-8">
         {!isEmpty(user) ? (
           <LoggedUserInfo isSimple={true} />
         ) : (
@@ -506,7 +506,8 @@ const Form = ({
                   <TextInput
                     required
                     label={t('contact_form.phone.label')}
-                    hint={t('contact_form.phone.hint')}
+                    // the format error repeats the hint, so show only one of them
+                    hint={touched.phone && errors.phone ? '' : t('contact_form.phone.hint')}
                     error={touched.phone && errors.phone ? errors.phone : ''}
                     inputProps={{
                       id: 'phone',
@@ -612,7 +613,7 @@ const Form = ({
                 </div>
               </div>
 
-              <div className="mt-3 pl-2 md:pl-2">
+              <div className="mt-3">
                 <CheckboxInput
                   label={t('contact_form.delivery_address.label')}
                   error={
@@ -636,9 +637,9 @@ const Form = ({
               <section
                 className={`${!isDifferentDeliveryAddress ? 'hidden' : 'block'}`}
               >
-                <h4 className="text-lg ms-1.5 mt-6 font-bold mb-3">
+                <h2 className="mb-3 mt-6 text-base font-semibold leading-snug text-ink md:text-lg">
                   {t('contact_form.delivery_address.title')}
-                </h4>
+                </h2>
 
                 <div className={'grid grid-cols-4 gap-4 mt-4 pb-4'}>
                   <div className={'col col-span-4 md:col-span-2'}>
@@ -686,7 +687,7 @@ const Form = ({
                     <TextInput
                       required
                       label={t('contact_form.delivery_phone.label')}
-                      hint={t('contact_form.delivery_phone.hint')}
+                      hint={touched.deliveryPhone && errors.deliveryPhone ? '' : t('contact_form.delivery_phone.hint')}
                       error={touched.deliveryPhone && errors.deliveryPhone ? errors.deliveryPhone : ''}
                       inputProps={{
                         id: 'deliveryPhone',
@@ -799,7 +800,7 @@ const Form = ({
                 </div>
               </section>
 
-              <div className="mt-3 pl-2 md:pl-2">
+              <div className="mt-3">
                 <CheckboxInput
                   label={t('contact_form.company.label')}
                   error={
@@ -818,9 +819,9 @@ const Form = ({
 
               <section className={`${!isCompany ? 'hidden' : 'block'}`}>
 
-                <h4 className="text-lg ms-1.5 font-bold mt-6 mb-3">
+                <h2 className="mb-3 mt-6 text-base font-semibold leading-snug text-ink md:text-lg">
                   {t('contact_form.company.title')}
-                </h4>
+                </h2>
                 <div className={'grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pb-4'}>
                   <div className={'col'}>
                     <TextInput

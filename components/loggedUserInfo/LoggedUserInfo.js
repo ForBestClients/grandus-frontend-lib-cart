@@ -30,11 +30,15 @@ const LoggedUserInfo = ({ isSimple = false }) => {
   }
 
   if (isSimple) {
-    return <LoggedUserInfoContent user={user} />;
+    return (
+      <p className="mb-0 text-sm leading-relaxed text-ink">
+        <LoggedUserInfoContent user={user} />
+      </p>
+    );
   }
 
   return (
-    <Box className={'!bg-primary/30 text-primary !bg-opacity-15 font-medium'}>
+    <Box className={'!border-brand-soft !bg-brand-soft font-medium text-brand-deep'}>
       <LoggedUserInfoContent user={user} />
     </Box>
   );

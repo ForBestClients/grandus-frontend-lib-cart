@@ -8,9 +8,9 @@ import useWebInstance from "@/grandus-lib/hooks/useWebInstance";
 import { BANK_TRANSFER_TYPE } from "@/grandus-lib/components/v2/payment/provider";
 
 const Row = ({ label, children }) => (
-  <div className={'grid grid-cols-3 gap-2 py-1'}>
-    <div className={'col-span-1 text-gray-500'}>{label}</div>
-    <div className={'col-span-2 font-semibold break-words'}>{children}</div>
+  <div className={'grid grid-cols-3 gap-3 py-1.5'}>
+    <dt className={'col-span-1 text-sm leading-relaxed text-ink-muted'}>{label}</dt>
+    <dd className={'col-span-2 m-0 break-words font-semibold tabular-nums text-ink'}>{children}</dd>
   </div>
 );
 
@@ -33,25 +33,31 @@ const BankTransferInfo = ({ order, settings: settingsProp = null }) => {
   }
 
   return (
-    <Box className="bg-white mt-6">
-      <h2 className={'text-lg md:text-xl mb-1'}>
-        <strong>{t('order.thank_you.transfer_title')}</strong>
+    <Box className="!border-brand-soft !bg-brand-soft">
+      <h2 className={'mb-1 text-lg font-medium leading-snug text-ink md:text-xl'}>
+        {t('order.thank_you.transfer_title')}
       </h2>
-      <p className={'text-gray-600 mb-4'}>{t('order.thank_you.transfer_info')}</p>
+      <p className={'mb-4 text-sm text-ink'}>{t('order.thank_you.transfer_info')}</p>
 
-      {holder ? (
-        <Row label={t('order.thank_you.transfer_account_holder')}>{holder}</Row>
-      ) : null}
-      <Row label={t('order.thank_you.transfer_iban')}>{iban}</Row>
-      {bic ? <Row label={t('order.thank_you.transfer_bic')}>{bic}</Row> : null}
-      {bankName ? <Row label={t('order.thank_you.transfer_bank')}>{bankName}</Row> : null}
+      <dl className="m-0">
+        {holder ? (
+          <Row label={t('order.thank_you.transfer_account_holder')}>{holder}</Row>
+        ) : null}
+        <Row label={t('order.thank_you.transfer_iban')}>{iban}</Row>
+        {bic ? <Row label={t('order.thank_you.transfer_bic')}>{bic}</Row> : null}
+        {bankName ? <Row label={t('order.thank_you.transfer_bank')}>{bankName}</Row> : null}
+      </dl>
 
-      <Divider />
+      <Divider className="!border-brand/30" />
 
-      <Row label={t('order.thank_you.transfer_vs')}>{order.orderNumber}</Row>
-      <Row label={t('order.thank_you.transfer_amount')}>
-        <Price priceData={order.totalSumData} />
-      </Row>
+      <dl className="m-0">
+        <Row label={t('order.thank_you.transfer_vs')}>{order.orderNumber}</Row>
+        <Row label={t('order.thank_you.transfer_amount')}>
+          <span className="text-lg">
+            <Price priceData={order.totalSumData} />
+          </span>
+        </Row>
+      </dl>
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import Image from '@/grandus-utils/wrappers/image/Image';
 import ShippingAndPaymentSkeleton from '@/modules/cart/components/skeletons/ShippingAndPaymentSkeleton';
 import { useTranslation } from '@/app/i18n/client';
 import RadioInput from '@/components/_other/form/RadioInput';
+import OptionCard from '@/modules/cart/components/ui/OptionCard';
 
 const PaymentItem = ({ payment, handleChange, selected = false }) => {
   const [isPending, startTransition] = useTransition();
@@ -17,6 +18,9 @@ const PaymentItem = ({ payment, handleChange, selected = false }) => {
     (_, newState) => newState,
   );
 
+  // RadioInput renders the input with the id `${id}-${value}` (value '')
+  const radioId = `payment-${payment.id}`;
+
   const onChange = e => {
     startTransition(async () => {
       setOptimisticIsSelected(true);
@@ -24,28 +28,29 @@ const PaymentItem = ({ payment, handleChange, selected = false }) => {
     });
   };
 
+  // the whole row is the radio's label: a click anywhere selects it once
+  // (natively, one cart update) and gives the radio its accessible name
   return (
-    <div className={'mt-4'}>
+    <OptionCard selected={optimisticIsSelected}>
       <label
-        htmlFor={`payment-${payment.id}`}
-        className={'flex items-start justify-start gap-4'}
-        onClick={onChange}
+        htmlFor={`${radioId}-`}
+        className={'flex cursor-pointer items-start gap-2 p-4 md:gap-3'}
       >
         <RadioInput
           inputProps={{
-            id: `payment-${payment.id}`,
-            name: `payment-${payment.id}`,
-            className: 'me-2',
+            id: radioId,
+            name: 'cart-payment',
+            className: '!mb-0 mt-px shrink-0',
             onChange: onChange,
             checked: optimisticIsSelected,
           }}
         />
         {payment?.photo ? (
-          <div className="w-[50px] h-[60px] flex-shrink-0">
+          <div className="h-[60px] w-[50px] flex-shrink-0 overflow-hidden rounded-[8px]">
             <Image
               width={50}
               height={60}
-              className={'w-full h-auto'}
+              className={'h-full w-full object-contain'}
               photo={payment?.photo}
               type={'jpg'}
               title={payment?.name}
@@ -55,20 +60,20 @@ const PaymentItem = ({ payment, handleChange, selected = false }) => {
         ) : (
           ''
         )}
-        <div className={'flex-grow'}>
-          <span className="font-bold text-font inline-block mb-1">
+        <div className={'min-w-0 flex-grow'}>
+          <span className="mb-1 inline-block text-[15px] font-semibold leading-snug text-ink">
             {payment?.name}{' '}
           </span>
-          <p
-            className="text-sm text-grey3"
+          <div
+            className="text-sm leading-snug text-ink-muted [&_p]:mb-0 [&_p]:text-sm [&_p]:leading-snug"
             dangerouslySetInnerHTML={{ __html: payment?.description }}
           />
         </div>
-        <div className={'font-semibold'}>
+        <div className={'shrink-0 whitespace-nowrap text-[15px]'}>
           <Price priceData={payment.priceData} />
         </div>
       </label>
-    </div>
+    </OptionCard>
   );
 };
 
@@ -82,9 +87,11 @@ const PaymentSelect = ({ options, selected, handleChange }) => {
 
   return (
     <div>
-      <h3 className="text-lg mb-3">{t('cart_form.payment.title')}</h3>
+      <h2 id="cart-payment-title" className="mb-4 text-lg font-medium leading-snug text-ink md:text-xl">
+        {t('cart_form.payment.title')}
+      </h2>
       {isEmpty(options) ? (
-        <p>
+        <p className="mb-0 text-[15px] text-ink-muted">
           {t(
             cart?.delivery === null
               ? 'payment_select.select_delivery'
@@ -92,7 +99,7 @@ const PaymentSelect = ({ options, selected, handleChange }) => {
           )}
         </p>
       ) : (
-        <>
+        <div className="flex flex-col gap-3" role="radiogroup" aria-labelledby="cart-payment-title">
           {map(options, (payment, i) => {
             return (
               <PaymentItem
@@ -103,7 +110,7 @@ const PaymentSelect = ({ options, selected, handleChange }) => {
               />
             );
           })}
-        </>
+        </div>
       )}
     </div>
   );

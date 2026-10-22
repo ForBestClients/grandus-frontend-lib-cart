@@ -1,7 +1,7 @@
 .wrapper {
-  @apply my-16 text-center flex flex-col items-center justify-center;
+  @apply my-16 flex min-h-[320px] flex-col items-center justify-center text-center;
 
   .icon {
-    @apply my-10 w-20 text-primary;
+    @apply mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-brand-soft text-brand-deep;
   }
 }

@@ -1,52 +1,36 @@
-import Divider from "@/components/_other/divider/Divider";
 import Box from "@/components/_other/box/Box";
+
+const BAR = 'rounded-[8px] bg-brand-soft';
 
 const ThankYouSkeleton = () => {
 
     return (
-        <div className="my-8 flex flex-col justify-center">
-            <div className="w-full bg-white text-center mx-auto mb-16 py-0 animate-pulse max-w-[800px]">
-                <div className="h-10 bg-grey mb-8"></div>
-                <div className="h-7 bg-grey w-full inline-block w-[200px]"></div>
+        <div className="mx-auto flex w-full max-w-[720px] animate-pulse flex-col gap-6" aria-hidden="true">
+            <div className="flex flex-col items-center">
+                <div className="mb-6 h-16 w-16 rounded-full bg-brand-soft"></div>
+                <div className={`${BAR} mb-3 h-4 w-40`}></div>
+                <div className={`${BAR} h-10 w-full max-w-[460px]`}></div>
+                <div className="mb-6 mt-5 h-1 w-16 rounded-full bg-brand-soft"></div>
+                <div className="h-8 w-48 rounded-full bg-brand-soft"></div>
             </div>
 
-            <div className="mx-auto w-[100%] max-w-[500px]">
-                <Box>
-                    <div className="flex flex-col justify-center animate-pulse">
-                        <div className="grid grid-cols-4 gap-2 pb-3">
-                            <div className="col-span-2 h-4 bg-grey mb-2"></div>
-                            <div className="col text-center h-4 bg-grey mb-2"></div>
-                            <div className="col text-end h-4 bg-grey mb-2"></div>
-                        </div>
-                        <div className="grid grid-cols-4 gap-2 pb-3">
-                            <div className="col-span-2 h-4 bg-grey mb-2"></div>
-                            <div className="col text-center h-4 bg-grey mb-2"></div>
-                            <div className="col text-end h-4 bg-grey mb-2"></div>
-                        </div>
-                        <Divider/>
-                        <div className="grid grid-cols-4 gap-2 pb-3">
-                            <div className="col-span-2 h-4 bg-grey mb-2"></div>
-                            <div className="col"></div>
-                            <div className="col text-end h-4 bg-grey mb-2"></div>
-                        </div>
-                        <div className="grid grid-cols-4 gap-2 pb-3">
-                            <div className="col-span-2 h-4 bg-grey mb-2"></div>
-                            <div className="col"></div>
-                            <div className="col text-end h-4 bg-grey mb-2"></div>
-                        </div>
-                        <Divider/>
-                        <div className="grid grid-cols-4 gap-2 pb-3">
-                            <div className="col-span-2 h-5 bg-grey mb-2"></div>
-                            <div className="col"></div>
-                            <div className="col text-end h-5 bg-grey mb-2"></div>
-                        </div>
+            <Box>
+                <div className={`${BAR} mb-5 h-6 w-56`}></div>
+                {[0, 1, 2].map(i => (
+                    <div key={i} className="grid grid-cols-4 gap-2 py-2">
+                        <div className={`${BAR} col-span-2 h-4`}></div>
+                        <div className={`${BAR} h-4`}></div>
+                        <div className={`${BAR} h-4`}></div>
                     </div>
-                </Box>
-
-                <div className="w-full bg-white text-center mx-auto mt-8 py-0 animate-pulse w-[200px]">
-                    <div className="h-4 bg-grey w-full"></div>
+                ))}
+                <div className="my-5 h-px bg-line"></div>
+                <div className="flex justify-between">
+                    <div className={`${BAR} h-6 w-24`}></div>
+                    <div className={`${BAR} h-6 w-24`}></div>
                 </div>
-            </div>
+            </Box>
+
+            <div className="mx-auto h-12 w-56 rounded-full bg-brand-soft"></div>
         </div>
     );
 }
