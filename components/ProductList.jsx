@@ -54,7 +54,9 @@ const ProductListItem = ({product, compact = false}) => {
     }
   }
 
-  // card: white with #E3EEED border; checked = brand border + light brand-soft fill
+  // compact (mini-cart): own card, white with #E3EEED border; checked = brand
+  // border + light brand-soft fill. Cart page: plain rows, the Box around
+  // Services is the only frame
   let state = 'border-line-card bg-white hover:border-brand/60';
 
   if (isChecked) {
@@ -69,9 +71,11 @@ const ProductListItem = ({product, compact = false}) => {
 
   return (
     <div
-      className={`border transition-colors duration-150 ${state} ${
-        compact ? 'rounded-input px-3 py-2.5' : 'rounded-card px-4 py-3 md:px-5'
-      }`}
+      className={
+        compact
+          ? `rounded-input border px-3 py-2.5 transition-colors duration-150 ${state}`
+          : `py-3 first:pt-0 last:pb-0 transition-opacity duration-150 ${isLoading ? 'opacity-70' : ''}`
+      }
     >
       <label
         htmlFor={inputId}
@@ -121,7 +125,7 @@ const ProductListItem = ({product, compact = false}) => {
 
 const ProductList = ({products, compact = false}) => {
   return (
-    <div className={compact ? 'flex flex-col gap-2' : 'flex flex-col gap-2 pb-2'}>
+    <div className={compact ? 'flex flex-col gap-2' : 'flex flex-col divide-y divide-line'}>
       {map(products, (product, i) => {
         return (
           <ProductListItem product={product} compact={compact} key={`product-${product?.id ?? i}`}/>
