@@ -3,6 +3,7 @@
 import useSWR from 'swr';
 import isEmpty from 'lodash/isEmpty';
 import ProductList from '@/modules/cart/components/ProductList';
+import Box from '@/components/_other/box/Box';
 import { useTranslation } from '@/app/i18n/client';
 import { CART_SERVICES_CATEGORY } from '@/constants/AppConstants';
 
@@ -40,13 +41,19 @@ const Services = ({ compact = false }) => {
     );
   }
 
+  // one card like the other cart blocks (brief 4.4)
   return (
-    <section>
-      <h2 className="mb-4 text-2xl font-medium leading-tight text-ink md:text-3xl">
-        {t('cart_services.title')}
-      </h2>
-      <ProductList products={products} />
-    </section>
+    <Box>
+      <section aria-labelledby="cart-services-title">
+        <h2
+          id="cart-services-title"
+          className="mb-4 text-lg font-medium leading-snug text-ink md:text-xl"
+        >
+          {t('cart_services.title')}
+        </h2>
+        <ProductList products={products} />
+      </section>
+    </Box>
   );
 };
 
